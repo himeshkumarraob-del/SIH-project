@@ -1,0 +1,22 @@
+# --- Phase 1-2 dependencies (project setup + FIRMS ingestion) ---
+# Additional dependencies (scikit-learn, xgboost, shap, fastapi, etc.)
+# will be added in later phases as those modules are built, to keep
+# the environment minimal and installs fast at each stage.
+
+python-dotenv>=1.0.0
+PyYAML>=6.0
+requests>=2.31.0
+pandas>=2.0.0
+
+# --- India boundary filtering (geospatial: point-in-polygon, CRS handling) ---
+geopandas>=0.14.0
+
+# --- Testing ---
+pytest>=7.4.0
+
+# --- ML / AI ---
+scikit-learn>=1.3.0
+joblib>=1.3.0
+
+# --- GIS / Visualization ---
+folium>=0.14.0

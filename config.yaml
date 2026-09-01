@@ -1,0 +1,108 @@
+# ==========================================================================
+# thermal-intelligence :: central configuration
+# ==========================================================================
+# This file holds all NON-SECRET configuration.
+# Secrets (API keys) live only in the .env file.
+
+project:
+  name: thermal-intelligence
+  description: >
+    AI-based detection and classification of industrial fires and
+    persistent thermal sources using NASA FIRMS, OSM, and satellite data.
+
+# --------------------------------------------------------------------------
+# Study area: India, approximate bounding box.
+# NOTE: This is a bounding box, not an exact India boundary.
+# True India-only filtering will be done downstream.
+# --------------------------------------------------------------------------
+study_area:
+  name: india_bbox
+  west: 68
+  south: 6
+  east: 97
+  north: 36
+
+# --------------------------------------------------------------------------
+# FIRMS data sources
+# --------------------------------------------------------------------------
+firms:
+  base_url: "https://firms.modaps.eosdis.nasa.gov/api/area/csv"
+
+  # Maximum number of days per single FIRMS request
+  max_days_per_request: 5
+
+  products:
+
+    # NOAA-20 Near Real-Time
+    - key: viirs_noaa20
+      source: VIIRS_NOAA20_NRT
+      description: "VIIRS on NOAA-20, Near Real-Time processing"
+
+    # NOAA-20 Standard Processing
+    - key: viirs_noaa20_sp
+      source: VIIRS_NOAA20_SP
+      description: "VIIRS on NOAA-20, Standard Processing (historical/backfill)"
+
+    # NOAA-21 Near Real-Time
+    - key: viirs_noaa21
+      source: VIIRS_NOAA21_NRT
+      description: "VIIRS on NOAA-21, Near Real-Time processing"
+
+    # NOAA-21 Standard Processing
+    - key: viirs_noaa21_sp
+      source: VIIRS_NOAA21_SP
+      description: "VIIRS on NOAA-21, Standard Processing (historical/backfill)"
+
+  # For the current recent-data test, use NRT products.
+  default_products:
+    - viirs_noaa20
+    - viirs_noaa21
+
+# --------------------------------------------------------------------------
+# Initial development data collection window
+# --------------------------------------------------------------------------
+initial_collection:
+  lookback_days: 30
+
+# --------------------------------------------------------------------------
+# Paths
+# --------------------------------------------------------------------------
+paths:
+  data_raw: data/raw
+  data_interim: data/interim
+  data_processed: data/processed
+  data_external: data/external
+  reports: reports
+  models: models
+  logs: reports/logs/ingestion.log
+
+# --------------------------------------------------------------------------
+# Persistence analysis: spatial-temporal clustering of India-filtered FIRMS
+# detections into candidate recurring/persistent thermal-event clusters.
+# These thresholds are heuristic starting points for a hackathon prototype,
+# not derived from a formal study — kept here (not hard-coded) so they can
+# be tuned without touching clustering code.
+# --------------------------------------------------------------------------
+persistence:
+  # Two detections are considered spatially related if within this
+  # great-circle distance (km) of each other.
+  spatial_distance_km: 1.0
+
+  # Two detections are considered temporally related (chainable into the
+  # same cluster) if within this many days of each other.
+  temporal_window_days: 3
+
+  # A cluster needs at least this many distinct active days to be
+  # labeled "persistent" (vs. "short_lived_repeated").
+  persistent_min_active_days: 5
+
+  # A cluster needs at least this many distinct active days to be
+  # labeled "short_lived_repeated" (vs. "isolated").
+  repeated_min_active_days: 2
+
+# --------------------------------------------------------------------------
+# Logging
+# --------------------------------------------------------------------------
+logging:
+  level: INFO
+  log_file: reports/logs/ingestion.log

@@ -1,0 +1,25 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+*.egg-info/
+
+# Data (raw/interim/processed are regenerable from FIRMS; don't commit large CSVs)
+data/raw/*
+!data/raw/.gitkeep
+data/interim/*
+!data/interim/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Logs and model artifacts
+reports/logs/*
+!reports/logs/.gitkeep
+models/*.joblib
+
+# OS
+.DS_Store
