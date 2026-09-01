@@ -6,85 +6,47 @@ This document outlines the user interface, widget hierarchy, design principles, 
 
 ---
 
-## Technical Stack & Aesthetic Guidelines
-
-- **Framework:** Next.js / Vite (React + TypeScript).
-- **Styling:** Modern Vanilla CSS / TailwindCSS (if configured), Dark Mode first, glassmorphism card UI, vibrant indicators for anomaly levels.
-- **Mapping:** Mapbox GL / Leaflet / Folium iframe wrapper.
-- **State Management:** TanStack Query (React Query) for REST API caching.
-
----
-
 ## Layout & View Components
 
 ### 1. Dashboard Overview Header
 Top-level metric cards displaying key performance indicators:
 - **Total Detections:** `4,524`
 - **Active Thermal Clusters:** `1,792`
-- **High-Risk Anomalies:** `1,585` (Red badge)
-- **Elevated Events:** `594` (Orange badge)
-- **Persistent Sites:** `35` (Blue badge)
+- **High-Risk Events (Index >= 60):** `98` (Red badge)
+- **Moving Clusters:** `55` (Arrow indicator badge)
+- **High False Alarm Concern:** `1,037` (Yellow/Gray warning chip)
 
 ---
 
 ### 2. Interactive India Map View
-Primary map view referencing the behaviors in `src/gis/map_builder.py`:
+Primary map view referencing the behaviors in `src/gis/map_builder.py` and `src/gis/thermal_movement.py`:
 - **Default Position:** Bounding box centered on India `[20.5937, 78.9629]`, zoom level 5.
-- **Controls:**
-  - Zoom in/out, mouse-wheel zoom, drag-panning.
-  - Reset to India Bounding Box button.
-  - Fullscreen toggle.
-- **Marker Clustering:** Dynamic grouping of point detections to prevent visual clutter.
 - **Color Coding:**
-  - 🔴 **HIGH Anomaly:** Red markers (`#d9534f`)
+  - 🔴 **HIGH Anomaly / High Risk:** Red markers (`#d9534f`)
   - 🟠 **ELEVATED Event:** Orange markers (`#f0ad4e`)
   - 🟢 **NORMAL Event:** Green markers (`#5cb85c`)
-- **Event Popup Modal:**
-  - Cluster ID & Abnormality Level Header
-  - Anomaly Score
-  - Persistence Category
-  - AI Characterization & Explanation text block
-  - Contributing Factor Chips (`max_bright_ti4`, `max_frp`, etc.)
-  - Thermal metrics (`FRP`, `Brightness Temp`, `Satellite`, `Date`)
+- **Thermal Activity Movement Overlay:** Direction arrows / vectors indicating movement trajectory for clusters with `movement_status = MOVING`.
 
 ---
 
 ### 3. Filter & Control Panel
-Allows operational users to narrow down visible events across both map and table views:
+Allows operational users to filter events across both map and table views:
 - **Abnormality Level Checklist:** `NORMAL`, `ELEVATED`, `HIGH`.
-- **Persistence Category Checklist:** `isolated`, `short_lived_repeated`, `persistent`.
+- **False Alarm Concern Checklist:** `LOW` (Reliable), `MEDIUM`, `HIGH` (Weak Evidence).
+- **Risk Level Checklist:** `LOW`, `MEDIUM`, `HIGH`.
+- **Movement Status Checklist:** `MOVING`, `STATIONARY`, `INSUFFICIENT_DATA`.
 - **Date Range Picker:** Filter by acquisition start and end dates.
-- **Satellite Selector:** `NOAA-20`, `NOAA-21`, `All`.
-- **Characterization Filter Dropdown:** Filter by `MULTI_FACTOR_ANOMALY`, `HIGH_THERMAL_INTENSITY`, etc.
 
 ---
 
 ### 4. Event Detail Side Panel
-When a user clicks any event marker on the map or row in the table, slide in a details panel displaying:
-- **Event Identifiers:** Cluster ID, Detection ID.
-- **Location:** WGS84 Latitude & Longitude with copy-to-clipboard button.
-- **AI Assessment Card:**
-  - Anomaly Score gauge meter.
-  - Abnormality badge (`HIGH` / `ELEVATED` / `NORMAL`).
-  - Evidence-based characterization title.
-  - Explanation sentence explaining physical evidence.
-  - Contributing factor tags.
-- **Thermal Physical Properties:**
-  - VIIRS I-4 Temperature (Kelvin).
-  - VIIRS I-5 Temperature (Kelvin).
-  - Fire Radiative Power (MW).
-  - Confidence rating.
-
----
-
-### 5. High-Risk Event Priority Table
-A searchable, sortable data table for rapid triage:
-- **Columns:** `Cluster ID`, `Acquisition Date`, `Coordinates`, `Abnormality Level`, `Anomaly Score`, `Persistence Category`, `FRP (MW)`, `Characterization`.
-- **Sort default:** `Anomaly Score` descending.
-- **Pagination:** 25 / 50 / 100 rows per page.
-
----
-
-### 6. Safety & Terminology Directives
-- **NO Ground-Truth Claims:** The frontend MUST NOT display terms like *"Industrial Explosion"* or *"Forest Fire"* unless supported by external land-use data.
-- **Use Official Terminology:** Always display characterizations verbatim as returned by the API (`HIGH_THERMAL_INTENSITY`, `PERSISTENT_THERMAL_ACTIVITY`, etc.).
+When an event marker or table row is selected, display:
+- **Cluster & Detection IDs:** ID details and coordinates.
+- **AI Assessment & Risk Score:**
+  - Risk Score Index Gauge (0–100).
+  - False Alarm Concern level (`LOW`, `MEDIUM`, `HIGH`) and reasons.
+  - Anomaly characterization & explanation text.
+- **Thermal Activity Movement Section:**
+  - Movement status (`MOVING` / `STATIONARY` / `INSUFFICIENT_DATA`).
+  - Net displacement distance (km) and rate (km/day).
+  - Compass direction (`NE`, `SW`, etc.) and bearing angle.
