@@ -21,5 +21,8 @@ reports/logs/*
 !reports/logs/.gitkeep
 models/*.joblib
 
+# Frontend (web/ directory is kept LOCAL ONLY)
+web/
+
 # OS
 .DS_Store
