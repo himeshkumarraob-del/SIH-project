@@ -76,6 +76,11 @@ class IndustrialClassifier:
         osm_dist_km = float(row.get("osm_distance_km", float("inf")))
         land_cover = str(row.get("land_cover_class", "UNKNOWN")).lower()
 
+        # Satellite CNN Visual Context Evidence
+        sat_available = bool(row.get("satellite_image_available", False))
+        sat_landcover = str(row.get("predicted_landcover_class", "UNKNOWN"))
+        sat_conf = float(row.get("prediction_confidence", 0.0))
+
         ind_score = 0.0
         agri_score = 0.0
         forest_score = 0.0
@@ -109,6 +114,11 @@ class IndustrialClassifier:
             ind_score += 0.20
             ind_evidence.append(f"land-cover context is {land_cover}")
 
+        # Optional Satellite CNN Evidence for Industrial Context
+        if sat_landcover == "Industrial" and sat_conf >= 0.50:
+            ind_score += 0.20
+            ind_evidence.append(f"satellite CNN visual context is Industrial (model confidence={sat_conf:.2f})")
+
         # 2. Agricultural Evidence Components
         if pers_cat == "isolated" or active_days <= 2:
             agri_score += 0.35
@@ -125,6 +135,11 @@ class IndustrialClassifier:
         if land_cover in ["cropland", "agriculture", "farmland"]:
             agri_score += 0.30
             agri_evidence.append("land-cover context is agricultural cropland")
+
+        # Optional Satellite CNN Evidence for Agricultural Context
+        if sat_landcover in ["AnnualCrop", "PermanentCrop", "Pasture"] and sat_conf >= 0.50:
+            agri_score += 0.20
+            agri_evidence.append(f"satellite CNN visual context is {sat_landcover} (model confidence={sat_conf:.2f})")
 
         if has_osm_industrial:
             agri_score -= 0.15  # Penalty if right next to industrial facility
@@ -146,6 +161,11 @@ class IndustrialClassifier:
             forest_score += 0.30
             forest_evidence.append(f"land-cover context is {land_cover}")
 
+        # Optional Satellite CNN Evidence for Forest Context
+        if sat_landcover in ["Forest", "HerbaceousVegetation"] and sat_conf >= 0.50:
+            forest_score += 0.20
+            forest_evidence.append(f"satellite CNN visual context is {sat_landcover} (model confidence={sat_conf:.2f})")
+
         if has_osm_industrial:
             forest_score -= 0.20  # Penalty if inside industrial facility zone
 
@@ -155,14 +175,14 @@ class IndustrialClassifier:
         forest_score = float(np.clip(forest_score, 0.0, 1.0))
 
         # Decision Logic & Scientific Guardrails
-        # Guardrail Rule: OSM proximity alone CANNOT force an Industrial-context classification!
-        # If OSM is present, but event is MOVING or active_days==1 with no thermal contrast/persistence,
-        # OSM proximity alone is insufficient to claim Industrial-context.
+        # Guardrail Rule 1: OSM proximity alone CANNOT force an Industrial-context classification!
         if has_osm_industrial and ind_score >= self.min_confidence_score:
-            # Check if thermal/movement signals contradict industrial flare behavior
             if movement_status == "MOVING" or (active_days == 1 and not (bt_diff >= 35.0 or max_ti4 >= 340.0)):
-                # Contradicted by movement or single-day low contrast -> Reduce industrial score below threshold
                 ind_score = min(ind_score, 0.35)
+
+        # Guardrail Rule 2: CNN visual prediction alone CANNOT force Industrial-context if contradicted by movement
+        if sat_landcover == "Industrial" and movement_status == "MOVING":
+            ind_score = min(ind_score, 0.35)
 
         # Select Highest Evidence Score
         scores_map = {
@@ -187,6 +207,8 @@ class IndustrialClassifier:
             context_notes.append("OSM industrial context is UNKNOWN")
         if land_cover == "unknown":
             context_notes.append("land-cover context is UNKNOWN")
+        if not sat_available or sat_landcover == "UNKNOWN":
+            context_notes.append("satellite observation unavailable/obscured")
 
         evidence_str = "; ".join(best_evidence + context_notes)
         rationale = f"{best_label}\nSupporting evidence:\n- " + "\n- ".join(best_evidence + context_notes)

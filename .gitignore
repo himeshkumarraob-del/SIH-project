@@ -20,9 +20,17 @@ data/processed/*
 reports/logs/*
 !reports/logs/.gitkeep
 models/*.joblib
+models/*.pth
+models/*.pt
 
-# Frontend (web/ directory is kept LOCAL ONLY)
-web/
+# Satellite Data
+data/external/satellite/*
+data/satellite/*
 
+# Frontend
+web/node_modules/
+web/dist/
+web/.env
+web/.env.local
 # OS
 .DS_Store
