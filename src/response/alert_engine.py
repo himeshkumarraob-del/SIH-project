@@ -10,7 +10,7 @@ Outputs operational recommendations strictly for advisory review. Does NOT execu
 
 from __future__ import annotations
 
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, Optional
 import pandas as pd
 
 from src.response.fire_station_locator import FireStationLocator
@@ -18,7 +18,7 @@ from src.logging_setup import get_logger
 
 logger = get_logger("response.alert_engine")
 
-class OperationalAlertEngine:
+class AlertEngine:
     def __init__(self, locator: Optional[FireStationLocator] = None):
         self.locator = locator or FireStationLocator()
 
