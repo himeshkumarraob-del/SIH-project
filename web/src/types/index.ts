@@ -86,6 +86,12 @@ export interface MovementVector {
   movement_direction: string;
   movement_confidence: string;
   movement_status: 'MOVING' | 'STATIONARY' | 'INSUFFICIENT_DATA';
+  /** Direction intelligence — movement of DETECTED THERMAL ACTIVITY, not confirmed fire spread. */
+  direction: string | null;
+  movement_pattern: 'directional' | 'erratic' | 'stationary' | 'insufficient_evidence';
+  direction_confidence: 'HIGH' | 'MODERATE' | 'PRELIMINARY' | 'INSUFFICIENT';
+  direction_confidence_score: number;
+  direction_available: boolean;
 }
 
 /** Dashboard aggregated statistics */
@@ -117,6 +123,108 @@ export interface ClassificationData {
   osm_facility_type: string;
   osm_distance_km: number;
   land_cover_class: string;
+}
+
+/** Cluster-level detail from /api/v1/events/{cluster_id} */
+export interface ClusterDetail {
+  cluster_id: number;
+  latitude: number;
+  longitude: number;
+  observation_count: number;
+  active_days: number;
+  first_detection: string;
+  last_detection: string;
+  duration_days: number | null;
+  persistence_category: string;
+  max_frp: number;
+  max_bright_ti4: number;
+  bt_diff_max: number;
+  abnormality_level: string;
+  anomaly_characterization: string;
+  explanation: string;
+  false_alarm_indicator: string;
+  detection_reliability: string;
+  risk_score: number;
+  risk_level: string;
+  classification_label: string;
+  classification_score: number;
+  classification_rationale: string;
+  movement_status: string;
+  total_movement_distance_km: number;
+}
+
+/** Classification + OSM + satellite context from /api/v1/classification/{cluster_id} */
+export interface ClassificationDetailData {
+  cluster_id: number;
+  classification_label: string;
+  classification_score: number;
+  classification_rationale: string;
+  osm_facility_type: string;
+  osm_distance_km: number;
+  predicted_landcover_class: string;
+  prediction_confidence: number;
+}
+
+/** Risk intelligence from /api/v1/risk/{cluster_id} */
+export interface RiskDetailData {
+  cluster_id: number;
+  risk_score: number;
+  risk_level: string;
+  risk_factors: string;
+  risk_explanation: string;
+}
+
+/** Response/alert detail from /api/v1/response/{cluster_id} */
+export interface ResponseDetailData {
+  cluster_id: number;
+  risk_score: number;
+  risk_level: string;
+  alert_priority: string;
+  recommended_action: string;
+  nearest_station_name: string;
+  station_distance_km: number | null;
+  station_available: boolean;
+  alert_rationale: string;
+  is_decision_support_only: boolean;
+}
+
+/** Thermal alert record from the Thermal Alert Engine (/api/v1/alerts).
+ *  Decision-support classification of processed thermal evidence — never a
+ *  confirmed fire declaration. */
+export interface ThermalAlert {
+  alert_id: string;
+  cluster_id: number;
+  severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  status: 'ACTIVE' | 'ACKNOWLEDGED' | 'RESOLVED';
+  evidence_confidence: 'HIGH' | 'MODERATE' | 'LOW' | 'INSUFFICIENT';
+  suppressed: boolean;
+  suppression_reason: string;
+  risk_score: number | null;
+  risk_level: 'LOW' | 'MEDIUM' | 'HIGH';
+  classification_label: string;
+  classification_score: number | null;
+  false_alarm_indicator: 'LOW' | 'MEDIUM' | 'HIGH';
+  detection_reliability: 'HIGH' | 'MEDIUM' | 'LOW';
+  observation_count: number;
+  active_days: number;
+  persistence_category: string;
+  max_frp: number | null;
+  max_bright_ti4: number | null;
+  bt_diff_max: number | null;
+  movement_direction: string | null;
+  movement_bearing_degrees: number | null;
+  movement_rate_km_per_day: number | null;
+  movement_pattern: string;
+  latitude: number | null;
+  longitude: number | null;
+  nearest_station_name: string;
+  station_distance_km: number | null;
+  station_available: boolean;
+  reasons: string;
+  alert_rationale: string;
+  created_at: string;
+  updated_at: string;
+  is_decision_support_only: boolean;
 }
 
 /** Active filter state */

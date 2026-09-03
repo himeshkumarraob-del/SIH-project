@@ -63,6 +63,11 @@ def main() -> int:
         max_dist = moving_df["total_movement_distance_km"].max() if not moving_df.empty else 0.0
         avg_dist = moving_df["total_movement_distance_km"].mean() if not moving_df.empty else 0.0
 
+        # Direction intelligence breakdown (novel feature)
+        pattern_counts = movement_df["movement_pattern"].value_counts()
+        dir_conf_counts = movement_df["direction_confidence"].value_counts()
+        dir_available = int(movement_df["direction_available"].sum())
+
         print("\n=== Thermal Activity Movement Summary ===")
         print(f"Total Clusters Analyzed:    {total_clusters}")
         print("\nMovement Status Breakdown:")
@@ -76,6 +81,15 @@ def main() -> int:
         print(f"  LOW Confidence:           {conf_counts.get('LOW', 0)}")
         print(f"  INSUFFICIENT_DATA:        {conf_counts.get('INSUFFICIENT_DATA', 0)}")
 
+        print("\nThermal Activity Direction Intelligence:")
+        print(f"  Direction available:      {dir_available}")
+        print("  Movement pattern:")
+        for pat in ["directional", "erratic", "stationary", "insufficient_evidence"]:
+            print(f"    {pat:.<22} {int(pattern_counts.get(pat, 0))}")
+        print("  Direction confidence:")
+        for conf in ["HIGH", "MODERATE", "PRELIMINARY", "INSUFFICIENT"]:
+            print(f"    {conf:.<22} {int(dir_conf_counts.get(conf, 0))}")
+
         print("\nDisplacement Metrics (for MOVING clusters):")
         print(f"  Min Movement Distance:     {min_dist:.2f} km")
         print(f"  Max Movement Distance:     {max_dist:.2f} km")
@@ -84,8 +98,9 @@ def main() -> int:
         print("\n=== Top 10 Clusters by Movement Rate (km/day) ===")
         top10 = movement_df.sort_values(by="movement_rate_km_per_day", ascending=False).head(10)
         cols_show = [
-            "cluster_id", "movement_status", "total_movement_distance_km", 
-            "time_span_days", "movement_rate_km_per_day", "movement_direction", "movement_confidence"
+            "cluster_id", "movement_status", "movement_pattern", "total_movement_distance_km",
+            "time_span_days", "movement_rate_km_per_day", "movement_direction",
+            "movement_confidence", "direction", "direction_confidence"
         ]
         print(top10[cols_show].to_string(index=False))
 

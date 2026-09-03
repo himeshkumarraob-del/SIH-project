@@ -1,9 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { fetchStatistics } from '../api/client';
 import { formatNumber } from '../utils/formatters';
 import type { DashboardStats } from '../types';
 
-export default function DashboardHeader() {
+interface DashboardHeaderProps {
+  /** Optional right-side header actions (e.g. thermal alert bell). */
+  actions?: ReactNode;
+}
+
+export default function DashboardHeader({ actions }: DashboardHeaderProps) {
   const [stats, setStats] = useState<DashboardStats | null>(null);
 
   useEffect(() => {
@@ -94,6 +99,7 @@ export default function DashboardHeader() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {actions}
           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-700 border border-green-200">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5 animate-pulse" />
             LIVE DATA

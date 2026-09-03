@@ -550,6 +550,9 @@ export const MOCK_MOVEMENTS: MovementVector[] = [
     total_movement_distance_km: 0.664, movement_rate_km_per_day: 0.441,
     movement_bearing_degrees: 294.04, movement_direction: 'NW',
     movement_confidence: 'LOW', movement_status: 'MOVING',
+    direction: 'NW', movement_pattern: 'directional',
+    direction_confidence: 'PRELIMINARY', direction_confidence_score: 33,
+    direction_available: true,
   },
   {
     cluster_id: 25, observation_count: 4, active_days: 3,
@@ -560,6 +563,9 @@ export const MOCK_MOVEMENTS: MovementVector[] = [
     total_movement_distance_km: 0.59, movement_rate_km_per_day: 0.236,
     movement_bearing_degrees: 304.25, movement_direction: 'NW',
     movement_confidence: 'LOW', movement_status: 'MOVING',
+    direction: 'NW', movement_pattern: 'directional',
+    direction_confidence: 'MODERATE', direction_confidence_score: 55,
+    direction_available: true,
   },
   {
     cluster_id: 55, observation_count: 3, active_days: 2,
@@ -570,6 +576,9 @@ export const MOCK_MOVEMENTS: MovementVector[] = [
     total_movement_distance_km: 0.749, movement_rate_km_per_day: 0.73,
     movement_bearing_degrees: 125.46, movement_direction: 'SE',
     movement_confidence: 'LOW', movement_status: 'MOVING',
+    direction: 'SE', movement_pattern: 'directional',
+    direction_confidence: 'PRELIMINARY', direction_confidence_score: 33,
+    direction_available: true,
   },
   {
     cluster_id: 63, observation_count: 5, active_days: 2,
@@ -580,6 +589,9 @@ export const MOCK_MOVEMENTS: MovementVector[] = [
     total_movement_distance_km: 1.201, movement_rate_km_per_day: 1.265,
     movement_bearing_degrees: 249.63, movement_direction: 'W',
     movement_confidence: 'MEDIUM', movement_status: 'MOVING',
+    direction: 'W', movement_pattern: 'directional',
+    direction_confidence: 'MODERATE', direction_confidence_score: 66,
+    direction_available: true,
   },
   {
     cluster_id: 283, observation_count: 8, active_days: 4,
@@ -590,6 +602,9 @@ export const MOCK_MOVEMENTS: MovementVector[] = [
     total_movement_distance_km: 3.913, movement_rate_km_per_day: 0.238,
     movement_bearing_degrees: 143.63, movement_direction: 'SE',
     movement_confidence: 'HIGH', movement_status: 'MOVING',
+    direction: 'SE', movement_pattern: 'directional',
+    direction_confidence: 'HIGH', direction_confidence_score: 100,
+    direction_available: true,
   },
   {
     cluster_id: 362, observation_count: 6, active_days: 3,
@@ -600,6 +615,22 @@ export const MOCK_MOVEMENTS: MovementVector[] = [
     total_movement_distance_km: 1.332, movement_rate_km_per_day: 0.45,
     movement_bearing_degrees: 184.63, movement_direction: 'S',
     movement_confidence: 'HIGH', movement_status: 'MOVING',
+    direction: 'S', movement_pattern: 'directional',
+    direction_confidence: 'MODERATE', direction_confidence_score: 66,
+    direction_available: true,
+  },
+  {
+    cluster_id: 10, observation_count: 2, active_days: 2,
+    first_detection: '2026-08-03T06:57:00', last_detection: '2026-08-04T06:57:00',
+    time_span_days: 1.0,
+    start_latitude: 11.1509, start_longitude: 78.0258,
+    end_latitude: 11.1509, end_longitude: 78.0258,
+    total_movement_distance_km: 0.0, movement_rate_km_per_day: 0.0,
+    movement_bearing_degrees: 0.0, movement_direction: 'STATIONARY',
+    movement_confidence: 'LOW', movement_status: 'STATIONARY',
+    direction: null, movement_pattern: 'stationary',
+    direction_confidence: 'INSUFFICIENT', direction_confidence_score: 0,
+    direction_available: false,
   },
 ];
 

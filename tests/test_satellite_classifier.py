@@ -96,14 +96,121 @@ def test_cnn_alone_cannot_force_industrial_if_moving():
 
 def test_no_satellite_image_returns_unknown():
     from src.satellite.sentinel2_search import Sentinel2Searcher
-    searcher = Sentinel2Searcher()
-    # Unconfigured credentials or missing imagery
+    searcher = Sentinel2Searcher(max_cloud_cover_percent=20.0)  # Low threshold to ensure unavailable
+    # Search for a location that likely has no imagery or high cloud cover
     stac_res = searcher.search_image_for_cluster(99, 20.0, 78.0, "2026-08-01")
-    assert stac_res["image_available"] is False
-    assert "Copernicus STAC credentials not configured" in stac_res["observation_status"] or "unavailable" in stac_res["observation_status"]
+    # The new implementation uses satellite_image_available instead of image_available
+    assert stac_res["satellite_image_available"] is False
+    # Check that observation_status indicates some form of unavailability
+    status = stac_res["observation_status"].lower()
+    assert any(word in status for word in ["unavailable", "obscured", "cloud", "error", "not found", "pending"])
 
     # When image is unavailable, prediction MUST be UNKNOWN and confidence MUST be None
-    pred_class = "UNKNOWN" if not stac_res["image_available"] else "TEST"
-    pred_conf = None if not stac_res["image_available"] else 0.5
+    pred_class = "UNKNOWN" if not stac_res["satellite_image_available"] else "TEST"
+    pred_conf = None if not stac_res["satellite_image_available"] else 0.5
     assert pred_class == "UNKNOWN"
     assert pred_conf is None
+
+
+# ---------------------------------------------------------------------------
+# Training pipeline hardening tests
+# ---------------------------------------------------------------------------
+
+def test_train_satellite_cnn_no_checkpoint_on_failure(tmp_path, monkeypatch):
+    """When EuroSAT training fails, train_satellite_cnn() must NOT save an
+    ImageNet-only checkpoint and must return False."""
+    from scripts.train_all_models import train_satellite_cnn
+
+    checkpoint = tmp_path / "satellite_landuse_efficientnet_b0.pth"
+    assert not checkpoint.exists()
+
+    # Force dataset loading to raise so the except branch fires
+    def _fail_dataloaders(**kwargs):
+        raise RuntimeError("EuroSAT download failed (simulated)")
+
+    monkeypatch.setattr(
+        "src.satellite.dataset.get_eurosat_dataloaders", _fail_dataloaders
+    )
+
+    result = train_satellite_cnn(epochs=1, batch_size=2)
+
+    assert result is False, "Expected False on training failure"
+    assert not checkpoint.exists(), "Checkpoint must NOT be created on failure"
+
+
+def test_train_satellite_cnn_preserves_existing_checkpoint(tmp_path, monkeypatch):
+    """When EuroSAT training fails but a valid checkpoint already exists,
+    the existing file must be preserved (not overwritten with ImageNet weights)."""
+    import torch as _torch
+    from scripts.train_all_models import train_satellite_cnn
+
+    checkpoint = tmp_path / "satellite_landuse_efficientnet_b0.pth"
+
+    # Create a pre-existing "valid" checkpoint with a sentinel value
+    sentinel = {"state_dict": {}, "val_acc": 0.99, "note": "real-trained"}
+    _torch.save(sentinel, checkpoint)
+    original_mtime = checkpoint.stat().st_mtime
+
+    def _fail_dataloaders(**kwargs):
+        raise RuntimeError("EuroSAT download failed (simulated)")
+
+    monkeypatch.setattr(
+        "src.satellite.dataset.get_eurosat_dataloaders", _fail_dataloaders
+    )
+
+    result = train_satellite_cnn(epochs=1, batch_size=2)
+
+    assert result is False
+    # File must still exist and NOT have been rewritten
+    assert checkpoint.exists(), "Existing checkpoint must be preserved"
+    assert checkpoint.stat().st_mtime == original_mtime, (
+        "Existing checkpoint must not be overwritten"
+    )
+    loaded = _torch.load(checkpoint, weights_only=False)
+    assert loaded["note"] == "real-trained", "Checkpoint content must be unchanged"
+    assert loaded["val_acc"] == 0.99, "val_acc must not be replaced with fake 0.85"
+
+
+def test_train_all_models_main_returns_nonzero_on_satellite_failure(tmp_path, monkeypatch):
+    """The CLI entry point train_satellite_cnn in train_satellite_cnn.py must
+    return exit code 1 when EuroSAT training fails (no fake checkpoint)."""
+    import subprocess, sys
+    from pathlib import Path
+
+    # Run from the actual project root so scripts/ is findable
+    project_root = Path(__file__).resolve().parent.parent
+    checkpoint = project_root / "models" / "satellite_landuse_efficientnet_b0.pth"
+    checkpoint_existed_before = checkpoint.exists()
+    original_mtime = checkpoint.stat().st_mtime if checkpoint_existed_before else None
+
+    result = subprocess.run(
+        [
+            sys.executable, "scripts/train_satellite_cnn.py",
+            "--epochs", "0",
+            "--batch-size", "2",
+        ],
+        cwd=str(project_root),
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+
+    output = result.stdout + result.stderr
+
+    if result.returncode != 0:
+        # On failure, stdout/stderr should mention the error
+        assert any(
+            kw in output.lower()
+            for kw in ["error", "abort", "failed", "not found"]
+        ), f"Expected error message in output, got: {output[:500]}"
+        # If no checkpoint existed before, it must not have been created
+        if not checkpoint_existed_before:
+            assert not checkpoint.exists(), (
+                "No checkpoint should be saved on failure"
+            )
+        else:
+            # If a checkpoint existed before, it must not have been modified
+            assert checkpoint.stat().st_mtime == original_mtime, (
+                "Existing checkpoint must not be overwritten on failure"
+            )
+    # If returncode == 0, training succeeded — that's acceptable

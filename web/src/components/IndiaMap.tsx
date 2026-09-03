@@ -11,6 +11,73 @@ import { formatCoordinate, markerColor } from '../utils/formatters';
 
 const INDIA_CENTER: [number, number] = [20.5937, 78.9629];
 
+// Movement direction arrows are shown only for clusters whose direction of
+// detected thermal activity movement is considered reliable (MODERATE/HIGH).
+// Arrows represent the direction of detected thermal activity, NOT confirmed
+// physical fire-front propagation.
+const RELIABLE_DIRECTION_CONFIDENCE = ['MODERATE', 'HIGH'];
+
+/** Approximate destination lat/lon after moving `distKm` at `bearingDeg` from a point. */
+function destinationPoint(lat: number, lon: number, bearingDeg: number, distKm: number): [number, number] {
+  const R = 6371.0088;
+  const d = distKm / R;
+  const brng = (bearingDeg * Math.PI) / 180;
+  const lat1 = (lat * Math.PI) / 180;
+  const lon1 = (lon * Math.PI) / 180;
+  const lat2 = Math.asin(
+    Math.sin(lat1) * Math.cos(d) + Math.cos(lat1) * Math.sin(d) * Math.cos(brng),
+  );
+  const lon2 =
+    lon1 +
+    Math.atan2(
+      Math.sin(brng) * Math.sin(d) * Math.cos(lat1),
+      Math.cos(d) - Math.sin(lat1) * Math.sin(lat2),
+    );
+  return [(lat2 * 180) / Math.PI, (lon2 * 180) / Math.PI];
+}
+
+/**
+ * Arrowhead wing endpoints at the tip of a direction arrow.
+ * Wing length scales with displacement but is clamped to a sensible visual
+ * range so arrows never become huge misleading vectors.
+ */
+function arrowHeadWings(mv: MovementVector): { tip: [number, number]; wing1: [number, number]; wing2: [number, number] } {
+  const tip: [number, number] = [mv.end_latitude, mv.end_longitude];
+  const disp = Math.max(mv.total_movement_distance_km, 0);
+  const wingKm = Math.min(Math.max(disp * 0.35, 0.9), 4.0);
+  const spreadDeg = 28;
+  const back1 = (mv.movement_bearing_degrees + 180 - spreadDeg + 360) % 360;
+  const back2 = (mv.movement_bearing_degrees + 180 + spreadDeg) % 360;
+  return {
+    tip,
+    wing1: destinationPoint(tip[0], tip[1], back1, wingKm),
+    wing2: destinationPoint(tip[0], tip[1], back2, wingKm),
+  };
+}
+
+/**
+ * Draw a direction arrow as a thin shaft (start->end centroid) plus an
+ * arrowhead at the end centroid. The shaft is the real recorded displacement
+ * of detected thermal activity; the head marks its direction.
+ */
+function MovementDirectionArrow({ mv }: { mv: MovementVector }) {
+  const { tip, wing1, wing2 } = arrowHeadWings(mv);
+  const color = mv.direction_confidence === 'HIGH' ? '#b45309' : '#d97706';
+  return (
+    <>
+      <Polyline
+        positions={[
+          [mv.start_latitude, mv.start_longitude],
+          [mv.end_latitude, mv.end_longitude],
+        ]}
+        pathOptions={{ color: '#d97706', weight: 1.5, opacity: 0.55, dashArray: '4 4' }}
+      />
+      <Polyline positions={[tip, wing1]} pathOptions={{ color, weight: 2.5, opacity: 0.95 }} />
+      <Polyline positions={[tip, wing2]} pathOptions={{ color, weight: 2.5, opacity: 0.95 }} />
+    </>
+  );
+}
+
 function createClusterIcon(cluster: { getChildCount(): number }) {
   const count = cluster.getChildCount();
   const size = count < 100 ? 'small' : count < 1000 ? 'medium' : 'large';
@@ -123,22 +190,16 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
         <MapFlyTo target={flyTarget} />
         <MapFocus selectedEvent={selectedEvent} />
 
-        {/* Movement vector lines */}
-        {movements.map((mv) => (
-          <Polyline
-            key={`mv-${mv.cluster_id}`}
-            positions={[
-              [mv.start_latitude, mv.start_longitude],
-              [mv.end_latitude, mv.end_longitude],
-            ]}
-            pathOptions={{
-              color: '#d97706',
-              weight: 2.5,
-              opacity: 0.85,
-              dashArray: '8 5',
-            }}
-          />
-        ))}
+        {/* Thermal Activity Movement Direction arrows.
+            Shown ONLY for clusters with a defensible direction of detected
+            thermal activity (MODERATE/HIGH confidence). No arrow is drawn for
+            stationary, erratic or insufficient-evidence clusters — absence of
+            an arrow is NOT evidence of no movement direction. */}
+        {movements
+          .filter((mv) => mv.movement_status === 'MOVING' && mv.direction_available && RELIABLE_DIRECTION_CONFIDENCE.includes(mv.direction_confidence))
+          .map((mv) => (
+            <MovementDirectionArrow key={`dir-arrow-${mv.cluster_id}`} mv={mv} />
+          ))}
 
         {/* Markers with clustering */}
         <MarkerClusterGroup
@@ -181,9 +242,20 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
                       <div>Date: {event.acq_date}</div>
                       <div>{formatCoordinate(event.latitude, event.longitude)}</div>
                     </div>
-                    {mv && (
+                    {mv && mv.movement_status === 'MOVING' && (
                       <div style={{ marginTop: '4px', paddingTop: '4px', borderTop: '1px solid #e2e8f0', color: '#b45309' }}>
-                        Movement: {mv.movement_direction} ({mv.total_movement_distance_km.toFixed(2)} km)
+                        <div>
+                          Direction: {mv.direction_available ? mv.direction : 'Not available'}{' '}
+                          ({mv.total_movement_distance_km.toFixed(2)} km)
+                        </div>
+                        {mv.direction_available && (
+                          <div>Confidence: {mv.direction_confidence}</div>
+                        )}
+                      </div>
+                    )}
+                    {mv && mv.movement_status === 'STATIONARY' && (
+                      <div style={{ marginTop: '4px', paddingTop: '4px', borderTop: '1px solid #e2e8f0', color: '#16a34a' }}>
+                        Stationary (no net displacement)
                       </div>
                     )}
                   </div>
@@ -357,11 +429,16 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px', paddingTop: '6px', borderTop: '1px solid #e2e8f0' }}>
           <svg width="14" height="14" viewBox="0 0 14 14">
-            <line x1="0" y1="7" x2="14" y2="7" stroke="#d97706" strokeWidth="2" strokeDasharray="5 3" />
+            <line x1="1" y1="7" x2="10" y2="7" stroke="#d97706" strokeWidth="2.5" />
+            <line x1="10" y1="7" x2="6.5" y2="4.5" stroke="#d97706" strokeWidth="2.5" />
+            <line x1="10" y1="7" x2="6.5" y2="9.5" stroke="#d97706" strokeWidth="2.5" />
           </svg>
-          <span>Movement Vector</span>
+          <span>Thermal Activity Direction (MODERATE/HIGH)</span>
         </div>
-        <div style={{ color: '#94a3b8', marginTop: '6px', paddingTop: '6px', borderTop: '1px solid #f1f5f9', fontSize: '11px' }}>
+        <div style={{ color: '#94a3b8', marginTop: '6px', paddingTop: '6px', borderTop: '1px solid #f1f5f9', fontSize: '11px', maxWidth: '230px' }}>
+          Arrows show the direction of detected thermal activity, not confirmed fire-front propagation.
+        </div>
+        <div style={{ color: '#94a3b8', marginTop: '2px', fontSize: '11px' }}>
           Total: {events.length.toLocaleString()} detections
         </div>
       </div>

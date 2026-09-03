@@ -207,3 +207,42 @@ def build_india_map(
     logger.info(f"Saved interactive GIS map to {output_path}")
 
     return output_path
+
+
+class MapBuilder:
+    """Wrapper class for building GIS event data and interactive maps."""
+
+    def build_gis_events(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Build GIS-ready event records from the AI results dataframe.
+        Returns a dataframe suitable for mapping with one row per detection.
+        """
+        required = ["cluster_id", "latitude", "longitude", "abnormality_level"]
+        missing = [c for c in required if c not in df.columns]
+        if missing:
+            raise ValueError(f"Missing columns for GIS events: {missing}")
+
+        gis_df = df.copy()
+        # Ensure required columns exist
+        if "acq_date" not in gis_df.columns:
+            gis_df["acq_date"] = ""
+        if "frp" not in gis_df.columns:
+            gis_df["frp"] = 0.0
+        if "bright_ti4" not in gis_df.columns:
+            gis_df["bright_ti4"] = 0.0
+        if "satellite" not in gis_df.columns:
+            gis_df["satellite"] = ""
+        if "anomaly_score" not in gis_df.columns:
+            gis_df["anomaly_score"] = 0.0
+        if "persistence_category" not in gis_df.columns:
+            gis_df["persistence_category"] = "unknown"
+        if "anomaly_characterization" not in gis_df.columns:
+            gis_df["anomaly_characterization"] = ""
+        if "explanation" not in gis_df.columns:
+            gis_df["explanation"] = ""
+
+        return gis_df
+
+    def build_interactive_map(self, events_df: pd.DataFrame, output_path) -> Path:
+        """Build an interactive Folium map from GIS events."""
+        return build_india_map(events_df, output_path)

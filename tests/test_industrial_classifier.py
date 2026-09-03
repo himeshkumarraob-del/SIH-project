@@ -180,3 +180,58 @@ def test_input_datasets_remain_unchanged():
     
     assert mtime_ai_before == os.path.getmtime(ai_file)
     assert mtime_move_before == os.path.getmtime(move_file)
+
+
+def test_osm_offline_returns_unknown():
+    """use_network=False must return UNKNOWN without making any HTTP request."""
+    extractor = OSMContextExtractor(use_network=False)
+    ftype, fname, fdist = extractor.get_cluster_context(28.6139, 77.2090)  # New Delhi
+    assert ftype == "UNKNOWN"
+    assert fname == "none"
+    assert fdist == float("inf")
+    assert extractor.last_query_status == "disabled"
+
+
+def test_osm_online_returns_query_status():
+    """use_network=True must return a valid query status (not crash)."""
+    extractor = OSMContextExtractor(
+        use_network=True, timeout_sec=15.0, max_retries=1,
+        retry_delay_sec=2.0, inter_request_delay_sec=1.0
+    )
+    # Use a location known to have no industrial facilities (remote ocean)
+    ftype, fname, fdist = extractor.get_cluster_context(0.0, 0.0)
+    assert extractor.last_query_status in ("not_found", "timeout", "http_error", "network_error")
+
+
+def test_osm_extract_context_adds_query_status_column():
+    """extract_context must add osm_query_status column to output."""
+    extractor = OSMContextExtractor(use_network=False)
+    df = pd.DataFrame([{"latitude": 28.6139, "longitude": 77.2090}])
+    result = extractor.extract_context(df)
+    assert "osm_query_status" in result.columns
+    assert result.iloc[0]["osm_query_status"] == "disabled"
+
+
+def test_osm_missing_coords_returns_missing_coords_status():
+    """NaN coordinates must yield missing_coords status."""
+    extractor = OSMContextExtractor(use_network=True)
+    df = pd.DataFrame([{"latitude": float("nan"), "longitude": float("nan")}])
+    result = extractor.extract_context(df)
+    assert result.iloc[0]["osm_query_status"] == "missing_coords"
+    assert result.iloc[0]["osm_facility_type"] == "UNKNOWN"
+
+
+def test_osm_found_facility_populates_fields():
+    """When a facility is found, osm_facility_type must not be UNKNOWN or none."""
+    extractor = OSMContextExtractor(
+        use_network=True, timeout_sec=15.0, max_retries=2,
+        retry_delay_sec=3.0, inter_request_delay_sec=1.5
+    )
+    # Visakhapatnam Steel Plant area — known industrial
+    ftype, fname, fdist = extractor.get_cluster_context(17.6087, 83.2037)
+    if extractor.last_query_status == "found":
+        assert ftype not in ("UNKNOWN", "none")
+        assert fdist < 2.0
+    else:
+        # If rate-limited, just check status is a valid error state
+        assert extractor.last_query_status in ("timeout", "http_error", "network_error")

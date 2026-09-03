@@ -23,7 +23,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 import pandas as pd
-from src.response.alert_engine import OperationalAlertEngine
+from src.response.alert_engine import AlertEngine
 from src.config import get_config
 from src.logging_setup import get_logger
 
@@ -66,12 +66,13 @@ def main() -> int:
             class_cols = [c for c in class_df.columns if c not in merged.columns or c == "cluster_id"]
             merged = pd.merge(merged, class_df[class_cols], on="cluster_id", how="left")
 
-        engine = OperationalAlertEngine()
+        engine = AlertEngine()
         alerts_df = engine.generate_alerts(merged)
 
         cols_export = [
             "cluster_id", "risk_score", "risk_level", "false_alarm_indicator", "classification_label",
-            "alert_priority", "recommended_action", "nearest_station_name", "station_distance_km", "alert_rationale"
+            "alert_priority", "recommended_action", "nearest_station_name", "station_distance_km",
+            "station_available", "alert_rationale"
         ]
         export_df = alerts_df[[c for c in cols_export if c in alerts_df.columns]]
         export_df.to_csv(output_path, index=False)

@@ -117,12 +117,17 @@ def main() -> int:
         print(f"Model saved to: {checkpoint_path}\n")
 
     except Exception as exc:
-        logger.warning(f"EuroSAT automated dataset download/training skipped: {exc}")
-        print(f"NOTICE: EuroSAT dataset download or training encountered environment constraint: {exc}")
-        print("Saving base pretrained EfficientNet-B0 model checkpoint for baseline inference...")
-        model = build_satellite_model(num_classes=len(EUROSAT_CLASSES), pretrained=True)
-        torch.save({"state_dict": model.state_dict(), "val_acc": 0.8500}, checkpoint_path)
-        print(f"Baseline model saved to: {checkpoint_path}\n")
+        logger.error(f"EuroSAT training failed: {exc}")
+        print(f"\nERROR: EuroSAT dataset download or training failed: {exc}")
+
+        # Guard: do NOT save ImageNet-only weights as a trained checkpoint
+        if checkpoint_path.exists():
+            print(f"Existing valid checkpoint preserved at: {checkpoint_path}")
+        else:
+            print("No valid checkpoint exists. A checkpoint must be trained before inference.")
+
+        print("Aborting. Re-run after fixing the issue (network, disk space, etc.).")
+        return 1
 
     return 0
 

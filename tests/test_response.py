@@ -7,11 +7,15 @@ and decision-support advisory flags.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
 from src.response.fire_station_locator import FireStationLocator, haversine_km
-from src.response.alert_engine import OperationalAlertEngine
+from src.response.alert_engine import AlertEngine
+
+STATIONS_FILE = Path(__file__).resolve().parent.parent / "data" / "processed" / "fire_stations.csv"
 
 def test_haversine_known_distance():
     # Delhi (28.6139, 77.2090) to Mumbai (19.0760, 72.8777) ~ 1148 km
@@ -19,12 +23,33 @@ def test_haversine_known_distance():
     assert abs(dist - 1148.0) < 30.0
 
 def test_find_nearest_station():
+    if not STATIONS_FILE.exists():
+        pytest.skip("fire_stations.csv missing; run scripts/fetch_fire_stations.py first")
     locator = FireStationLocator()
-    # Coordinates near Delhi
-    res = locator.find_nearest_station(28.60, 77.20)
+    # Near Connaught Place, New Delhi — real OSM stations exist within 15 km
+    res = locator.find_nearest_station(28.6315, 77.2167)
     assert res["station_available"] is True
-    assert "Delhi" in res["station_name"]
     assert res["distance_km"] < 15.0
+    assert len(res["station_name"]) > 0
+    assert "No fire station" not in res["station_name"]
+
+
+def test_no_station_within_radius_reported_honestly():
+    """A valid location far from any real fire station must report unavailable,
+    never fabricate a station or distance."""
+    locator = FireStationLocator(search_radius_km=50.0)
+    res = locator.find_nearest_station(10.0, 60.0)  # open Arabian Sea
+    assert res["station_available"] is False
+    assert "No fire station within" in res["station_name"]
+    assert res["distance_km"] == float("inf")
+
+
+def test_missing_station_dataset_reported_honestly():
+    """When the real fire-station dataset is absent, lookup must say so plainly."""
+    locator = FireStationLocator(stations_path=Path("data/processed/does_not_exist.csv"))
+    res = locator.find_nearest_station(28.6315, 77.2167)
+    assert res["station_available"] is False
+    assert "unavailable" in res["station_name"].lower()
 
 def test_invalid_coordinates_handled_safely():
     locator = FireStationLocator()
@@ -33,7 +58,7 @@ def test_invalid_coordinates_handled_safely():
     assert res["station_name"] == "Invalid Coordinates"
 
 def test_high_risk_low_false_alarm_triggers_high_priority_alert():
-    engine = OperationalAlertEngine()
+    engine = AlertEngine()
     df = pd.DataFrame([{
         "cluster_id": 1,
         "latitude": 28.61,
@@ -50,7 +75,7 @@ def test_high_risk_low_false_alarm_triggers_high_priority_alert():
     assert bool(res.iloc[0]["is_decision_support_only"]) is True
 
 def test_high_risk_high_false_alarm_triggers_review_priority():
-    engine = OperationalAlertEngine()
+    engine = AlertEngine()
     df = pd.DataFrame([{
         "cluster_id": 2,
         "latitude": 28.61,
@@ -65,7 +90,7 @@ def test_high_risk_high_false_alarm_triggers_review_priority():
     assert res.iloc[0]["alert_priority"] == "REVIEW / VERIFICATION"
 
 def test_low_risk_triggers_no_alert():
-    engine = OperationalAlertEngine()
+    engine = AlertEngine()
     df = pd.DataFrame([{
         "cluster_id": 3,
         "latitude": 28.61,

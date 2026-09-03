@@ -10,7 +10,7 @@ Outputs operational recommendations strictly for advisory review. Does NOT execu
 
 from __future__ import annotations
 
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, Optional
 import pandas as pd
 
 from src.response.fire_station_locator import FireStationLocator
@@ -18,7 +18,7 @@ from src.logging_setup import get_logger
 
 logger = get_logger("response.alert_engine")
 
-class OperationalAlertEngine:
+class AlertEngine:
     def __init__(self, locator: Optional[FireStationLocator] = None):
         self.locator = locator or FireStationLocator()
 
@@ -38,6 +38,7 @@ class OperationalAlertEngine:
         actions = []
         st_names = []
         st_dists = []
+        st_avail = []
         rationales = []
 
         for _, row in df_out.iterrows():
@@ -48,23 +49,45 @@ class OperationalAlertEngine:
             fa_indicator = str(row.get("false_alarm_indicator", "MEDIUM")).upper()
             classification = str(row.get("classification_label", "Unknown")).strip()
 
-            # Find nearest fire station
+            # Find nearest REAL fire station
             st_info = self.locator.find_nearest_station(lat, lon)
             st_name = st_info["station_name"]
             st_dist = st_info["distance_km"]
+            st_available = bool(st_info.get("station_available", False))
+
+            if st_available:
+                station_ref = f"{st_name} ({st_dist:.1f} km away)"
+                station_note = ""
+            else:
+                # Honest representation: never name a station that does not exist.
+                station_ref = st_name
+                station_note = (
+                    "; no verified fire station identified within the search radius "
+                    "-- nearest district fire service should be contacted"
+                )
 
             # Alert Rules Logic
             if risk_level == "HIGH" and fa_indicator == "LOW":
                 prio = "HIGH PRIORITY ALERT"
-                act = f"Dispatch priority ground verification unit from {st_name} ({st_dist:.1f} km away)."
-                rat = f"High Risk Index ({row.get('risk_score', 80)}) combined with high evidence reliability (Low False-Alarm Concern)."
+                act = (
+                    f"Dispatch priority ground verification unit from the nearest operational "
+                    f"fire service." + (f" Closest verified fire station: {station_ref}." if st_available
+                                        else station_note)
+                )
+                rat = (
+                    f"High Risk Index ({row.get('risk_score', 80)}) combined with high evidence "
+                    f"reliability (Low False-Alarm Concern)."
+                )
             elif risk_level == "HIGH" and fa_indicator == "HIGH":
                 prio = "REVIEW / VERIFICATION"
                 act = "Perform remote verification before ground deployment."
                 rat = "High statistical abnormality but weak supporting evidence (High False-Alarm Concern)."
             elif risk_level == "HIGH" or risk_level == "MEDIUM":
                 prio = "MONITOR / REVIEW"
-                act = f"Monitor thermal activity for escalation. Closest station: {st_name} ({st_dist:.1f} km)."
+                act = (
+                    "Monitor thermal activity for escalation."
+                    + (f" Closest verified fire station: {station_ref}." if st_available else station_note)
+                )
                 rat = f"Moderate thermal risk context ({classification}). Operational review recommended."
             else:
                 prio = "NO ALERT"
@@ -75,12 +98,14 @@ class OperationalAlertEngine:
             actions.append(act)
             st_names.append(st_name)
             st_dists.append(st_dist)
+            st_avail.append(st_available)
             rationales.append(rat)
 
         df_out["alert_priority"] = priorities
         df_out["recommended_action"] = actions
         df_out["nearest_station_name"] = st_names
         df_out["station_distance_km"] = st_dists
+        df_out["station_available"] = st_avail
         df_out["alert_rationale"] = rationales
         df_out["is_decision_support_only"] = True
 
