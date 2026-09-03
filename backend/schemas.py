@@ -29,6 +29,7 @@ class EventSummary(BaseModel):
     active_days: Optional[int] = None
 
 
+
 class PaginatedEventsResponse(BaseModel):
     total: int
     page: int
@@ -101,6 +102,7 @@ class MovementVector(BaseModel):
     direction_confidence: str = "INSUFFICIENT"
     direction_confidence_score: int = 0
     direction_available: bool = False
+
 
 
 class ClassificationDetail(BaseModel):

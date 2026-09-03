@@ -30,6 +30,7 @@ planetary-computer>=1.0.0  # URL signing for Planetary Computer data access
 pystac-client>=0.8.0       # STAC catalog search
 rasterio>=1.4.0            # GeoTIFF/JP2 reading for Sentinel-2 bands
 
+
 # --- Innovation Modules (Cloud-Aware Detection, Explainability, Uncertainty) ---
 # Optional: Uncomment if using advanced features
 # shap>=0.42.0          # SHAP explanations for model interpretability

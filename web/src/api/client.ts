@@ -345,6 +345,7 @@ export function findClusterSummary(clusterId: number): ClusterSummary | undefine
   if (USE_MOCK) {
     return MOCK_CLUSTERS.find((c) => c.cluster_id === clusterId);
   }
+  // For real API mode, we fetch clusters on demand
   return undefined;
 }
 

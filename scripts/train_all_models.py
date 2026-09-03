@@ -288,6 +288,7 @@ def train_satellite_cnn(epochs: int = 5, batch_size: int = 32):
         return False
 
 
+
 def train_anomaly_detector():
     """Train Anomaly Detector on synthetic FIRMS data."""
     print("\n" + "="*60)
