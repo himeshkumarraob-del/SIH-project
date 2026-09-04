@@ -1,6 +1,12 @@
-/**
- * API client — connects to the FastAPI backend at localhost:8000.
- * The Vite dev server proxies /api → localhost:8000.
+﻿/**
+ * API client â€” connects to the FastAPI backend.
+ *
+ * Resolution order:
+ *   1. VITE_API_BASE_URL (production env var, full URL incl. /api/v1) â€” for
+ *      a frontend and backend hosted on separate origins.
+ *   2. Same-origin /api/v1 â€” in dev the Vite server proxies /api â†’
+ *      localhost:8000; on Vercel the vercel.json rewrite proxies /api to the
+ *      backend (VERCEL_API_BASE_URL).
  */
 
 import type {
@@ -15,6 +21,9 @@ import type {
   RiskDetailData,
   ResponseDetailData,
   ThermalAlert,
+  EmergencyResponseSearchResult,
+  PrototypeNotificationResult,
+  PrototypeNotificationHistoryEntry,
 } from '../types';
 
 // Set to true to use mock data for offline development
@@ -30,7 +39,9 @@ import { MOCK_CLASSIFICATIONS } from '../data/classifications';
 // Backend API helpers
 // ---------------------------------------------------------------------------
 
-const API_BASE = '/api/v1';
+// Absolute base override (https://host/api/v1). Empty in dev/preview builds so
+// calls stay same-origin and the platform proxy handles /api.
+const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? '/api/v1').replace(/\/$/, '');
 
 async function apiGet<T>(path: string, params?: Record<string, string>): Promise<T> {
   const url = new URL(`${API_BASE}${path}`, window.location.origin);
@@ -54,7 +65,18 @@ async function apiPost<T>(path: string, body?: any): Promise<T> {
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) {
-    throw new Error(`API error ${res.status}: ${res.statusText}`);
+    // Surface the backend's safe detail (e.g. masked Twilio error code/message)
+    // instead of only the generic HTTP status text.
+    let detail = res.statusText;
+    try {
+      const data = await res.json();
+      if (data && typeof data.detail === 'string' && data.detail) {
+        detail = data.detail;
+      }
+    } catch {
+      // Non-JSON error body: fall back to the status text.
+    }
+    throw new Error(`API error ${res.status}: ${detail}`);
   }
   return res.json();
 }
@@ -143,7 +165,16 @@ export async function fetchEvents(filters: FilterState): Promise<ThermalEvent[]>
   }
 }
 
-export async function fetchClusters(filters: FilterState): Promise<ClusterSummary[]> {
+export interface FetchClustersOptions {
+  /**
+   * When true, API failures reject instead of resolving to []. Used by pages
+   * that need a visible error + retry state (Events Queue). All existing
+   * callers keep the lenient default (resolve [] on error).
+   */
+  throwOnError?: boolean;
+}
+
+export async function fetchClusters(filters: FilterState, opts?: FetchClustersOptions): Promise<ClusterSummary[]> {
   if (USE_MOCK) {
     return applyFilters(MOCK_CLUSTERS, filters, {
       riskLevel: 'risk_level',
@@ -204,6 +235,9 @@ export async function fetchClusters(filters: FilterState): Promise<ClusterSummar
       risk_explanation: c.risk_explanation ?? '',
     }));
   } catch (err) {
+    if (opts?.throwOnError) {
+      throw err instanceof Error ? err : new Error('Failed to fetch clusters');
+    }
     console.error('Failed to fetch clusters:', err);
     return [];
   }
@@ -453,3 +487,21 @@ export function findClassification(clusterId: number): ClassificationData | unde
   }
   return undefined;
 }
+
+export async function fetchEmergencyResponseStations(clusterId: number): Promise<EmergencyResponseSearchResult> {
+  return apiGet<EmergencyResponseSearchResult>(`/emergency-response/${clusterId}/stations`);
+}
+
+export async function postPrototypeNotification(clusterId: number, stationId?: string): Promise<PrototypeNotificationResult> {
+  return apiPost<PrototypeNotificationResult>(`/emergency-response/${clusterId}/prototype-notification`, {
+    confirmed: true,
+    station_id: stationId,
+  });
+}
+
+export async function fetchPrototypeNotificationHistory(clusterId?: number): Promise<PrototypeNotificationHistoryEntry[]> {
+  const query: Record<string, string> = {};
+  if (clusterId !== undefined) query.cluster_id = String(clusterId);
+  return apiGet<PrototypeNotificationHistoryEntry[]>('/emergency-response/notifications-history', query);
+}
+

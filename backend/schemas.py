@@ -1,4 +1,4 @@
-"""
+﻿"""
 Pydantic Schemas for FastAPI REST API endpoints.
 
 These schemas define the response shapes that the React frontend expects.
@@ -196,3 +196,74 @@ class AlertHistoryEntry(BaseModel):
     status: str = ""
     timestamp: str = ""
     reason: str = ""
+
+
+class FireStationCandidate(BaseModel):
+    station_id: str
+    station_name: str
+    station_latitude: float
+    station_longitude: float
+    distance_km: float
+    contact_phone: Optional[str] = None
+    verified_source: str = "OSM fire_stations.csv"
+
+
+class EmergencyEventContext(BaseModel):
+    cluster_id: int
+    alert_id: str
+    severity: str
+    risk_score: float
+    risk_level: str
+    classification_label: str
+    evidence_confidence: str
+    false_alarm_indicator: str
+    detection_reliability: str
+    observation_count: int
+    active_days: int
+    persistence_category: str
+    latitude: float
+    longitude: float
+    suppressed: bool = False
+
+
+class EmergencyResponseSearchResult(BaseModel):
+    cluster_id: int
+    search_radius_km: float
+    event: EmergencyEventContext
+    stations: List[FireStationCandidate]
+    nearest_station: Optional[FireStationCandidate] = None
+    station_available: bool = False
+    status_message: str
+    notification_eligible: bool = False
+    eligibility_reason: str
+    is_decision_support_only: bool = True
+
+
+class PrototypeNotificationRequest(BaseModel):
+    confirmed: bool = False
+    station_id: Optional[str] = None
+
+
+class PrototypeNotificationResult(BaseModel):
+    cluster_id: int
+    alert_id: str
+    send_status: str
+    recipient_masked: str
+    selected_station: FireStationCandidate
+    provider_message_id: Optional[str] = None
+    is_decision_support_only: bool = True
+    detail: str
+
+
+class PrototypeNotificationHistoryEntry(BaseModel):
+    alert_id: str
+    cluster_id: int
+    timestamp: str
+    recipient_masked: str = ""
+    severity: str = ""
+    selected_station: str = ""
+    distance_km: Optional[float] = None
+    send_status: str = ""
+    provider_message_id: str = ""
+    failure_reason: str = ""
+    failure_reason: str = ""

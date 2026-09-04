@@ -226,7 +226,7 @@ export default function SystemPage() {
             <div key={pipe.name} className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-lg border border-slate-100 dark:border-slate-800 space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-navy-900 dark:text-slate-100">{pipe.name}</span>
-                <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-950/80 dark:text-green-300">
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-950/80 dark:text-green-300">
                   {pipe.status}
                 </span>
               </div>

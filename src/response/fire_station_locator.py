@@ -1,4 +1,4 @@
-"""
+﻿"""
 Fire Station Proximity Locator Module.
 
 Locates the nearest REAL fire station (OpenStreetMap amenity=fire_station,
@@ -65,7 +65,7 @@ class FireStationLocator:
         try:
             df = pd.read_csv(path)
             if {"latitude", "longitude"}.issubset(df.columns):
-                cls._stations_cache = df[["name", "latitude", "longitude"]].dropna(subset=["latitude", "longitude"])
+                cls._stations_cache = df.dropna(subset=["latitude", "longitude"]).copy()
                 logger.info(f"Loaded {len(cls._stations_cache)} real fire stations from {path}")
             else:
                 logger.warning(f"Fire-station dataset at {path} is missing lat/lon columns.")
@@ -77,12 +77,54 @@ class FireStationLocator:
         self._load_stations(self.stations_path)
         return self._stations_cache if self._stations_cache is not None else pd.DataFrame()
 
+    def find_nearby_stations(self, lat: float, lon: float, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+        """Return real fire stations within the configured radius, sorted by distance."""
+        if pd.isna(lat) or pd.isna(lon) or lat < -90 or lat > 90 or lon < -180 or lon > 180:
+            return []
+
+        stations = self._stations()
+        if stations.empty:
+            return []
+
+        nearby: List[Dict[str, Any]] = []
+        phone_cols = [c for c in stations.columns if c.lower() in {"phone", "contact", "contact_phone", "mobile", "telephone"}]
+        for _, s in stations.iterrows():
+            st_lat = float(s["latitude"])
+            st_lon = float(s["longitude"])
+            dist = haversine_km(lat, lon, st_lat, st_lon)
+            if dist > self.search_radius_km:
+                continue
+
+            phone = None
+            for col in phone_cols:
+                val = s.get(col)
+                if val is not None and not pd.isna(val) and str(val).strip():
+                    phone = str(val).strip()
+                    break
+
+            osm_type = str(s.get("osm_type", "")).strip()
+            osm_id = str(s.get("osm_id", "")).strip()
+            station_id = f"{osm_type}:{osm_id}" if osm_type and osm_id else str(s.name)
+            nearby.append({
+                "station_id": station_id,
+                "station_name": str(s.get("name", "Fire station")).strip() or "Fire station",
+                "station_latitude": round(st_lat, 5),
+                "station_longitude": round(st_lon, 5),
+                "distance_km": round(dist, 2),
+                "contact_phone": phone,
+                "verified_source": "OSM fire_stations.csv",
+            })
+
+        nearby.sort(key=lambda item: item["distance_km"])
+        if limit is not None:
+            nearby = nearby[:limit]
+        return nearby
     def find_nearest_station(self, lat: float, lon: float) -> Dict[str, Any]:
         """
         Find the nearest REAL fire station to given coordinates within the search radius.
 
         Returns dictionary with station_name, station_latitude, station_longitude,
-        distance_km, station_available. Never fabricates a station — a missing
+        distance_km, station_available. Never fabricates a station â€” a missing
         dataset or an empty search radius is reported honestly.
         """
         if pd.isna(lat) or pd.isna(lon) or lat < -90 or lat > 90 or lon < -180 or lon > 180:
@@ -133,3 +175,4 @@ class FireStationLocator:
             "distance_km": float("inf"),
             "station_available": False
         }
+

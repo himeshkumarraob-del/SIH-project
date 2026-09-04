@@ -1,4 +1,4 @@
-"""
+﻿"""
 FastAPI REST API Service for SIH Thermal Intelligence Engine.
 
 Serves real processed datasets from the pipeline output CSVs.
@@ -12,10 +12,12 @@ Usage:
 from __future__ import annotations
 
 import math
+import os
 from typing import Dict, Any, List, Optional
 from pathlib import Path
+from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 
@@ -30,6 +32,10 @@ from backend.schemas import (
     RiskDetail,
     ThermalAlert,
     AlertTransitionResult,
+    EmergencyResponseSearchResult,
+    PrototypeNotificationRequest,
+    PrototypeNotificationResult,
+    PrototypeNotificationHistoryEntry,
 )
 from src.config import get_config
 from src.logging_setup import get_logger
@@ -38,27 +44,9 @@ from src.models.alert_engine import (
     ThermalAlertStore,
     build_intelligence_frame,
 )
+from src.response.emergency_response_agent import EmergencyResponseAgent
 
 logger = get_logger("backend.main")
-
-app = FastAPI(
-    title="SIH Thermal Intelligence Engine REST API",
-    description=(
-        "Production REST API exposing NASA FIRMS, AI anomaly, false alarm, "
-        "risk index, thermal movement, classification, satellite context, "
-        "and alert datasets for the Thermal Intelligence Dashboard."
-    ),
-    version="2.0.0",
-)
-
-# CORS — allow all origins for development
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # ---------------------------------------------------------------------------
 # In-memory cached master dataframe
@@ -97,6 +85,36 @@ def _get_alert_store() -> ThermalAlertStore:
     return _ALERT_STORE
 
 
+
+
+def _cluster_record(cluster_id: int) -> Dict[str, Any]:
+    df = load_master_dataframe()
+    match = df[df["cluster_id"].astype(int) == int(cluster_id)] if not df.empty and "cluster_id" in df.columns else pd.DataFrame()
+    if match.empty:
+        raise HTTPException(status_code=404, detail=f"Cluster ID {cluster_id} not found.")
+    record = match.iloc[0].to_dict()
+    out: Dict[str, Any] = {}
+    for key, val in record.items():
+        if val is None or (isinstance(val, float) and (math.isnan(val) or math.isinf(val))):
+            out[key] = None
+        else:
+            out[key] = val
+    return out
+
+
+def _alert_for_cluster(cluster_id: int) -> Optional[Dict[str, Any]]:
+    store = _get_alert_store()
+    records = store.list_alerts(cluster_id=cluster_id)
+    return records[0] if records else None
+
+
+def _emergency_response_agent() -> EmergencyResponseAgent:
+    """Build the Emergency Response agent, honoring an optional history-path
+    override (used by tests; production defaults to data/processed)."""
+    history_path = os.environ.get("EMERGENCY_RESPONSE_HISTORY_PATH", "").strip()
+    if history_path:
+        return EmergencyResponseAgent(history_path=Path(history_path))
+    return EmergencyResponseAgent()
 def _load_csv(path: Path) -> Optional[pd.DataFrame]:
     """Load a CSV if it exists, otherwise return None."""
     if path.exists():
@@ -105,6 +123,15 @@ def _load_csv(path: Path) -> Optional[pd.DataFrame]:
         except Exception as exc:
             logger.warning(f"Failed to load {path}: {exc}")
     return None
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    """Application lifecycle: preload the processed thermal dataset."""
+    df = load_master_dataframe()
+    if df.empty:
+        logger.error("API started with NO processed data loaded. Mount data/processed or run the pipeline; /api/v1/health will report 503.")
+    yield
 
 
 def load_master_dataframe() -> pd.DataFrame:
@@ -196,18 +223,60 @@ def load_master_dataframe() -> pd.DataFrame:
     logger.info(f"Loaded master API dataset with {len(df)} cluster records.")
     return _MASTER_DF
 
+app = FastAPI(
+    title="SIH Thermal Intelligence Engine REST API",
+    description=(
+        "Production REST API exposing NASA FIRMS, AI anomaly, false alarm, "
+        "risk index, thermal movement, classification, satellite context, "
+        "and alert datasets for the Thermal Intelligence Dashboard."
+    ),
+    version="2.0.0",
+    lifespan=lifespan,
+)
 
-@app.on_event("startup")
-def startup_event():
-    load_master_dataframe()
-
+# CORS â€” origins come from the CORS_ORIGINS env var (comma-separated).
+# The browser app talks to the API same-origin via a reverse proxy, so CORS
+# is only needed for cross-origin setups. allow_credentials is enabled only
+# when explicit origins are configured (wildcard + credentials is rejected by
+# browsers and must never be combined).
+_default_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+_cors_origins_env = os.environ.get("CORS_ORIGINS", "").strip()
+_cors_origins = (
+    [o.strip() for o in _cors_origins_env.split(",") if o.strip()]
+    if _cors_origins_env
+    else _default_origins
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_cors_origins,
+    allow_credentials=bool(_cors_origins_env),
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/api/v1/health")
 def health_check():
+    """Liveness/readiness probe.
+
+    Returns 200 only when the master dataset is actually loaded and serving.
+    Returns 503 (unavailable) when the API booted without processed data so
+    orchestrators/load balancers never mark an empty backend as ready.
+    """
     df = load_master_dataframe()
+    total = len(df)
+    if total == 0:
+        raise HTTPException(
+            status_code=503,
+            detail="No processed thermal dataset loaded. Run the data pipeline or mount data/processed before starting the API.",
+        )
     return {
         "status": "healthy",
-        "total_records_loaded": len(df),
+        "total_records_loaded": total,
         "api_version": "2.0.0",
     }
 
@@ -705,3 +774,61 @@ def get_alert_history(alert_id: Optional[str] = None, cluster_id: Optional[int] 
                 clean[k] = v
         out.append(clean)
     return out
+
+
+# ============================================================================
+# Emergency Response Agent API (prototype decision-support notification)
+# ============================================================================
+
+
+@app.get("/api/v1/emergency-response/{cluster_id}/stations", response_model=EmergencyResponseSearchResult)
+def get_emergency_response_stations(cluster_id: int):
+    """Search real verified fire stations near a thermal cluster.
+
+    Uses the existing processed event coordinates and real OSM fire-station
+    cache. It never fabricates stations or contact details.
+    """
+    event = _cluster_record(cluster_id)
+    alert = _alert_for_cluster(cluster_id)
+    try:
+        return _emergency_response_agent().search(event, alert)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+
+
+@app.post("/api/v1/emergency-response/{cluster_id}/prototype-notification", response_model=PrototypeNotificationResult)
+def send_emergency_response_notification(cluster_id: int, payload: PrototypeNotificationRequest = Body(default_factory=PrototypeNotificationRequest)):
+    """Send an operator-confirmed prototype SMS notification.
+
+    ThermalWatch does not declare a real emergency or dispatch public services.
+    Eligibility and SMS configuration are enforced only on the backend.
+    """
+    event = _cluster_record(cluster_id)
+    alert = _alert_for_cluster(cluster_id)
+    agent = _emergency_response_agent()
+    try:
+        return agent.send_notification(event, alert, station_id=payload.station_id, confirmed=payload.confirmed)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc))
+    except RuntimeError as exc:
+        msg = str(exc)
+        if "PROTOTYPE_SMS_TO" in msg:
+            raise HTTPException(status_code=503, detail="Missing prototype recipient configuration.")
+        if "Missing SMS credentials" in msg:
+            raise HTTPException(status_code=503, detail="Missing SMS provider credentials.")
+        if "Invalid SMS provider configuration" in msg:
+            raise HTTPException(status_code=503, detail=msg)
+        # Provider failures keep the sanitized, masked Twilio code/message so
+        # operators see the exact safe rejection (e.g. 572006) instead of a
+        # generic gateway error.
+        raise HTTPException(status_code=502, detail=msg or "SMS provider failure.")
+
+
+@app.get("/api/v1/emergency-response/notifications-history", response_model=List[PrototypeNotificationHistoryEntry])
+def get_prototype_notification_history(cluster_id: Optional[int] = None):
+    """Return masked prototype notification attempts; provider secrets are never returned."""
+    return _emergency_response_agent().history(cluster_id=cluster_id)
+
+

@@ -30,6 +30,10 @@ export default {
           'low-bg': '#f0fdf4',
         },
       },
+      boxShadow: {
+        '2xs': '0 0 0 1px rgba(15, 23, 42, 0.03), 0 1px 2px rgba(15, 23, 42, 0.04)',
+        xs: '0 1px 2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.04)',
+      },
     },
   },
   plugins: [],

@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import RiskGauge from './RiskGauge';
+import EmergencyResponseModal from './EmergencyResponseModal';
 import {
   fetchClusterDetail,
   fetchClassificationDetail,
@@ -31,6 +32,13 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copiedCoord, setCopiedCoord] = useState(false);
+  const [emergencyOpen, setEmergencyOpen] = useState(false);
+  // Desktop dossier renders in-flow at the bottom of scrollable catalog pages
+  // (Events Queue, Overview, Alerts). When a row is selected there the panel
+  // can mount below the fold, so gently reveal it. On the Map page it is a
+  // permanent side panel (always visible â†’ no-op) and on mobile it is a fixed
+  // overlay sheet, so this only affects scrollable in-flow layouts.
+  const panelRef = useRef<HTMLElement | null>(null);
 
   const clusterId = event?.cluster_id ?? null;
 
@@ -77,6 +85,21 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
     };
   }, [clusterId]);
 
+  // Desktop dossier renders in-flow at the bottom of scrollable catalog pages
+  // (Events Queue, Overview, Alerts). When a row is selected there the panel
+  // can mount below the fold, so gently reveal it with a minimal scroll. On
+  // the Map page it is a permanent side panel (always visible â†’ no-op) and on
+  // mobile it is a fixed overlay sheet (aside is display:none â†’ no-op).
+  useEffect(() => {
+    if (!event) return;
+    const el = panelRef.current;
+    if (!el || el.offsetParent === null) return;
+    const id = requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [event]);
+
   if (!event) {
     return (
       <aside className="hidden lg:flex w-80 lg:w-96 flex-shrink-0 bg-slate-50/90 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 overflow-y-auto items-center justify-center p-6 transition-colors duration-200">
@@ -114,6 +137,51 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
     setTimeout(() => setCopiedCoord(false), 2000);
   };
 
+  // Always-visible header tones so the operator can scan risk at a glance.
+  const riskTone =
+    riskLevel === 'HIGH'
+      ? 'text-red-600 dark:text-red-400'
+      : riskLevel === 'MEDIUM'
+      ? 'text-amber-600 dark:text-amber-400'
+      : 'text-emerald-600 dark:text-emerald-400';
+  const abnormalTone =
+    abnormality === 'HIGH'
+      ? 'text-red-600 dark:text-red-400'
+      : abnormality === 'ELEVATED'
+      ? 'text-orange-600 dark:text-orange-400'
+      : 'text-emerald-600 dark:text-emerald-400';
+  const reliabilityTone =
+    detail?.detection_reliability === 'HIGH'
+      ? 'text-emerald-600 dark:text-emerald-400'
+      : detail?.detection_reliability === 'LOW'
+      ? 'text-red-600 dark:text-red-400'
+      : 'text-amber-600 dark:text-amber-400';
+  const hasScoreData = risk !== null || detail !== null;
+  const frpValue = detail?.max_frp ?? event.frp;
+  const canOpenEmergencyResponse = riskLevel === 'HIGH' || response?.alert_priority.includes('HIGH') || response?.alert_priority.includes('CRITICAL');
+
+  // Why-flagged evidence: risk factors (engine) + contributing indicators (AI
+  // explanation), de-duplicated while preserving source ordering/casing.
+  const riskFactorList =
+    risk?.risk_factors && risk.risk_factors !== 'Standard thermal baseline'
+      ? risk.risk_factors.split(';').map((s) => s.trim()).filter(Boolean)
+      : [];
+  const contributingList = event.contributing_factors
+    ? event.contributing_factors.split(';').map((s) => s.trim()).filter(Boolean)
+    : [];
+  const drivingFactors = Array.from(
+    new Map([...riskFactorList, ...contributingList].map((s) => [s.toLowerCase(), s])).values(),
+  );
+
+  const headerStat = (label: string, value: string, tone: string) => (
+    <div className="min-w-0 rounded-md bg-slate-50 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/60 px-1.5 py-1 text-center">
+      <div className="text-[8px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.12em]">
+        {label}
+      </div>
+      <div className={`text-[11px] font-extrabold font-mono truncate ${tone}`}>{value}</div>
+    </div>
+  );
+
   const panelContent = (
     <div className="flex flex-col h-full overflow-hidden select-none">
       {/* Top Dossier Header */}
@@ -150,7 +218,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <span>{coordText}</span>
-            <span className="text-[10px] text-slate-400 dark:text-slate-500 ml-0.5">{copiedCoord ? '✓ Copied' : '⧉'}</span>
+            <span className="text-[10px] text-slate-400 dark:text-slate-500 ml-0.5">{copiedCoord ? 'âœ“ Copied' : 'â§‰'}</span>
           </button>
 
           {detail && (
@@ -159,6 +227,14 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
             </span>
           )}
         </div>
+
+        {/* At-a-glance stat strip (sticky with header while dossier scrolls) */}
+        <div className="mt-2.5 grid grid-cols-4 gap-1.5">
+          {headerStat('Risk', hasScoreData ? Math.round(riskScore).toString() : 'â€”', riskTone)}
+          {headerStat('Anomaly', abnormality, abnormalTone)}
+          {headerStat('Signal', detail?.detection_reliability || 'â€”', detail ? reliabilityTone : 'text-slate-400 dark:text-slate-500')}
+          {headerStat('Peak FRP', frpValue && frpValue > 0 ? `${frpValue.toFixed(1)} MW` : 'â€”', 'text-slate-700 dark:text-slate-200')}
+        </div>
       </div>
 
       {/* Scrollable Dossier Content */}
@@ -166,7 +242,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
         {loading && (
           <div className="py-12 text-center">
             <div className="w-8 h-8 border-2 border-navy-800 dark:border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">Synthesizing Cluster Intelligence…</p>
+            <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">Synthesizing Cluster Intelligenceâ€¦</p>
             <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">Querying sensor radiometry & models</p>
           </div>
         )}
@@ -194,7 +270,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                     Risk & AI Assessment
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P1 · PRIMARY</span>
+                <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P1 Â· PRIMARY</span>
               </div>
 
               <div className="p-3.5 space-y-3.5">
@@ -258,7 +334,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                       <span className="font-medium">Persistence Footprint</span>
                     </div>
                     <span className="font-semibold text-slate-800 dark:text-slate-200 capitalize">
-                      {detail.persistence_category?.replace(/_/g, ' ') || '—'}
+                      {detail.persistence_category?.replace(/_/g, ' ') || 'â€”'}
                     </span>
                   </div>
                 )}
@@ -272,25 +348,6 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                   </div>
                 )}
 
-                {/* Risk Factors Badges */}
-                {risk?.risk_factors && risk.risk_factors !== 'Standard thermal baseline' && (
-                  <div className="space-y-1.5 pt-0.5">
-                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
-                      Active Risk Factors
-                    </span>
-                    <div className="flex flex-wrap gap-1">
-                      {risk.risk_factors.split('; ').map((f, i) => (
-                        <span
-                          key={i}
-                          className="inline-flex items-center gap-1 px-2 py-0.5 bg-red-50/80 dark:bg-red-950/60 border border-red-200/70 dark:border-red-900/70 text-red-800 dark:text-red-300 rounded-md text-[10px] font-medium"
-                        >
-                          <span className="w-1 h-1 rounded-full bg-red-500" />
-                          {f}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -305,12 +362,12 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                     Source Classification
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P2 · TAXONOMY</span>
+                <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P2 Â· TAXONOMY</span>
               </div>
 
               <div className="p-3.5 space-y-3">
                 {/* Classification Hero Badge */}
-                <div className="bg-gradient-to-br from-slate-50 to-slate-100/80 dark:from-slate-900 dark:to-slate-850 border border-slate-200 dark:border-slate-700 rounded-xl p-3">
+                <div className="bg-gradient-to-br from-slate-50 to-slate-100/80 dark:from-slate-900 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-3">
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div className="flex items-center gap-2">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
@@ -381,7 +438,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                           const clean = line.substring(2);
                           return (
                             <div key={i} className="flex items-start gap-1.5 text-[11px] text-slate-700 dark:text-slate-300 leading-tight">
-                              <span className="text-navy-600 dark:text-blue-400 font-bold flex-shrink-0 mt-0.5">›</span>
+                              <span className="text-navy-600 dark:text-blue-400 font-bold flex-shrink-0 mt-0.5">â€º</span>
                               <span>{clean}</span>
                             </div>
                           );
@@ -420,7 +477,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                         <span className="text-xs font-mono font-bold text-blue-900 dark:text-blue-300">
                           {classification.osm_distance_km != null && isFinite(classification.osm_distance_km)
                             ? `${classification.osm_distance_km.toFixed(2)} km`
-                            : '—'}
+                            : 'â€”'}
                         </span>
                       </div>
                     </div>
@@ -445,34 +502,62 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                     Why Flagged
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P3 · ANOMALY</span>
+                <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P3 Â· ANOMALY</span>
               </div>
 
-              <div className="p-3.5 space-y-2.5">
-                {/* Anomaly Characterization / Flag Banner */}
-                {(event.anomaly_characterization || detail?.anomaly_characterization) && (
-                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-900 text-amber-900 dark:text-amber-300 text-[11px] font-semibold">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                    <span>{event.anomaly_characterization || detail?.anomaly_characterization}</span>
+              <div className="p-3.5 space-y-3">
+                {/* Flag Reason Banner */}
+                <div className="rounded-lg border border-amber-200/80 dark:border-amber-900/60 bg-gradient-to-br from-amber-50 to-orange-50/60 dark:from-amber-950/30 dark:to-slate-900/40 px-3 py-2.5 flex items-start gap-2.5">
+                    <div className="w-7 h-7 rounded-md bg-amber-100 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm15-8h.01M9 9h.01" />
+                      </svg>
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[9px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-[0.16em] block">
+                        Flag Reason
+                      </span>
+                      <span className="text-xs font-bold text-amber-950 dark:text-amber-200 capitalize leading-snug block">
+                        {event.anomaly_characterization || detail?.anomaly_characterization || 'AI anomaly outside thermal baseline'}
+                      </span>
+                    </div>
                   </div>
-                )}
 
                 {/* Primary AI Explanation */}
-                <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700/80 rounded-lg p-3">
-                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+                <div className="rounded-lg border border-slate-200/80 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-900/60 p-3 space-y-1.5">
+                  <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-[0.16em]">
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    Model Explanation
+                  </span>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
                     {event.explanation || detail?.explanation || 'No anomaly explanation recorded for this cluster.'}
                   </p>
                 </div>
 
-                {/* Contributing Factors (if present in event) */}
-                {event.contributing_factors && (
-                  <div className="space-y-1 pt-1">
-                    <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block">
-                      Contributing Indicators
-                    </span>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/60 p-2 rounded border border-slate-100 dark:border-slate-700">
-                      {event.contributing_factors}
-                    </p>
+                {/* Driving Indicators (risk factors + contributing signals) */}
+                {drivingFactors.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                        Why Flagged Â· Indicators
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 text-[9px] font-extrabold">
+                        {drivingFactors.length}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {drivingFactors.map((f, i) => (
+                        <span
+                          key={i}
+                          className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md border border-amber-200/70 dark:border-amber-900/60 bg-amber-50/70 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 text-[10px] font-medium leading-tight"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
+                          {f}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
@@ -489,7 +574,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                     Thermal Movement & Direction
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P4 · KINEMATICS</span>
+                <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P4 Â· KINEMATICS</span>
               </div>
 
               <div className="p-3.5 space-y-3">
@@ -507,8 +592,8 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                           movement.movement_status === 'STATIONARY' ? 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-900' :
                           'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700'
                         }`}>
-                          {movement.movement_status === 'MOVING' ? '● MOVING CLUSTER' :
-                           movement.movement_status === 'STATIONARY' ? '● STATIONARY' : '● INSUFFICIENT DATA'}
+                          {movement.movement_status === 'MOVING' ? 'â— MOVING CLUSTER' :
+                           movement.movement_status === 'STATIONARY' ? 'â— STATIONARY' : 'â— INSUFFICIENT DATA'}
                         </span>
                         <span className="text-[11px] text-slate-500 dark:text-slate-400 capitalize font-medium">
                           ({movement.movement_pattern?.replace(/_/g, ' ') || 'unknown pattern'})
@@ -549,7 +634,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                               Heading / Bearing
                             </span>
                             <span className="text-sm font-bold text-navy-900 dark:text-slate-100">
-                              {movement.direction ?? '—'}
+                              {movement.direction ?? 'â€”'}
                             </span>
                             <span className="text-xs font-mono text-slate-500 dark:text-slate-400 block">
                               {formatDegrees(movement.movement_bearing_degrees)}
@@ -572,7 +657,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                     ) : movement.movement_pattern === 'erratic' ? (
                       <div className="bg-amber-50/80 dark:bg-amber-950/60 border border-amber-200/80 dark:border-amber-900 rounded-lg p-2.5 text-xs text-amber-900 dark:text-amber-300 leading-relaxed">
                         <span className="font-bold block mb-0.5">Contradictory Directional Vectors</span>
-                        Net displacement exists but day-to-day observations show conflicting bearings — no single defensible propagation direction.
+                        Net displacement exists but day-to-day observations show conflicting bearings â€” no single defensible propagation direction.
                       </div>
                     ) : (
                       <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-700 rounded-lg p-2.5 flex items-center justify-between text-xs">
@@ -603,7 +688,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                     Satellite Context (Sentinel-2)
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P5 · OPTICAL</span>
+                <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P5 Â· OPTICAL</span>
               </div>
 
               <div className="p-3.5 space-y-2.5">
@@ -675,7 +760,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                       Operational Response
                     </h3>
                   </div>
-                  <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P6 · DISPATCH</span>
+                  <span className="text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500">P6 Â· DISPATCH</span>
                 </div>
 
                 <div className="p-3.5 space-y-3">
@@ -698,6 +783,16 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                     </div>
                     <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400">Decision Support</span>
                   </div>
+
+                  {canOpenEmergencyResponse && (
+                    <button
+                      type="button"
+                      onClick={() => setEmergencyOpen(true)}
+                      className="w-full rounded-lg bg-red-600 px-3 py-2 text-xs font-extrabold uppercase tracking-[0.1em] text-white shadow-xs hover:bg-red-500 transition-colors"
+                    >
+                      Emergency Response
+                    </button>
+                  )}
 
                   {/* Nearest Fire Station Card */}
                   {response.nearest_station_name && !response.nearest_station_name.toLowerCase().includes('no fire station') ? (
@@ -722,7 +817,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                           Distance
                         </span>
                         <span className="text-xs font-mono font-bold text-navy-900 dark:text-slate-100">
-                          {response.station_distance_km != null ? `${response.station_distance_km.toFixed(1)} km` : '—'}
+                          {response.station_distance_km != null ? `${response.station_distance_km.toFixed(1)} km` : 'â€”'}
                         </span>
                       </div>
                     </div>
@@ -797,7 +892,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                     <div className="text-sm font-bold font-mono text-navy-900 dark:text-slate-100">
                       {(detail?.max_bright_ti4 ?? event.bright_ti4 ?? 0).toFixed(1)} <span className="text-[10px] font-normal text-slate-500 dark:text-slate-400">K</span>
                     </div>
-                    <span className="text-[9px] text-slate-400 dark:text-slate-500">4µm channel peak</span>
+                    <span className="text-[9px] text-slate-400 dark:text-slate-500">4Âµm channel peak</span>
                   </div>
 
                   {/* BT Contrast */}
@@ -811,7 +906,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                     <div className="text-sm font-bold font-mono text-navy-900 dark:text-slate-100">
                       {(detail?.bt_diff_max ?? 0).toFixed(1)} <span className="text-[10px] font-normal text-slate-500 dark:text-slate-400">K</span>
                     </div>
-                    <span className="text-[9px] text-slate-400 dark:text-slate-500">Δ(TI4 - TI5) diff</span>
+                    <span className="text-[9px] text-slate-400 dark:text-slate-500">Î”(TI4 - TI5) diff</span>
                   </div>
 
                   {/* Observations */}
@@ -835,12 +930,12 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
                     <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
                       <span>Temporal Range</span>
                       <span className="font-semibold text-slate-700 dark:text-slate-300">
-                        {detail.duration_days != null ? `${detail.duration_days} days span` : '—'}
+                        {detail.duration_days != null ? `${detail.duration_days} days span` : 'â€”'}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-[10px] font-mono text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 p-1.5 rounded border border-slate-100 dark:border-slate-700">
                       <span>{detail.first_detection}</span>
-                      <span className="text-slate-300 dark:text-slate-600">──────►</span>
+                      <span className="text-slate-300 dark:text-slate-600">â”€â”€â”€â”€â”€â”€â–º</span>
                       <span>{detail.last_detection}</span>
                     </div>
                   </div>
@@ -863,9 +958,16 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
   return (
     <>
       {/* Desktop Side Panel */}
-      <aside className="hidden lg:flex w-80 lg:w-96 flex-shrink-0 bg-slate-50/80 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex-col overflow-hidden h-full transition-colors duration-200">
+      <aside
+        ref={panelRef}
+        className="hidden lg:flex w-80 lg:w-96 flex-shrink-0 bg-slate-50/80 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex-col overflow-hidden h-full transition-colors duration-200"
+      >
         {panelContent}
       </aside>
+
+      {emergencyOpen && clusterId !== null && (
+        <EmergencyResponseModal clusterId={clusterId} onClose={() => setEmergencyOpen(false)} />
+      )}
 
       {/* Mobile / Tablet Full-Width Bottom Sheet / Drawer Modal */}
       <div className="lg:hidden fixed inset-0 z-[1400] flex flex-col justify-end items-center">
@@ -885,4 +987,6 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
     </>
   );
 }
+
+
 

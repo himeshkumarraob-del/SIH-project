@@ -34,7 +34,7 @@ function CollapsibleSection({
             {title}
           </span>
           {activeCount > 0 && (
-            <span className="inline-flex items-center justify-center px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-navy-800 dark:bg-navy-600 text-white shadow-2xs">
+            <span className="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-navy-800 dark:bg-navy-600 text-white shadow-2xs">
               {activeCount}
             </span>
           )}
@@ -89,31 +89,39 @@ export default function FilterPanel({ isMobileOpen = false, onCloseMobile }: Fil
   const panelContent = (
     <div className="flex flex-col h-full overflow-hidden select-none">
       {/* Top Header: Mission Control & Clear Action */}
-      <div className="px-3.5 py-3 border-b border-slate-200/90 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/60 flex-shrink-0 shadow-2xs">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-1.5">
-            <div className="w-5 h-5 rounded bg-navy-900 dark:bg-navy-700 text-white flex items-center justify-center flex-shrink-0">
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="px-3.5 py-3 border-b border-slate-200/90 dark:border-slate-800 bg-gradient-to-b from-white to-slate-50/80 dark:from-slate-900 dark:to-slate-950/60 flex-shrink-0">
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-7 h-7 rounded-md bg-gradient-to-br from-navy-800 to-navy-950 dark:from-blue-600 dark:to-blue-800 text-white flex items-center justify-center flex-shrink-0 shadow-xs ring-1 ring-white/10">
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
             </div>
-            <h2 className="text-xs font-bold text-navy-900 dark:text-slate-100 uppercase tracking-wider">
-              Filter Parameters
-            </h2>
+            <div className="min-w-0">
+              <h2 className="text-[11px] font-extrabold text-navy-900 dark:text-slate-100 uppercase tracking-[0.14em] leading-none">
+                Mission Filters
+              </h2>
+              <p className="mt-1 text-[9px] text-slate-400 dark:text-slate-500 uppercase tracking-[0.12em] font-semibold leading-none">
+                Surveillance Scope
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-1.5">
             {activeFilterCount > 0 ? (
               <button
                 onClick={clearAllFilters}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 dark:bg-red-950/60 hover:bg-red-100 dark:hover:bg-red-900/60 border border-red-200 dark:border-red-900 transition-colors shadow-2xs"
+                className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 dark:bg-red-950/60 hover:bg-red-100 dark:hover:bg-red-900/60 border border-red-200 dark:border-red-900 transition-colors"
                 title="Reset all active filters"
               >
-                <span>Reset ({activeFilterCount})</span>
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h5M20 20v-5h-5M4.5 9A7.5 7.5 0 0119 7.5M19.5 15A7.5 7.5 0 015 16.5" />
+                </svg>
+                Reset {activeFilterCount > 0 ? `· ${activeFilterCount}` : ''}
               </button>
             ) : (
-              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                ALL
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider bg-slate-100 dark:bg-slate-800/80">
+                All Active
               </span>
             )}
 
@@ -133,15 +141,18 @@ export default function FilterPanel({ isMobileOpen = false, onCloseMobile }: Fil
         </div>
 
         {/* Live Filtered Result Counter */}
-        <div className="flex items-center justify-between bg-white dark:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-200/80 dark:border-slate-700 shadow-2xs text-xs">
-          <span className="text-slate-500 dark:text-slate-400 font-medium">Matching Clusters</span>
-          <div className="flex items-center gap-1 font-mono font-bold text-navy-900 dark:text-slate-100">
+        <div className="flex items-center justify-between rounded-md bg-slate-900 dark:bg-slate-950/80 border border-slate-800/60 dark:border-slate-800 px-2.5 py-1.5 text-[11px] shadow-inner">
+          <span className="text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider">
+            Scope Match
+          </span>
+          <div className="flex items-center gap-1.5 font-mono font-bold">
             {loadingCount ? (
-              <span className="text-slate-400 dark:text-slate-500 animate-pulse text-[11px]">Updating…</span>
+              <span className="text-slate-500 animate-pulse text-[10px] uppercase tracking-wider">Querying…</span>
             ) : (
               <>
-                <span className="text-navy-900 dark:text-slate-100">{matchingCount !== null ? formatNumber(matchingCount) : '—'}</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="text-white dark:text-blue-300">{matchingCount !== null ? formatNumber(matchingCount) : '—'}</span>
+                <span className="text-slate-500">clusters</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               </>
             )}
           </div>
@@ -347,13 +358,11 @@ export default function FilterPanel({ isMobileOpen = false, onCloseMobile }: Fil
               return (
                 <button
                   key={item.id}
-                  onClick={() => toggleFilterValue('persistenceCategory', item.id)}
-                  className={`w-full flex items-center justify-between px-2 py-1.2 rounded-md text-xs border transition-all ${
+                  onClick={() => toggleFilterValue('persistenceCategory', item.id)}                  className={`w-full flex items-center justify-between px-2 py-1.5 rounded-md text-xs border transition-all ${
                     isSelected
                       ? 'bg-navy-800 dark:bg-navy-700 text-white border-navy-900 dark:border-navy-600 font-semibold shadow-xs'
                       : 'bg-slate-50/60 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60'
-                  }`}
-                >
+                  }`}>
                   <span className="truncate">{item.label}</span>
                   <span className={`w-2 h-2 rounded-full border ${isSelected ? 'bg-emerald-400 border-white' : 'border-slate-300 dark:border-slate-600'}`} />
                 </button>
@@ -436,31 +445,6 @@ export default function FilterPanel({ isMobileOpen = false, onCloseMobile }: Fil
           </div>
         </CollapsibleSection>
 
-        {/* 8. Modular Extensions (Future Modules) */}
-        <CollapsibleSection
-          title="Telemetry Extensions"
-          defaultOpen={false}
-          icon={
-            <svg className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-          }
-        >
-          <div className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
-            <div className="px-2 py-1.5 bg-slate-50 dark:bg-slate-800 rounded border border-slate-100 dark:border-slate-700 flex items-center justify-between text-[11px]">
-              <span>Vulnerability-Aware Risk</span>
-              <span className="text-[9px] font-bold px-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">PLANNED</span>
-            </div>
-            <div className="px-2 py-1.5 bg-slate-50 dark:bg-slate-800 rounded border border-slate-100 dark:border-slate-700 flex items-center justify-between text-[11px]">
-              <span>CloudShield Filter</span>
-              <span className="text-[9px] font-bold px-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">PLANNED</span>
-            </div>
-            <div className="px-2 py-1.5 bg-slate-50 dark:bg-slate-800 rounded border border-slate-100 dark:border-slate-700 flex items-center justify-between text-[11px]">
-              <span>Automated Station Dispatch</span>
-              <span className="text-[9px] font-bold px-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">PLANNED</span>
-            </div>
-          </div>
-        </CollapsibleSection>
       </div>
     </div>
   );

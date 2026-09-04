@@ -131,28 +131,28 @@ export default function AlertsPage() {
 
       {/* Summary KPI Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3">
-        <div className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xs">
-          <div className="text-xs text-slate-500 dark:text-slate-400">Total Alerts</div>
-          <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-slate-100">{alerts.length}</div>
-        </div>
-        <div className="p-3 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-900/50 rounded-xl shadow-2xs">
-          <div className="text-xs text-red-600 dark:text-red-400 font-semibold">Critical</div>
-          <div className="text-lg sm:text-xl font-bold text-red-600 dark:text-red-400">{criticalCount}</div>
-        </div>
-        <div className="p-3 bg-white dark:bg-slate-900 border border-orange-200 dark:border-orange-900/50 rounded-xl shadow-2xs">
-          <div className="text-xs text-orange-600 dark:text-orange-400 font-semibold">High</div>
-          <div className="text-lg sm:text-xl font-bold text-orange-600 dark:text-orange-400">{highCount}</div>
-        </div>
-        <div className="p-3 bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900/50 rounded-xl shadow-2xs">
-          <div className="text-xs text-blue-600 dark:text-blue-400 font-semibold">Active</div>
-          <div className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">{activeCount}</div>
-        </div>
-        <div className="p-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xs col-span-2 sm:col-span-1">
-          <div className="text-xs text-slate-500 dark:text-slate-400">Resolved / Ack</div>
-          <div className="text-lg sm:text-xl font-bold text-slate-700 dark:text-slate-300">
-            {resolvedCount} / {acknowledgedCount}
+        {[
+          { label: 'Total Alerts', value: String(alerts.length), valueClass: 'text-slate-900 dark:text-slate-100', bar: 'bg-slate-400', chip: 'text-slate-500 dark:text-slate-400' },
+          { label: 'Critical', value: String(criticalCount), valueClass: 'text-red-600 dark:text-red-400', bar: 'bg-red-500', chip: 'text-red-600 dark:text-red-400' },
+          { label: 'High', value: String(highCount), valueClass: 'text-orange-600 dark:text-orange-500', bar: 'bg-orange-500', chip: 'text-orange-600 dark:text-orange-500' },
+          { label: 'Active', value: String(activeCount), valueClass: 'text-blue-600 dark:text-blue-400', bar: 'bg-blue-500', chip: 'text-blue-600 dark:text-blue-400' },
+          { label: 'Resolved / Ack', value: `${resolvedCount} / ${acknowledgedCount}`, valueClass: 'text-slate-700 dark:text-slate-300', bar: 'bg-emerald-500', chip: 'text-slate-500 dark:text-slate-400' },
+        ].map((item, idx) => (
+          <div
+            key={item.label}
+            className={`relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-xs ${
+              idx === 4 ? 'col-span-2 sm:col-span-1' : ''
+            }`}
+          >
+            <div className={`absolute inset-x-0 top-0 h-0.5 opacity-80 ${item.bar}`} />
+            <div className="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
+              {item.label}
+            </div>
+            <div className={`mt-1 text-xl sm:text-2xl font-extrabold tabular-nums leading-none ${item.valueClass}`}>
+              {item.value}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
 
       {/* Filter and Search Bar */}
@@ -221,7 +221,15 @@ export default function AlertsPage() {
             return (
               <div
                 key={alert.alert_id}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 sm:p-4 shadow-2xs hover:shadow-md transition-all space-y-3"
+                className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-l-[3px] rounded-xl p-3.5 sm:p-4 shadow-xs hover:shadow-md transition-all space-y-3 ${
+                  alert.severity === 'CRITICAL'
+                    ? 'border-l-red-600'
+                    : alert.severity === 'HIGH'
+                    ? 'border-l-orange-500'
+                    : alert.severity === 'MEDIUM'
+                    ? 'border-l-amber-400'
+                    : 'border-l-slate-300 dark:border-l-slate-600'
+                }`}
               >
                 {/* Header Row */}
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-2.5">
@@ -243,7 +251,7 @@ export default function AlertsPage() {
                       {alert.alert_id} (Cluster #{alert.cluster_id})
                     </span>
                     <span
-                      className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                      className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
                         alert.status === 'ACTIVE'
                           ? 'bg-red-100 text-red-700 dark:bg-red-950/80 dark:text-red-300'
                           : alert.status === 'ACKNOWLEDGED'
@@ -255,43 +263,63 @@ export default function AlertsPage() {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 ml-auto">
-                    <span>
-                      Risk Score:{' '}
-                      <strong className="text-navy-900 dark:text-slate-200">
-                        {alert.risk_score ? formatNumber(alert.risk_score) : '—'}
-                      </strong>
+                  <div className="flex items-center gap-2.5 ml-auto">
+                    <span className="flex items-baseline gap-1.5">
+                      <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500">
+                        Risk
+                      </span>
+                      <span className={`font-mono text-sm font-extrabold leading-none ${
+                        alert.severity === 'CRITICAL'
+                          ? 'text-red-600 dark:text-red-400'
+                          : alert.severity === 'HIGH'
+                          ? 'text-orange-600 dark:text-orange-400'
+                          : alert.severity === 'MEDIUM'
+                          ? 'text-amber-600 dark:text-amber-400'
+                          : 'text-slate-700 dark:text-slate-200'
+                      }`}>
+                        {alert.risk_score != null ? formatNumber(alert.risk_score) : '—'}
+                      </span>
                     </span>
-                    <span className="hidden sm:inline">·</span>
-                    <span className="hidden sm:inline">Evidence: {alert.evidence_confidence ?? 'INSUFFICIENT'}</span>
+                    <span className="hidden sm:inline text-slate-300 dark:text-slate-600">|</span>
+                    <span
+                      className={`hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${
+                        alert.evidence_confidence === 'HIGH'
+                          ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300'
+                          : alert.evidence_confidence === 'MODERATE'
+                          ? 'bg-amber-100 text-amber-700 dark:bg-amber-950/70 dark:text-amber-300'
+                          : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'
+                      }`}
+                    >
+                      Evidence {alert.evidence_confidence ?? 'INSUFFICIENT'}
+                    </span>
                   </div>
                 </div>
 
                 {/* Details & Metadata Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs">
-                  <div>
-                    <span className="text-slate-400 dark:text-slate-500 block">Classification</span>
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-2">
+                  <div className="min-w-0">
+                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400 dark:text-slate-500 block mb-0.5">Classification</span>
+                    <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200 leading-snug">
                       {alert.classification_label ?? 'Unknown'}
                     </span>
                   </div>
-                  <div>
-                    <span className="text-slate-400 dark:text-slate-500 block">Persistence</span>
-                    <span className="font-semibold text-slate-800 dark:text-slate-200 capitalize">
+                  <div className="min-w-0">
+                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400 dark:text-slate-500 block mb-0.5">Persistence</span>
+                    <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200 capitalize leading-snug">
                       {alert.persistence_category?.replace(/_/g, ' ') ?? '—'}
                     </span>
                   </div>
-                  <div>
-                    <span className="text-slate-400 dark:text-slate-500 block">Station Distance</span>
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  <div className="min-w-0">
+                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400 dark:text-slate-500 block mb-0.5">Station</span>
+                    <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200 leading-snug">
                       {alert.station_available
-                        ? `${alert.nearest_station_name} (${alert.station_distance_km?.toFixed(1)} km)`
+                        ? `${alert.nearest_station_name} · ${alert.station_distance_km?.toFixed(1)} km`
                         : 'No station nearby'}
                     </span>
                   </div>
-                  <div>
-                    <span className="text-slate-400 dark:text-slate-500 block">Max FRP / Brightness</span>
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">
+                  <div className="min-w-0">
+                    <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400 dark:text-slate-500 block mb-0.5">Max FRP / Brightness</span>
+                    <span className="text-[11px] font-semibold font-mono text-slate-800 dark:text-slate-200 leading-snug">
                       {alert.max_frp ? `${alert.max_frp.toFixed(1)} MW` : '—'} /{' '}
                       {alert.max_bright_ti4 ? `${alert.max_bright_ti4.toFixed(1)} K` : '—'}
                     </span>
@@ -300,14 +328,17 @@ export default function AlertsPage() {
 
                 {/* Trigger Reasons */}
                 {reasons.length > 0 && (
-                  <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs">
-                    <span className="font-bold text-navy-900 dark:text-slate-200 block mb-1">
-                      Alert Trigger Rationale:
+                  <div className="p-2.5 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/40">
+                    <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-[0.12em] block mb-1.5">
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Alert Trigger Rationale
                     </span>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-slate-600 dark:text-slate-300">
+                    <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-slate-700 dark:text-slate-300">
                       {reasons.map((r, i) => (
                         <div key={i} className="flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          <span className="w-1 h-1 rounded-full bg-amber-500" />
                           <span>{r}</span>
                         </div>
                       ))}

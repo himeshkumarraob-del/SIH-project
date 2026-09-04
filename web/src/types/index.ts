@@ -1,4 +1,4 @@
-/** Detection-level record (from gis_thermal_events.csv — 4,524 rows) */
+﻿/** Detection-level record (from gis_thermal_events.csv â€” 4,524 rows) */
 export interface ThermalEvent {
   detection_id: string;
   latitude: number;
@@ -26,7 +26,7 @@ export interface ThermalEvent {
   acquisition_datetime: string;
 }
 
-/** Cluster-level record (from firms_risk_results.csv — 1,792 rows) */
+/** Cluster-level record (from firms_risk_results.csv â€” 1,792 rows) */
 export interface ClusterSummary {
   cluster_id: number;
   latitude?: number;
@@ -68,7 +68,7 @@ export interface ClusterSummary {
   risk_explanation: string;
 }
 
-/** Movement vector record (from thermal_movement.csv — 1,792 rows) */
+/** Movement vector record (from thermal_movement.csv â€” 1,792 rows) */
 export interface MovementVector {
   cluster_id: number;
   observation_count: number;
@@ -86,7 +86,7 @@ export interface MovementVector {
   movement_direction: string;
   movement_confidence: string;
   movement_status: 'MOVING' | 'STATIONARY' | 'INSUFFICIENT_DATA';
-  /** Direction intelligence — movement of DETECTED THERMAL ACTIVITY, not confirmed fire spread. */
+  /** Direction intelligence â€” movement of DETECTED THERMAL ACTIVITY, not confirmed fire spread. */
   direction: string | null;
   movement_pattern: 'directional' | 'erratic' | 'stationary' | 'insufficient_evidence';
   direction_confidence: 'HIGH' | 'MODERATE' | 'PRELIMINARY' | 'INSUFFICIENT';
@@ -107,7 +107,7 @@ export interface DashboardStats {
   movement_distribution: { INSUFFICIENT_DATA: number; STATIONARY: number; MOVING: number };
 }
 
-/** Industrial fire classification record (from firms_industrial_classification.csv — 1,792 rows) */
+/** Industrial fire classification record (from firms_industrial_classification.csv â€” 1,792 rows) */
 export interface ClassificationData {
   cluster_id: number;
   classification_label: string;
@@ -189,7 +189,7 @@ export interface ResponseDetailData {
 }
 
 /** Thermal alert record from the Thermal Alert Engine (/api/v1/alerts).
- *  Decision-support classification of processed thermal evidence — never a
+ *  Decision-support classification of processed thermal evidence â€” never a
  *  confirmed fire declaration. */
 export interface ThermalAlert {
   alert_id: string;
@@ -247,3 +247,68 @@ export const EMPTY_FILTERS: FilterState = {
   dateRange: null,
   satellite: [],
 };
+
+export interface FireStationCandidate {
+  station_id: string;
+  station_name: string;
+  station_latitude: number;
+  station_longitude: number;
+  distance_km: number;
+  contact_phone: string | null;
+  verified_source: string;
+}
+
+export interface EmergencyEventContext {
+  cluster_id: number;
+  alert_id: string;
+  severity: string;
+  risk_score: number;
+  risk_level: string;
+  classification_label: string;
+  evidence_confidence: string;
+  false_alarm_indicator: string;
+  detection_reliability: string;
+  observation_count: number;
+  active_days: number;
+  persistence_category: string;
+  latitude: number;
+  longitude: number;
+  suppressed: boolean;
+}
+
+export interface EmergencyResponseSearchResult {
+  cluster_id: number;
+  search_radius_km: number;
+  event: EmergencyEventContext;
+  stations: FireStationCandidate[];
+  nearest_station: FireStationCandidate | null;
+  station_available: boolean;
+  status_message: string;
+  notification_eligible: boolean;
+  eligibility_reason: string;
+  is_decision_support_only: boolean;
+}
+
+export interface PrototypeNotificationResult {
+  cluster_id: number;
+  alert_id: string;
+  send_status: string;
+  recipient_masked: string;
+  selected_station: FireStationCandidate;
+  provider_message_id: string | null;
+  is_decision_support_only: boolean;
+  detail: string;
+}
+
+export interface PrototypeNotificationHistoryEntry {
+  alert_id: string;
+  cluster_id: number;
+  timestamp: string;
+  recipient_masked: string;
+  severity: string;
+  selected_station: string;
+  distance_km: number | null;
+  send_status: string;
+  provider_message_id: string;
+  failure_reason: string;
+}

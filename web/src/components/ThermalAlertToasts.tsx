@@ -40,7 +40,7 @@ function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
     <div
       role="alert"
       aria-live="assertive"
-      className={`thermal-toast-enter w-[360px] max-w-[calc(100vw-1.5rem)] rounded-md border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-xl border-l-4 ${severityAccent(alert.severity)} overflow-hidden`}
+      className={`thermal-toast-enter w-[360px] max-w-[calc(100vw-1.5rem)] rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 border-l-4 ${severityAccent(alert.severity)} overflow-hidden`}
     >
       <div className="px-3 pt-2.5 pb-2">
         {/* Header */}

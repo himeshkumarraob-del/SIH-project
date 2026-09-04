@@ -92,7 +92,7 @@ export default function ThermalAlertCenter({
           aria-label="Active thermal alerts"
           // Fixed under the header's title row on the right — never over the
           // map's top-left zoom controls. Dismissible and keyboard operable.
-          className="fixed top-36 right-3 z-[1300] w-[380px] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-md border border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900"
+          className="fixed top-36 right-3 z-[1300] w-[380px] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-slate-200/90 bg-white shadow-2xl ring-1 ring-black/5 dark:border-slate-800 dark:bg-slate-900 dark:ring-white/10"
         >
           <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-800/80">
             <div>
@@ -134,7 +134,10 @@ export default function ThermalAlertCenter({
                 {eligibleAlerts.map((alert) => {
                   const classification = alert.classification_label ?? 'Unknown';
                   return (
-                    <li key={alert.alert_id}>
+                    <li
+                      key={alert.alert_id}
+                      className={alert.severity === 'CRITICAL' ? 'border-l-2 border-l-red-600' : ''}
+                    >
                       <button
                         type="button"
                         onClick={() => onView(alert)}

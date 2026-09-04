@@ -11,7 +11,13 @@
   body {
     @apply bg-slate-50 text-slate-900 antialiased overflow-x-hidden;
   }
+
+  ::selection {
+    @apply bg-blue-600/20;
+  }
 }
+
+/* ---------- Entrance animations (guarded by prefers-reduced-motion) ---------- */
 
 @keyframes slide-right {
   from {
@@ -31,6 +37,17 @@
   }
 }
 
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .animate-slideRight {
   animation: slide-right 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -39,60 +56,11 @@
   animation: slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Leaflet overrides for clean appearance */
-.leaflet-container {
-  background: #e8ecf1 !important;
-  font-family: inherit !important;
+.animate-fadeIn {
+  animation: fade-in 0.18s ease-out both;
 }
 
-.leaflet-popup-content-wrapper {
-  border-radius: 4px !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-  padding: 0 !important;
-}
-
-.leaflet-popup-content {
-  margin: 0 !important;
-  line-height: 1.5 !important;
-}
-
-/* Marker cluster styles */
-.marker-cluster-small {
-  background-color: rgba(181, 226, 140, 0.5);
-}
-.marker-cluster-small div {
-  background-color: rgba(110, 204, 57, 0.6);
-}
-.marker-cluster-medium {
-  background-color: rgba(253, 218, 130, 0.5);
-}
-.marker-cluster-medium div {
-  background-color: rgba(253, 203, 70, 0.6);
-}
-.marker-cluster-large {
-  background-color: rgba(252, 146, 146, 0.5);
-}
-.marker-cluster-large div {
-  background-color: rgba(238, 82, 82, 0.6);
-}
-.marker-cluster {
-  background-clip: padding-box;
-  border-radius: 20px;
-}
-.marker-cluster div {
-  width: 30px;
-  height: 30px;
-  margin-left: 5px;
-  margin-top: 5px;
-  text-align: center;
-  border-radius: 15px;
-  color: #fff;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 30px;
-}
-
-/* Thermal alert toast entrance (respects reduced-motion preference) */
+/* Thermal alert toast entrance */
 .thermal-toast-enter {
   animation: thermal-toast-in 0.25s ease-out both;
 }
@@ -108,13 +76,209 @@
   }
 }
 
+/* Respect reduced-motion for all decorative animation */
 @media (prefers-reduced-motion: reduce) {
-  .thermal-toast-enter {
+  .thermal-toast-enter,
+  .animate-fadeIn,
+  .animate-slideRight,
+  .animate-slideUp {
     animation: none;
   }
 }
 
-/* Scrollbar styling */
+/* ---------- Leaflet surface polish ---------- */
+
+.leaflet-container {
+  background: #0f172a !important;
+  font-family: inherit !important;
+}
+
+/* Dark theme renders the map chrome (zoom, attribution) over a near-black
+   command-center canvas when the OSM tile layer is unavailable / loading. */
+.dark .leaflet-container {
+  background: #020617 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 10px !important;
+  box-shadow: 0 12px 32px -12px rgba(2, 6, 23, 0.45) !important;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.5 !important;
+}
+
+.leaflet-popup-content p {
+  margin: 0 !important;
+}
+
+/* Rounded, translucent zoom control (kept compact over the map) */
+.leaflet-touch .leaflet-bar,
+.leaflet-control-zoom,
+.leaflet-bar {
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 14px -6px rgba(2, 6, 23, 0.35) !important;
+  overflow: hidden;
+}
+
+.leaflet-touch .leaflet-control-zoom a {
+  border-radius: 0 !important;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.leaflet-touch .leaflet-control-zoom-in,
+.leaflet-touch .leaflet-control-zoom-out {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.25) !important;
+}
+
+.dark .leaflet-bar a {
+  background: rgba(15, 23, 42, 0.92);
+  color: #e2e8f0;
+}
+
+.dark .leaflet-bar a:hover {
+  background: rgba(30, 41, 59, 0.95);
+}
+
+.dark .leaflet-control-attribution {
+  background: rgba(2, 6, 23, 0.7) !important;
+  color: #64748b;
+}
+
+.dark .leaflet-control-attribution a {
+  color: #94a3b8;
+}
+
+/* ---------- Thermal markers: glow + subtle pulse ---------- */
+
+/* Every marker gets a soft halo so thermal sources read as "hot points",
+   not flat dots. Classes are applied via Leaflet path className. */
+.thermal-dot {
+  transition: filter 0.25s ease, fill-opacity 0.25s ease;
+}
+
+.dot-normal {
+  filter: drop-shadow(0 0 1.5px rgba(22, 163, 74, 0.75));
+}
+
+.dot-elevated {
+  filter: drop-shadow(0 0 2px rgba(217, 119, 6, 0.8)) drop-shadow(0 0 6px rgba(217, 119, 6, 0.25));
+}
+
+.dot-high {
+  filter: drop-shadow(0 0 2.5px rgba(220, 38, 38, 0.9)) drop-shadow(0 0 8px rgba(220, 38, 38, 0.4));
+  animation: thermal-breathe 2.6s ease-in-out infinite;
+}
+
+.dot-selected {
+  filter: drop-shadow(0 0 3px rgba(59, 130, 246, 1)) drop-shadow(0 0 9px rgba(59, 130, 246, 0.5)) !important;
+  animation: none !important;
+}
+
+/* Static halo ring rendered beneath each marker; fades to suggest a pulse. */
+.thermal-halo {
+  animation: halo-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes thermal-breathe {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px rgba(220, 38, 38, 0.85)) drop-shadow(0 0 6px rgba(220, 38, 38, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 3px rgba(239, 68, 68, 1)) drop-shadow(0 0 11px rgba(220, 38, 38, 0.55));
+  }
+}
+
+@keyframes halo-pulse {
+  0%, 100% {
+    opacity: 0.16;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot-high {
+    animation: none;
+  }
+  .thermal-halo {
+    animation: none;
+    opacity: 0.2;
+  }
+}
+
+/* ---------- Movement direction arrows ---------- */
+
+/* Slow marching dashes suggest the direction of detected centroid travel.
+   The overlay draws clean edges over a soft glow underlay. */
+.direction-shaft {
+  animation: dash-flow 1.6s linear infinite;
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .direction-shaft {
+    animation: none;
+  }
+}
+
+/* ---------- Marker cluster styles ---------- */
+
+.marker-cluster-small {
+  background-color: rgba(134, 239, 172, 0.35);
+}
+.marker-cluster-small div {
+  background-color: rgba(34, 197, 94, 0.85);
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+}
+.marker-cluster-medium {
+  background-color: rgba(253, 230, 138, 0.35);
+}
+.marker-cluster-medium div {
+  background-color: rgba(245, 158, 11, 0.9);
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.18);
+}
+.marker-cluster-large {
+  background-color: rgba(252, 165, 165, 0.4);
+}
+.marker-cluster-large div {
+  background-color: rgba(239, 68, 68, 0.95);
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+}
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 22px;
+}
+.marker-cluster div {
+  width: 30px;
+  height: 30px;
+  margin-left: 6px;
+  margin-top: 6px;
+  text-align: center;
+  border-radius: 16px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- Scrollbar styling ---------- */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -128,4 +292,11 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }

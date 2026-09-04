@@ -1,6 +1,8 @@
 # Secrets
 .env
 .env.*
+!.env.example
+!web/.env.example
 *.key
 Key.txt
 key.txt

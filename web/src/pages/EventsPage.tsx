@@ -46,6 +46,7 @@ const LEVEL_ORDER: Record<string, number> = { HIGH: 3, MEDIUM: 2, LOW: 1, ELEVAT
 export default function EventsPage() {
   const [clusters, setClusters] = useState<ClusterSummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [selectedRisk, setSelectedRisk] = useState<string[]>([]);
   const [selectedAbnormality, setSelectedAbnormality] = useState<string[]>([]);
@@ -53,10 +54,18 @@ export default function EventsPage() {
   const [sortAsc, setSortAsc] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<ThermalEvent | null>(null);
   const [page, setPage] = useState(1);
+  const [reloadKey, setReloadKey] = useState(0);
   const pageSize = 25;
 
+  // Load the full cluster catalog from /api/v1/clusters whenever the risk/
+  // abnormality filter pills change or the user hits Retry. Unlike the old
+  // code, a failed request surfaces an explicit error state instead of
+  // silently leaving the queue empty.
   useEffect(() => {
+    let cancelled = false;
     setLoading(true);
+    setError(null);
+
     const filters: FilterState = {
       riskLevel: selectedRisk,
       abnormalityLevel: selectedAbnormality,
@@ -66,12 +75,32 @@ export default function EventsPage() {
       satellite: [],
       dateRange: null,
     };
-    fetchClusters(filters).then((data) => {
-      setClusters(data);
-      setLoading(false);
-      setPage(1);
-    });
-  }, [selectedRisk, selectedAbnormality]);
+
+    fetchClusters(filters, { throwOnError: true })
+      .then((data) => {
+        if (cancelled) return;
+        setClusters(data);
+        setLoading(false);
+        setPage(1);
+      })
+      .catch((err: Error) => {
+        if (cancelled) return;
+        console.error('Failed to load clusters catalog:', err);
+        setClusters([]);
+        setLoading(false);
+        setError(err?.message || 'Unable to reach the thermal intelligence API.');
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedRisk, selectedAbnormality, reloadKey]);
+
+  // Restart at page 1 whenever the search query changes so a narrowed result
+  // set can never leave the user stranded on an out-of-range page.
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
 
   const toggleRisk = (r: string) => {
     setSelectedRisk((prev) => (prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r]));
@@ -110,7 +139,10 @@ export default function EventsPage() {
   }, [clusters, search, sortKey, sortAsc]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const paginatedRows = filtered.slice((page - 1) * pageSize, page * pageSize);
+  // Clamp to the last valid page so an out-of-range page (from sorting or a
+  // result set that shrank) can never render as an empty table.
+  const safePage = Math.min(Math.max(1, page), totalPages);
+  const paginatedRows = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
 
   const handleSort = (key: keyof ClusterSummary) => {
     if (sortKey === key) {
@@ -256,8 +288,39 @@ export default function EventsPage() {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
               {loading ? (
                 <tr>
-                  <td colSpan={10} className="text-center py-16 text-slate-400 dark:text-slate-500 animate-pulse">
-                    Loading clusters catalog...
+                  <td colSpan={10} className="text-center py-16">
+                    <div className="inline-flex flex-col items-center gap-2">
+                      <div className="w-7 h-7 border-2 border-navy-800 dark:border-blue-500 border-t-transparent rounded-full animate-spin" />
+                      <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 animate-pulse">
+                        Loading cluster catalog…
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td colSpan={10} className="px-6 py-16 text-center">
+                    <div className="inline-flex flex-col items-center gap-2 max-w-md">
+                      <div className="w-9 h-9 rounded-full bg-red-100 dark:bg-red-950/70 text-red-600 dark:text-red-400 flex items-center justify-center">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                      </div>
+                      <p className="text-sm font-bold text-navy-900 dark:text-slate-200">
+                        Unable to Load Cluster Catalog
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{error}</p>
+                      <button
+                        type="button"
+                        onClick={() => setReloadKey((k) => k + 1)}
+                        className="mt-1 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-navy-900 hover:bg-navy-800 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors shadow-xs"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h5M20 20v-5h-5M4.5 9A7.5 7.5 0 0119 7.5M19.5 15A7.5 7.5 0 015 16.5" />
+                        </svg>
+                        Retry Fetch
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ) : paginatedRows.length > 0 ? (
@@ -353,23 +416,23 @@ export default function EventsPage() {
         {/* Pagination Bar */}
         <div className="px-4 py-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <div>
-            Showing {(page - 1) * pageSize + 1} to {Math.min(page * pageSize, filtered.length)} of {filtered.length} clusters
+            Showing {(safePage - 1) * pageSize + 1} to {Math.min(safePage * pageSize, filtered.length)} of {filtered.length} clusters
           </div>
           <div className="flex items-center gap-1.5">
             <button
               type="button"
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={safePage <= 1}
+              onClick={() => setPage((p) => Math.max(1, Math.min(p, totalPages) - 1))}
               className="px-2.5 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors"
             >
               Previous
             </button>
             <span className="px-2 font-bold text-slate-700 dark:text-slate-200">
-              {page} / {totalPages}
+              {safePage} / {totalPages}
             </span>
             <button
               type="button"
-              disabled={page >= totalPages}
+              disabled={safePage >= totalPages}
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               className="px-2.5 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-100 transition-colors"
             >

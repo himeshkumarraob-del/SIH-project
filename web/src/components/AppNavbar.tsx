@@ -83,18 +83,19 @@ export default function AppNavbar({ actions, activeAlertCount = 0 }: AppNavbarPr
           {/* Left: Brand Identity */}
           <div className="flex items-center gap-3">
             <NavLink to="/" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 bg-navy-800 dark:bg-navy-700 rounded-lg flex items-center justify-center shadow-xs group-hover:bg-navy-700 dark:group-hover:bg-navy-600 transition-colors flex-shrink-0">
-                <svg className="w-4.5 h-4.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-navy-700 via-navy-800 to-navy-950 dark:from-blue-600 dark:via-blue-700 dark:to-blue-950 flex items-center justify-center shadow-xs ring-1 ring-white/10 group-hover:ring-white/25 transition-all flex-shrink-0">
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3l1.912 5.813L20 10.5l-5.088 1.687L12 18l-2.912-5.813L4 10.5l6.088-1.687L12 3z" />
+                  <circle cx="12" cy="19" r="1.6" fill="currentColor" stroke="none" opacity="0.9" />
                 </svg>
               </div>
-              <div>
-                <span className="text-sm sm:text-base font-bold text-navy-900 dark:text-slate-100 leading-none tracking-tight block">
-                  Thermal<span className="text-blue-600 dark:text-blue-400">IQ</span>
+              <div className="leading-none">
+                <span className="text-sm sm:text-base font-extrabold text-navy-900 dark:text-slate-100 tracking-tight block">
+                  Thermal<span className="text-blue-600 dark:text-blue-400">Watch</span>
                 </span>
-                <span className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest hidden sm:block">
-                  VIIRS AI Intelligence
+                <span className="mt-1 inline-flex items-center gap-1.5 text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-[0.18em] font-semibold">
+                  <span className="w-1 h-1 rounded-full bg-emerald-500" />
+                  Thermal Intelligence
                 </span>
               </div>
             </NavLink>
@@ -118,7 +119,7 @@ export default function AppNavbar({ actions, activeAlertCount = 0 }: AppNavbarPr
                 {item.icon}
                 <span>{item.label}</span>
                 {item.badge !== undefined && item.badge > 0 && (
-                  <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-red-600 text-white animate-pulse">
+                  <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-red-600 text-white animate-pulse">
                     {item.badge}
                   </span>
                 )}
@@ -195,7 +196,7 @@ export default function AppNavbar({ actions, activeAlertCount = 0 }: AppNavbarPr
                 <span>{item.label}</span>
               </div>
               {item.badge !== undefined && item.badge > 0 && (
-                <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-red-600 text-white">
+                <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-red-600 text-white">
                   {item.badge} ACTIVE
                 </span>
               )}
