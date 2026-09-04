@@ -40,7 +40,7 @@ function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
     <div
       role="alert"
       aria-live="assertive"
-      className={`thermal-toast-enter w-[360px] max-w-[calc(100vw-1.5rem)] rounded-md border border-slate-200 bg-white shadow-lg border-l-4 ${severityAccent(alert.severity)} overflow-hidden`}
+      className={`thermal-toast-enter w-[360px] max-w-[calc(100vw-1.5rem)] rounded-md border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-xl border-l-4 ${severityAccent(alert.severity)} overflow-hidden`}
     >
       <div className="px-3 pt-2.5 pb-2">
         {/* Header */}
@@ -54,10 +54,10 @@ function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
             </svg>
           </span>
           <div className="min-w-0 flex-1">
-            <div className={`text-sm font-bold tracking-wide ${alert.severity === 'CRITICAL' ? 'text-red-700' : 'text-orange-700'}`}>
+            <div className={`text-sm font-bold tracking-wide ${alert.severity === 'CRITICAL' ? 'text-red-700 dark:text-red-400' : 'text-orange-700 dark:text-orange-400'}`}>
               {label}
             </div>
-            <div className="text-xs text-slate-500">
+            <div className="text-xs text-slate-500 dark:text-slate-400">
               Thermal anomaly detected — decision-support alert
             </div>
           </div>
@@ -65,7 +65,7 @@ function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
             type="button"
             aria-label={`Dismiss alert for cluster ${alert.cluster_id}`}
             onClick={() => onDismiss(alert.alert_id)}
-            className="flex-shrink-0 rounded p-0.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-300"
+            className="flex-shrink-0 rounded p-0.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-300"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -76,37 +76,37 @@ function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
         {/* Body */}
         <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
           <div>
-            <dt className="text-slate-400">Cluster</dt>
-            <dd className="font-semibold text-slate-800">#{alert.cluster_id}</dd>
+            <dt className="text-slate-400 dark:text-slate-500">Cluster</dt>
+            <dd className="font-semibold text-slate-800 dark:text-slate-200">#{alert.cluster_id}</dd>
           </div>
           <div>
-            <dt className="text-slate-400">Risk Score</dt>
-            <dd className="font-semibold text-slate-800">
+            <dt className="text-slate-400 dark:text-slate-500">Risk Score</dt>
+            <dd className="font-semibold text-slate-800 dark:text-slate-200">
               {alert.risk_score != null ? formatNumber(alert.risk_score) : '—'}
             </dd>
           </div>
           <div className="col-span-2">
-            <dt className="text-slate-400">Classification</dt>
-            <dd className="font-medium text-slate-800 truncate">
+            <dt className="text-slate-400 dark:text-slate-500">Classification</dt>
+            <dd className="font-medium text-slate-800 dark:text-slate-200 truncate">
               {classification}
               {alert.classification_score != null ? ` (${(alert.classification_score * 100).toFixed(0)}%)` : ''}
             </dd>
           </div>
           <div>
-            <dt className="text-slate-400">Evidence</dt>
-            <dd className="font-semibold text-slate-800">{alert.evidence_confidence ?? 'INSUFFICIENT'}</dd>
+            <dt className="text-slate-400 dark:text-slate-500">Evidence</dt>
+            <dd className="font-semibold text-slate-800 dark:text-slate-200">{alert.evidence_confidence ?? 'INSUFFICIENT'}</dd>
           </div>
           <div>
-            <dt className="text-slate-400">Status</dt>
-            <dd className="font-semibold text-slate-800">{alert.status}</dd>
+            <dt className="text-slate-400 dark:text-slate-500">Status</dt>
+            <dd className="font-semibold text-slate-800 dark:text-slate-200">{alert.status}</dd>
           </div>
         </dl>
 
         {reasons.length > 0 && (
-          <div className="mt-1.5 text-[11px] text-slate-500 leading-snug">
+          <div className="mt-1.5 text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
             {reasons.map((r, i) => (
               <div key={i} className="flex gap-1">
-                <span aria-hidden="true" className="text-slate-300">•</span>
+                <span aria-hidden="true" className="text-slate-300 dark:text-slate-600">•</span>
                 <span className="truncate">{r}</span>
               </div>
             ))}
@@ -114,14 +114,14 @@ function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
         )}
 
         {alert.station_available && (
-          <div className="mt-1.5 text-[11px] text-slate-500 truncate">
+          <div className="mt-1.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
             Fire station: {alert.nearest_station_name}
             {alert.station_distance_km != null ? ` (${formatNumber(alert.station_distance_km)} km)` : ''}
           </div>
         )}
 
         {/* Actions */}
-        <div className="mt-2.5 flex items-center gap-2 border-t border-slate-100 pt-2">
+        <div className="mt-2.5 flex items-center gap-2 border-t border-slate-100 dark:border-slate-800 pt-2">
           <button
             type="button"
             onClick={() => onView(alert)}
@@ -132,7 +132,7 @@ function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
           <button
             type="button"
             onClick={() => onDismiss(alert.alert_id)}
-            className="rounded px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-300"
+            className="rounded px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-300"
           >
             DISMISS
           </button>

@@ -62,18 +62,18 @@ export default function ClusterTable({ selectedClusterId, onSelectCluster }: Clu
   };
 
   const SortIcon = ({ col }: { col: SortKey }) => (
-    <span className="ml-1 text-slate-300">
+    <span className="ml-1 text-slate-300 dark:text-slate-600">
       {sortKey === col ? (sortAsc ? '↑' : '↓') : '↕'}
     </span>
   );
 
   return (
-    <div className="bg-white border-t border-slate-200 flex flex-col flex-shrink-0" style={{ height: '180px' }}>
+    <div className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex flex-col flex-shrink-0 transition-colors duration-200 h-[160px] sm:h-[180px]">
       {/* Table header bar */}
-      <div className="px-3 py-2 border-b border-slate-100 flex items-center justify-between flex-shrink-0">
+      <div className="px-3 py-1.5 sm:py-2 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-semibold text-navy-900">High-Priority Events</h2>
-          <span className="text-xs text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+          <h2 className="text-xs sm:text-sm font-semibold text-navy-900 dark:text-slate-100">High-Priority Events</h2>
+          <span className="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
             {filtered.length} clusters
           </span>
         </div>
@@ -82,15 +82,15 @@ export default function ClusterTable({ selectedClusterId, onSelectCluster }: Clu
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search cluster ID or factors..."
-          className="px-2 py-1 text-xs border border-slate-200 rounded w-48 focus:outline-none focus:ring-1 focus:ring-navy-500"
+          className="px-2 py-1 text-xs border border-slate-200 dark:border-slate-700 rounded w-full xs:w-44 sm:w-48 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-navy-500 dark:focus:ring-blue-500"
         />
       </div>
 
-      {/* Scrollable table */}
-      <div className="flex-1 overflow-auto">
-        <table className="w-full text-xs">
-          <thead className="bg-slate-50 sticky top-0">
-            <tr className="text-left text-slate-500">
+      {/* Scrollable table container */}
+      <div className="flex-1 overflow-x-auto overflow-y-auto">
+        <table className="min-w-[640px] w-full text-xs">
+          <thead className="bg-slate-50 dark:bg-slate-950/80 sticky top-0 border-b border-slate-200 dark:border-slate-800">
+            <tr className="text-left text-slate-500 dark:text-slate-400">
               <th className="px-3 py-1.5 font-medium cursor-pointer" onClick={() => handleSort('cluster_id')}>
                 Cluster ID <SortIcon col="cluster_id" />
               </th>
@@ -112,29 +112,29 @@ export default function ClusterTable({ selectedClusterId, onSelectCluster }: Clu
               <th className="px-3 py-1.5 font-medium">Characterization</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
             {filtered.map((cluster) => (
               <tr
                 key={cluster.cluster_id}
                 className={`cursor-pointer transition-colors border-l-2 ${
                   selectedClusterId === cluster.cluster_id
-                    ? 'bg-navy-50 border-l-navy-600'
-                    : 'hover:bg-slate-50 border-l-transparent'
+                    ? 'bg-navy-50 dark:bg-slate-800/80 border-l-navy-600 dark:border-l-blue-500'
+                    : 'hover:bg-slate-50 dark:hover:bg-slate-800/50 border-l-transparent'
                 }`}
                 onClick={() => onSelectCluster(cluster)}
               >
-                <td className="px-3 py-1.5 font-medium text-navy-800">
+                <td className="px-3 py-1.5 font-medium text-navy-800 dark:text-slate-200">
                   #{cluster.cluster_id}
                 </td>
                 <td className="px-3 py-1.5">
                   <span className={`font-semibold ${
-                    cluster.risk_level === 'HIGH' ? 'text-red-600' :
-                    cluster.risk_level === 'MEDIUM' ? 'text-amber-600' :
-                    'text-green-600'
+                    cluster.risk_level === 'HIGH' ? 'text-red-600 dark:text-red-400' :
+                    cluster.risk_level === 'MEDIUM' ? 'text-amber-600 dark:text-amber-400' :
+                    'text-green-600 dark:text-green-400'
                   }`}>
                     {cluster.risk_score}
                   </span>
-                  <span className="ml-1 text-slate-400">{cluster.risk_level}</span>
+                  <span className="ml-1 text-slate-400 dark:text-slate-500">{cluster.risk_level}</span>
                 </td>
                 <td className="px-3 py-1.5">
                   <LevelBadge level={cluster.abnormality_level} />
@@ -145,17 +145,17 @@ export default function ClusterTable({ selectedClusterId, onSelectCluster }: Clu
                 <td className="px-3 py-1.5">
                   <LevelBadge level={cluster.detection_reliability} />
                 </td>
-                <td className="px-3 py-1.5 text-slate-600 capitalize">
+                <td className="px-3 py-1.5 text-slate-600 dark:text-slate-400 capitalize">
                   {cluster.persistence_category?.replace(/_/g, ' ') ?? '—'}
                 </td>
-                <td className="px-3 py-1.5 text-slate-600 truncate max-w-[160px]">
+                <td className="px-3 py-1.5 text-slate-600 dark:text-slate-400 truncate max-w-[160px]">
                   {cluster.anomaly_characterization?.replace(/_/g, ' ') ?? '—'}
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-3 py-6 text-center text-slate-400">
+                <td colSpan={7} className="px-3 py-6 text-center text-slate-400 dark:text-slate-500">
                   No clusters match current filters
                 </td>
               </tr>
@@ -168,12 +168,12 @@ export default function ClusterTable({ selectedClusterId, onSelectCluster }: Clu
 }
 
 function LevelBadge({ level, invert = false }: { level: string; invert?: boolean }) {
-  let cls = 'bg-slate-100 text-slate-600';
-  if (level === 'HIGH') cls = invert ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200';
-  else if (level === 'MEDIUM') cls = 'bg-amber-50 text-amber-700 border border-amber-200';
-  else if (level === 'LOW') cls = invert ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200';
-  else if (level === 'ELEVATED') cls = 'bg-orange-50 text-orange-700 border border-orange-200';
-  else if (level === 'NORMAL') cls = 'bg-green-50 text-green-700 border border-green-200';
+  let cls = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400';
+  if (level === 'HIGH') cls = invert ? 'bg-green-50 dark:bg-green-950/60 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800';
+  else if (level === 'MEDIUM') cls = 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800';
+  else if (level === 'LOW') cls = invert ? 'bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800' : 'bg-green-50 dark:bg-green-950/60 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800';
+  else if (level === 'ELEVATED') cls = 'bg-orange-50 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800';
+  else if (level === 'NORMAL') cls = 'bg-green-50 dark:bg-green-950/60 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800';
 
   return (
     <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-medium ${cls}`}>

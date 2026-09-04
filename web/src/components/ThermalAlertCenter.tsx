@@ -70,7 +70,7 @@ export default function ThermalAlertCenter({
         aria-haspopup="dialog"
         aria-expanded={centerOpen}
         onClick={() => setCenterOpen(!centerOpen)}
-        className="relative inline-flex items-center justify-center rounded p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-red-300"
+        className="relative inline-flex items-center justify-center rounded p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-300"
       >
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path
@@ -80,7 +80,7 @@ export default function ThermalAlertCenter({
           />
         </svg>
         {count > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
+          <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white shadow-sm shadow-red-500/50">
             {count > 9 ? '9+' : count}
           </span>
         )}
@@ -92,18 +92,18 @@ export default function ThermalAlertCenter({
           aria-label="Active thermal alerts"
           // Fixed under the header's title row on the right — never over the
           // map's top-left zoom controls. Dismissible and keyboard operable.
-          className="fixed top-36 right-3 z-[1300] w-[380px] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-md border border-slate-200 bg-white shadow-xl"
+          className="fixed top-36 right-3 z-[1300] w-[380px] max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-md border border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900"
         >
-          <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-3 py-2">
+          <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-800/80">
             <div>
-              <div className="text-sm font-semibold text-slate-800">
+              <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                 Thermal Alerts
-                <span className="ml-2 inline-flex items-center gap-1 text-[11px] font-medium text-slate-500">
+                <span className="ml-2 inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-400">
                   <span className={`w-1.5 h-1.5 rounded-full ${apiAvailable ? 'bg-green-500' : 'bg-amber-500'}`} />
                   {apiAvailable ? 'Live API' : 'API unavailable'}
                 </span>
               </div>
-              <div className="text-[11px] text-slate-400">
+              <div className="text-[11px] text-slate-400 dark:text-slate-500">
                 {hasEligible
                   ? `${totalCritical} critical · ${totalHigh} high · updated ${formatTimestamp(lastUpdated)}`
                   : 'No active HIGH/CRITICAL alerts'}
@@ -113,7 +113,7 @@ export default function ThermalAlertCenter({
               type="button"
               aria-label="Close alert list"
               onClick={() => setCenterOpen(false)}
-              className="rounded p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-300"
+              className="rounded p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-300"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -123,14 +123,14 @@ export default function ThermalAlertCenter({
 
           <div className="max-h-[60vh] overflow-y-auto">
             {!apiAvailable && !hasEligible && (
-              <div className="px-3 py-4 text-xs text-slate-500">
+              <div className="px-3 py-4 text-xs text-slate-500 dark:text-slate-400">
                 Alert API is currently unavailable. Last known data is retained;
                 polling will resume automatically.
               </div>
             )}
 
             {hasEligible ? (
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-slate-100 dark:divide-slate-800">
                 {eligibleAlerts.map((alert) => {
                   const classification = alert.classification_label ?? 'Unknown';
                   return (
@@ -138,7 +138,7 @@ export default function ThermalAlertCenter({
                       <button
                         type="button"
                         onClick={() => onView(alert)}
-                        className="w-full px-3 py-2.5 text-left hover:bg-slate-50 focus:outline-none focus:bg-slate-50"
+                        className="w-full px-3 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-800/60 focus:outline-none focus:bg-slate-50 dark:focus:bg-slate-800/60 transition-colors"
                       >
                         <div className="flex items-center gap-2">
                           <span
@@ -146,17 +146,17 @@ export default function ThermalAlertCenter({
                           >
                             {alert.severity}
                           </span>
-                          <span className="text-xs font-semibold text-slate-800">
+                          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
                             Cluster #{alert.cluster_id}
                           </span>
-                          <span className="ml-auto text-[11px] text-slate-400">
+                          <span className="ml-auto text-[11px] text-slate-400 dark:text-slate-500">
                             {formatTimestamp(alert.updated_at)}
                           </span>
                         </div>
-                        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-slate-500">
+                        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-slate-500 dark:text-slate-400">
                           <span>
                             Risk{' '}
-                            <span className="font-semibold text-slate-700">
+                            <span className="font-semibold text-slate-700 dark:text-slate-300">
                               {alert.risk_score != null ? formatNumber(alert.risk_score) : '—'}
                             </span>
                           </span>
@@ -167,7 +167,7 @@ export default function ThermalAlertCenter({
                           <span>Status {alert.status}</span>
                         </div>
                         {alert.station_available && (
-                          <div className="mt-0.5 truncate text-[11px] text-slate-400">
+                          <div className="mt-0.5 truncate text-[11px] text-slate-400 dark:text-slate-500">
                             {alert.nearest_station_name}
                             {alert.station_distance_km != null
                               ? ` (${formatNumber(alert.station_distance_km)} km)`
@@ -180,13 +180,13 @@ export default function ThermalAlertCenter({
                 })}
               </ul>
             ) : (
-              <div className="px-3 py-5 text-center text-xs text-slate-500">
+              <div className="px-3 py-5 text-center text-xs text-slate-500 dark:text-slate-400">
                 No active unsuppressed HIGH/CRITICAL alerts right now.
               </div>
             )}
           </div>
 
-          <div className="border-t border-slate-100 bg-slate-50 px-3 py-1.5 text-[10px] leading-snug text-slate-400">
+          <div className="border-t border-slate-100 bg-slate-50 px-3 py-1.5 text-[10px] leading-snug text-slate-400 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-500">
             Decision-support alerts from processed satellite evidence — not
             confirmed fire declarations. No automatic dispatch.
           </div>

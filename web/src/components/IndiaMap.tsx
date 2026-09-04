@@ -173,6 +173,8 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
     setFlyTarget(loc);
   };
 
+  const [basemapLayer, setBasemapLayer] = useState<'osm' | 'satellite'>('osm');
+
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
       <MapContainer
@@ -183,8 +185,17 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
         scrollWheelZoom={true}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          key={basemapLayer}
+          attribution={
+            basemapLayer === 'satellite'
+              ? '&copy; Esri, Maxar, Earthstar Geographics'
+              : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }
+          url={
+            basemapLayer === 'satellite'
+              ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+              : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+          }
         />
 
         <MapFlyTo target={flyTarget} />
@@ -218,9 +229,9 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
                 center={[event.latitude, event.longitude]}
                 radius={isSelected ? 10 : event.abnormality_level === 'HIGH' ? 7 : 5}
                 pathOptions={{
-                  color: isSelected ? '#1e40af' : color,
+                  color: isSelected ? '#3b82f6' : color,
                   fillColor: color,
-                  fillOpacity: isSelected ? 0.9 : 0.7,
+                  fillOpacity: isSelected ? 0.95 : 0.75,
                   weight: isSelected ? 3 : 1.5,
                 }}
                 eventHandlers={{
@@ -229,25 +240,24 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
               >
                 <Popup>
                   <div style={{ padding: '8px', fontSize: '12px', fontFamily: 'sans-serif', minWidth: '180px' }}>
-                    <div style={{ fontWeight: 600, color: '#1e293b', marginBottom: '4px' }}>
+                    <div style={{ fontWeight: 600, color: '#0f172a', marginBottom: '4px' }}>
                       Cluster #{event.cluster_id}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '4px' }}>
                       <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: color, display: 'inline-block' }} />
                       <span style={{ fontWeight: 500, color }}>{event.abnormality_level}</span>
                     </div>
-                    <div style={{ color: '#64748b', lineHeight: '1.6' }}>
+                    <div style={{ color: '#475569', lineHeight: '1.6' }}>
                       <div>FRP: {event.frp.toFixed(1)} MW</div>
-                      <div>Bright TI4: {event.bright_ti4.toFixed(1)} K</div>
-                      <div>Date: {event.acq_date}</div>
-                      <div>{formatCoordinate(event.latitude, event.longitude)}</div>
+                      <div>Brightness: {event.bright_ti4.toFixed(1)} K</div>
+                      <div>Coords: {formatCoordinate(event.latitude, event.longitude)}</div>
+                      {event.acq_date && <div>Date: {event.acq_date}</div>}
                     </div>
                     {mv && mv.movement_status === 'MOVING' && (
-                      <div style={{ marginTop: '4px', paddingTop: '4px', borderTop: '1px solid #e2e8f0', color: '#b45309' }}>
-                        <div>
-                          Direction: {mv.direction_available ? mv.direction : 'Not available'}{' '}
-                          ({mv.total_movement_distance_km.toFixed(2)} km)
-                        </div>
+                      <div style={{ marginTop: '4px', paddingTop: '4px', borderTop: '1px solid #e2e8f0', color: '#d97706' }}>
+                        <div>Moving {mv.direction ?? ''} ({mv.movement_bearing_degrees.toFixed(0)}°)</div>
+                        <div>Rate: {mv.movement_rate_km_per_day.toFixed(2)} km/day</div>
+                        <div>Total: {mv.total_movement_distance_km.toFixed(2)} km</div>
                         {mv.direction_available && (
                           <div>Confidence: {mv.direction_confidence}</div>
                         )}
@@ -266,27 +276,43 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
         </MarkerClusterGroup>
       </MapContainer>
 
+      {/* Basemap Switcher (OSM / Satellite) */}
+      <div className="absolute top-2.5 left-14 sm:top-3 sm:left-14 z-[1000] flex items-center bg-white/95 dark:bg-slate-900/95 border border-slate-300 dark:border-slate-700 rounded-md shadow-md p-0.5 text-xs backdrop-blur-xs">
+        <button
+          type="button"
+          onClick={() => setBasemapLayer('osm')}
+          className={`px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-[11px] font-bold transition-colors ${
+            basemapLayer === 'osm'
+              ? 'bg-navy-900 dark:bg-blue-600 text-white shadow-2xs'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          OSM
+        </button>
+        <button
+          type="button"
+          onClick={() => setBasemapLayer('satellite')}
+          className={`px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-[11px] font-bold transition-colors ${
+            basemapLayer === 'satellite'
+              ? 'bg-navy-900 dark:bg-blue-600 text-white shadow-2xs'
+              : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+          }`}
+        >
+          SATELLITE
+        </button>
+      </div>
+
       {/* Location Search — positioned top-right over the map */}
-      <div ref={searchRef} style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 1000 }}>
+      <div ref={searchRef} className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-[1000] w-44 sm:w-60 max-w-[calc(100vw-5.5rem)]">
         {/* Search Input */}
-        <div style={{ position: 'relative' }}>
+        <div className="relative">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
             onFocus={() => { if (searchResults.length > 0) setShowResults(true); }}
             placeholder="Search location..."
-            style={{
-              width: '240px',
-              padding: '8px 32px 8px 10px',
-              fontSize: '13px',
-              fontFamily: 'sans-serif',
-              border: '1px solid #d1d5db',
-              borderRadius: '6px',
-              outline: 'none',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-              background: 'white',
-            }}
+            className="w-full px-2.5 pr-7 py-1 sm:py-1.5 text-xs font-sans rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-md outline-none focus:ring-1 focus:ring-navy-600 dark:focus:ring-blue-500"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && searchResults.length > 0) {
                 handleSelectLocation(searchResults[0]);
@@ -298,8 +324,8 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
           />
           {/* Search icon */}
           <svg
-            style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}
-            width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2"
+            className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none w-3.5 h-3.5 text-slate-400"
+            fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2"
           >
             <circle cx="11" cy="11" r="8" />
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -308,137 +334,66 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
 
         {/* Search Results Dropdown */}
         {showResults && searchResults.length > 0 && (
-          <div
-            style={{
-              position: 'absolute',
-              top: '100%',
-              left: 0,
-              right: 0,
-              marginTop: '4px',
-              background: 'white',
-              border: '1px solid #d1d5db',
-              borderRadius: '6px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
-              maxHeight: '200px',
-              overflowY: 'auto',
-              zIndex: 1001,
-            }}
-          >
+          <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md shadow-xl max-h-52 overflow-y-auto z-[1001]">
             {searchResults.slice(0, 8).map((loc, i) => (
               <div
                 key={`${loc.name}-${i}`}
                 onClick={() => handleSelectLocation(loc)}
-                style={{
-                  padding: '8px 10px',
-                  fontSize: '13px',
-                  fontFamily: 'sans-serif',
-                  cursor: 'pointer',
-                  borderBottom: i < searchResults.length - 1 ? '1px solid #f1f5f9' : 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                }}
-                onMouseEnter={(e) => { (e.target as HTMLElement).style.backgroundColor = '#f8fafc'; }}
-                onMouseLeave={(e) => { (e.target as HTMLElement).style.backgroundColor = 'white'; }}
+                className="px-2.5 py-1.5 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 last:border-b-0"
               >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="2">
+                <svg className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                   <circle cx="12" cy="10" r="3" />
                 </svg>
-                <span>{loc.name}</span>
+                <span className="truncate">{loc.name}</span>
+                {loc.region && <span className="text-[10px] text-slate-400 dark:text-slate-500 ml-auto flex-shrink-0">({loc.region})</span>}
               </div>
             ))}
           </div>
         )}
       </div>
 
-      {/* Quick Locations — positioned below search */}
+      {/* Quick Locations — hidden on very small mobile to prevent map clutter */}
       <div
-        style={{
-          position: 'absolute',
-          top: '52px',
-          right: '12px',
-          zIndex: 1000,
-          display: 'flex',
-          gap: '4px',
-          flexWrap: 'wrap',
-          justifyContent: 'flex-end',
-          maxWidth: '240px',
-        }}>
+        className="hidden sm:flex absolute top-[48px] sm:top-[52px] right-2.5 sm:right-3 z-[1000] gap-1 flex-wrap justify-end max-w-[240px]"
+      >
         {QUICK_LOCATIONS.map((loc) => (
           <button
             key={loc.name}
             onClick={() => handleSelectLocation(loc)}
-            style={{
-              padding: '3px 8px',
-              fontSize: '11px',
-              fontFamily: 'sans-serif',
-              fontWeight: 500,
-              color: '#475569',
-              background: 'rgba(255,255,255,0.92)',
-              border: '1px solid #d1d5db',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.06)',
-              whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={(e) => {
-              (e.target as HTMLElement).style.backgroundColor = '#0f172a';
-              (e.target as HTMLElement).style.color = 'white';
-              (e.target as HTMLElement).style.borderColor = '#0f172a';
-            }}
-            onMouseLeave={(e) => {
-              (e.target as HTMLElement).style.backgroundColor = 'rgba(255,255,255,0.92)';
-              (e.target as HTMLElement).style.color = '#475569';
-              (e.target as HTMLElement).style.borderColor = '#d1d5db';
-            }}
+            className="px-2 py-0.5 text-[11px] font-sans font-medium text-slate-700 dark:text-slate-200 bg-white/95 dark:bg-slate-900/95 hover:bg-slate-900 hover:text-white dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded shadow-xs cursor-pointer whitespace-nowrap transition-colors"
           >
             {loc.name}
           </button>
         ))}
       </div>
 
-      {/* Map Legend — positioned absolutely over the map */}
+      {/* Map Legend — positioned bottom-left over the map with dark mode & responsive sizing */}
       <div
-        style={{
-          position: 'absolute',
-          bottom: '16px',
-          left: '16px',
-          zIndex: 1000,
-          background: 'rgba(255,255,255,0.95)',
-          border: '1px solid #e2e8f0',
-          borderRadius: '6px',
-          padding: '10px 12px',
-          fontSize: '12px',
-          fontFamily: 'sans-serif',
-          boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-        }}
+        className="absolute bottom-3 left-3 z-[1000] bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-lg p-2.5 text-xs font-sans shadow-md max-w-[calc(100vw-2rem)] sm:max-w-xs text-slate-800 dark:text-slate-200 backdrop-blur-xs"
       >
-        <div style={{ fontWeight: 600, color: '#0f172a', marginBottom: '6px' }}>Thermal Abnormality</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-          <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#dc2626', display: 'inline-block' }} />
+        <div className="font-semibold text-slate-900 dark:text-slate-100 mb-1 text-[11px] sm:text-xs">Thermal Abnormality</div>
+        <div className="flex items-center gap-2 mb-1 text-[11px]">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-600 inline-block flex-shrink-0" />
           <span>HIGH Anomaly</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-          <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#d97706', display: 'inline-block' }} />
+        <div className="flex items-center gap-2 mb-1 text-[11px]">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block flex-shrink-0" />
           <span>ELEVATED Event</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px' }}>
-          <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#16a34a', display: 'inline-block' }} />
+        <div className="flex items-center gap-2 mb-1 text-[11px]">
+          <span className="w-2.5 h-2.5 rounded-full bg-green-600 inline-block flex-shrink-0" />
           <span>NORMAL Event</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px', paddingTop: '6px', borderTop: '1px solid #e2e8f0' }}>
-          <svg width="14" height="14" viewBox="0 0 14 14">
+        <div className="flex items-center gap-2 mt-1.5 pt-1.5 border-t border-slate-200 dark:border-slate-800 text-[11px]">
+          <svg width="14" height="14" viewBox="0 0 14 14" className="flex-shrink-0">
             <line x1="1" y1="7" x2="10" y2="7" stroke="#d97706" strokeWidth="2.5" />
             <line x1="10" y1="7" x2="6.5" y2="4.5" stroke="#d97706" strokeWidth="2.5" />
             <line x1="10" y1="7" x2="6.5" y2="9.5" stroke="#d97706" strokeWidth="2.5" />
           </svg>
-          <span>Thermal Activity Direction (MODERATE/HIGH)</span>
+          <span>Movement Direction</span>
         </div>
-        <div style={{ color: '#94a3b8', marginTop: '6px', paddingTop: '6px', borderTop: '1px solid #f1f5f9', fontSize: '11px', maxWidth: '230px' }}>
-          Arrows show the direction of detected thermal activity, not confirmed fire-front propagation.
-        </div>
-        <div style={{ color: '#94a3b8', marginTop: '2px', fontSize: '11px' }}>
+        <div className="text-slate-400 dark:text-slate-500 mt-1 pt-1 border-t border-slate-100 dark:border-slate-800 text-[10px] hidden xs:block">
           Total: {events.length.toLocaleString()} detections
         </div>
       </div>

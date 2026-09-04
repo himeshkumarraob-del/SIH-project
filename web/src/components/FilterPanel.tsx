@@ -1,165 +1,503 @@
+import { useState, useEffect } from 'react';
 import { useFilters } from '../hooks/useFilters';
+import { fetchClusters } from '../api/client';
+import { formatNumber } from '../utils/formatters';
 
-interface FilterGroupProps {
-  label: string;
-  options: string[];
-  selected: string[];
-  onToggle: (value: string) => void;
+interface CollapsibleSectionProps {
+  title: string;
+  count?: number;
+  activeCount?: number;
+  icon?: React.ReactNode;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
 }
 
-function FilterGroup({ label, options, selected, onToggle }: FilterGroupProps) {
+function CollapsibleSection({
+  title,
+  activeCount = 0,
+  icon,
+  defaultOpen = true,
+  children,
+}: CollapsibleSectionProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
   return (
-    <div className="mb-4">
-      <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-        {label}
-      </h3>
-      <div className="space-y-1">
-        {options.map((opt) => {
-          const isActive = selected.includes(opt);
-          return (
-            <label
-              key={opt}
-              className={`flex items-center gap-2 px-2 py-1 rounded text-sm cursor-pointer transition-colors ${
-                isActive
-                  ? 'bg-navy-800 text-white'
-                  : 'text-slate-700 hover:bg-slate-100'
-              }`}
-            >
-              <input
-                type="checkbox"
-                checked={isActive}
-                onChange={() => onToggle(opt)}
-                className="sr-only"
-              />
-              <span
-                className={`w-3.5 h-3.5 rounded border flex items-center justify-center flex-shrink-0 ${
-                  isActive
-                    ? 'bg-white border-white'
-                    : 'border-slate-300 bg-white'
-                }`}
-              >
-                {isActive && (
-                  <svg className="w-2.5 h-2.5 text-navy-800" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                )}
-              </span>
-              <span className="truncate">{opt.replace(/_/g, ' ')}</span>
-            </label>
-          );
-        })}
-      </div>
+    <div className="border-b border-slate-100/90 dark:border-slate-800/80 py-2.5 last:border-b-0">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between text-left group py-0.5"
+      >
+        <div className="flex items-center gap-1.5 min-w-0">
+          {icon && <span className="text-slate-400 dark:text-slate-500 group-hover:text-navy-700 dark:group-hover:text-slate-200 transition-colors flex-shrink-0">{icon}</span>}
+          <span className="text-xs font-bold text-navy-900 dark:text-slate-200 group-hover:text-navy-700 dark:group-hover:text-white uppercase tracking-wider truncate">
+            {title}
+          </span>
+          {activeCount > 0 && (
+            <span className="inline-flex items-center justify-center px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-navy-800 dark:bg-navy-600 text-white shadow-2xs">
+              {activeCount}
+            </span>
+          )}
+        </div>
+        <svg
+          className={`w-3.5 h-3.5 text-slate-400 dark:text-slate-500 transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {isOpen && <div className="mt-2 space-y-1.5 animate-fadeIn">{children}</div>}
     </div>
   );
 }
 
-export default function FilterPanel() {
+interface FilterPanelProps {
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
+}
+
+export default function FilterPanel({ isMobileOpen = false, onCloseMobile }: FilterPanelProps) {
   const { filters, toggleFilterValue, clearAllFilters, activeFilterCount } = useFilters();
+  const [matchingCount, setMatchingCount] = useState<number | null>(null);
+  const [loadingCount, setLoadingCount] = useState(false);
+
+  // Dynamically derive matching cluster count from current filter state (no hardcoded count)
+  useEffect(() => {
+    let cancelled = false;
+    setLoadingCount(true);
+    fetchClusters(filters)
+      .then((clusters) => {
+        if (!cancelled) {
+          setMatchingCount(clusters.length);
+          setLoadingCount(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setLoadingCount(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [filters]);
+
+  const panelContent = (
+    <div className="flex flex-col h-full overflow-hidden select-none">
+      {/* Top Header: Mission Control & Clear Action */}
+      <div className="px-3.5 py-3 border-b border-slate-200/90 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/60 flex-shrink-0 shadow-2xs">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-1.5">
+            <div className="w-5 h-5 rounded bg-navy-900 dark:bg-navy-700 text-white flex items-center justify-center flex-shrink-0">
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+            </div>
+            <h2 className="text-xs font-bold text-navy-900 dark:text-slate-100 uppercase tracking-wider">
+              Filter Parameters
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            {activeFilterCount > 0 ? (
+              <button
+                onClick={clearAllFilters}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 bg-red-50 dark:bg-red-950/60 hover:bg-red-100 dark:hover:bg-red-900/60 border border-red-200 dark:border-red-900 transition-colors shadow-2xs"
+                title="Reset all active filters"
+              >
+                <span>Reset ({activeFilterCount})</span>
+              </button>
+            ) : (
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                ALL
+              </span>
+            )}
+
+            {/* Close button for mobile drawer */}
+            {onCloseMobile && (
+              <button
+                onClick={onCloseMobile}
+                className="lg:hidden p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+                title="Close filter drawer"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Live Filtered Result Counter */}
+        <div className="flex items-center justify-between bg-white dark:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-200/80 dark:border-slate-700 shadow-2xs text-xs">
+          <span className="text-slate-500 dark:text-slate-400 font-medium">Matching Clusters</span>
+          <div className="flex items-center gap-1 font-mono font-bold text-navy-900 dark:text-slate-100">
+            {loadingCount ? (
+              <span className="text-slate-400 dark:text-slate-500 animate-pulse text-[11px]">Updating…</span>
+            ) : (
+              <>
+                <span className="text-navy-900 dark:text-slate-100">{matchingCount !== null ? formatNumber(matchingCount) : '—'}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Scrollable Filter Categories */}
+      <div className="flex-1 overflow-y-auto px-3.5 py-2 space-y-1">
+        {/* 1. Risk Level Filter (Pills) */}
+        <CollapsibleSection
+          title="Risk Level"
+          activeCount={filters.riskLevel.length}
+          icon={
+            <svg className="w-3.5 h-3.5 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          }
+        >
+          <div className="grid grid-cols-3 gap-1.5">
+            {[
+              { id: 'HIGH', label: 'High', color: 'border-red-300 dark:border-red-900/80', active: 'bg-red-600 text-white border-red-700 shadow-xs', inactive: 'bg-red-50/70 dark:bg-red-950/40 text-red-700 dark:text-red-400 hover:bg-red-100/80 dark:hover:bg-red-900/40' },
+              { id: 'MEDIUM', label: 'Medium', color: 'border-amber-300 dark:border-amber-900/80', active: 'bg-amber-600 text-white border-amber-700 shadow-xs', inactive: 'bg-amber-50/70 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 hover:bg-amber-100/80 dark:hover:bg-amber-900/40' },
+              { id: 'LOW', label: 'Low', color: 'border-emerald-300 dark:border-emerald-900/80', active: 'bg-emerald-600 text-white border-emerald-700 shadow-xs', inactive: 'bg-emerald-50/70 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/40' },
+            ].map((item) => {
+              const isSelected = filters.riskLevel.includes(item.id);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => toggleFilterValue('riskLevel', item.id)}
+                  className={`px-2 py-1 rounded-md text-xs font-bold border transition-all text-center flex items-center justify-center gap-1 ${
+                    isSelected ? item.active : `${item.inactive} ${item.color}`
+                  }`}
+                >
+                  <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-current'}`} />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </CollapsibleSection>
+
+        {/* 2. AI Abnormality Filter */}
+        <CollapsibleSection
+          title="AI Abnormality"
+          activeCount={filters.abnormalityLevel.length}
+          icon={
+            <svg className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          }
+        >
+          <div className="space-y-1">
+            {[
+              { id: 'HIGH', label: 'High Abnormality', activeClass: 'bg-red-600 text-white border-red-700', inactiveClass: 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' },
+              { id: 'ELEVATED', label: 'Elevated Abnormality', activeClass: 'bg-orange-600 text-white border-orange-700', inactiveClass: 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' },
+              { id: 'NORMAL', label: 'Normal Baseline', activeClass: 'bg-emerald-600 text-white border-emerald-700', inactiveClass: 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' },
+            ].map((item) => {
+              const isSelected = filters.abnormalityLevel.includes(item.id);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => toggleFilterValue('abnormalityLevel', item.id)}
+                  className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs font-medium border transition-all ${
+                    isSelected
+                      ? `${item.activeClass} shadow-xs font-semibold`
+                      : `${item.inactiveClass} border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/60`
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  <span className={`w-3.5 h-3.5 rounded flex items-center justify-center ${isSelected ? 'bg-white/20' : 'border border-slate-300 dark:border-slate-600'}`}>
+                    {isSelected && (
+                      <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </CollapsibleSection>
+
+        {/* 3. False Alarm Concern Filter */}
+        <CollapsibleSection
+          title="False Alarm Concern"
+          activeCount={filters.falseAlarmConcern.length}
+          icon={
+            <svg className="w-3.5 h-3.5 text-blue-500 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          }
+        >
+          <div className="grid grid-cols-3 gap-1">
+            {[
+              { id: 'LOW', label: 'Low', sub: 'Verified', active: 'bg-emerald-700 text-white border-emerald-800' },
+              { id: 'MEDIUM', label: 'Med', sub: 'Uncertain', active: 'bg-amber-600 text-white border-amber-700' },
+              { id: 'HIGH', label: 'High', sub: 'Concern', active: 'bg-red-600 text-white border-red-700' },
+            ].map((item) => {
+              const isSelected = filters.falseAlarmConcern.includes(item.id);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => toggleFilterValue('falseAlarmConcern', item.id)}
+                  className={`p-1.5 rounded-md text-center border transition-all ${
+                    isSelected
+                      ? `${item.active} shadow-xs`
+                      : 'bg-slate-50/70 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60'
+                  }`}
+                >
+                  <div className={`text-xs font-bold leading-tight ${isSelected ? 'text-white' : 'text-slate-800 dark:text-slate-200'}`}>
+                    {item.label}
+                  </div>
+                  <div className={`text-[9px] ${isSelected ? 'text-white/80' : 'text-slate-400 dark:text-slate-500'}`}>
+                    {item.sub}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </CollapsibleSection>
+
+        {/* 4. Thermal Movement Filter */}
+        <CollapsibleSection
+          title="Thermal Movement"
+          activeCount={filters.movementStatus.length}
+          icon={
+            <svg className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          }
+        >
+          <div className="space-y-1">
+            {[
+              {
+                id: 'MOVING',
+                label: 'Moving Clusters',
+                icon: (
+                  <svg className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                ),
+              },
+              {
+                id: 'STATIONARY',
+                label: 'Stationary Clusters',
+                icon: (
+                  <svg className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                ),
+              },
+              {
+                id: 'INSUFFICIENT_DATA',
+                label: 'Insufficient Vector Data',
+                icon: (
+                  <svg className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                ),
+              },
+            ].map((item) => {
+              const isSelected = filters.movementStatus.includes(item.id);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => toggleFilterValue('movementStatus', item.id)}
+                  className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs border transition-all ${
+                    isSelected
+                      ? 'bg-navy-900 dark:bg-navy-700 text-white border-navy-950 dark:border-navy-600 font-bold shadow-xs'
+                      : 'bg-slate-50/70 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-medium'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    <span>{item.icon}</span>
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                  {isSelected && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </CollapsibleSection>
+
+        {/* 5. Persistence Footprint Filter */}
+        <CollapsibleSection
+          title="Persistence"
+          activeCount={filters.persistenceCategory.length}
+          icon={
+            <svg className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          }
+        >
+          <div className="space-y-1">
+            {[
+              { id: 'persistent', label: 'Persistent Multi-Day' },
+              { id: 'short_lived_repeated', label: 'Short-Lived Repeated' },
+              { id: 'isolated', label: 'Isolated Single-Pass' },
+            ].map((item) => {
+              const isSelected = filters.persistenceCategory.includes(item.id);
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => toggleFilterValue('persistenceCategory', item.id)}
+                  className={`w-full flex items-center justify-between px-2 py-1.2 rounded-md text-xs border transition-all ${
+                    isSelected
+                      ? 'bg-navy-800 dark:bg-navy-700 text-white border-navy-900 dark:border-navy-600 font-semibold shadow-xs'
+                      : 'bg-slate-50/60 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60'
+                  }`}
+                >
+                  <span className="truncate">{item.label}</span>
+                  <span className={`w-2 h-2 rounded-full border ${isSelected ? 'bg-emerald-400 border-white' : 'border-slate-300 dark:border-slate-600'}`} />
+                </button>
+              );
+            })}
+          </div>
+        </CollapsibleSection>
+
+        {/* 6. Satellite Constellation */}
+        <CollapsibleSection
+          title="Satellite Constellation"
+          activeCount={filters.satellite.length}
+          icon={
+            <svg className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
+            </svg>
+          }
+        >
+          <div className="grid grid-cols-2 gap-1.5">
+            {['NOAA-20', 'NOAA-21'].map((sat) => {
+              const isSelected = filters.satellite.includes(sat);
+              return (
+                <button
+                  key={sat}
+                  onClick={() => toggleFilterValue('satellite', sat)}
+                  className={`px-2 py-1.5 rounded-md text-xs font-semibold border text-center transition-all ${
+                    isSelected
+                      ? 'bg-navy-900 dark:bg-navy-700 text-white border-navy-950 dark:border-navy-600 shadow-xs'
+                      : 'bg-slate-50/70 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60'
+                  }`}
+                >
+                  {sat}
+                </button>
+              );
+            })}
+          </div>
+        </CollapsibleSection>
+
+        {/* 7. Temporal Range */}
+        <CollapsibleSection
+          title="Acquisition Window"
+          activeCount={filters.dateRange ? 1 : 0}
+          icon={
+            <svg className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          }
+        >
+          <div className="space-y-1.5 bg-slate-50/80 dark:bg-slate-800/70 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+            <div>
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-0.5">Start Date</span>
+              <input
+                type="date"
+                value={filters.dateRange?.start ?? ''}
+                onChange={(e) => {
+                  const start = e.target.value;
+                  const end = filters.dateRange?.end ?? '2026-08-30';
+                  if (start) {
+                    toggleFilterValue('dateRange', { start, end } as unknown as string);
+                  }
+                }}
+                className="w-full px-2 py-1 text-xs border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono focus:outline-none focus:ring-1 focus:ring-navy-600"
+              />
+            </div>
+            <div>
+              <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-0.5">End Date</span>
+              <input
+                type="date"
+                value={filters.dateRange?.end ?? ''}
+                onChange={(e) => {
+                  const end = e.target.value;
+                  const start = filters.dateRange?.start ?? '2026-08-01';
+                  if (end) {
+                    toggleFilterValue('dateRange', { start, end } as unknown as string);
+                  }
+                }}
+                className="w-full px-2 py-1 text-xs border border-slate-300 dark:border-slate-600 rounded bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-mono focus:outline-none focus:ring-1 focus:ring-navy-600"
+              />
+            </div>
+          </div>
+        </CollapsibleSection>
+
+        {/* 8. Modular Extensions (Future Modules) */}
+        <CollapsibleSection
+          title="Telemetry Extensions"
+          defaultOpen={false}
+          icon={
+            <svg className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          }
+        >
+          <div className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
+            <div className="px-2 py-1.5 bg-slate-50 dark:bg-slate-800 rounded border border-slate-100 dark:border-slate-700 flex items-center justify-between text-[11px]">
+              <span>Vulnerability-Aware Risk</span>
+              <span className="text-[9px] font-bold px-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">PLANNED</span>
+            </div>
+            <div className="px-2 py-1.5 bg-slate-50 dark:bg-slate-800 rounded border border-slate-100 dark:border-slate-700 flex items-center justify-between text-[11px]">
+              <span>CloudShield Filter</span>
+              <span className="text-[9px] font-bold px-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">PLANNED</span>
+            </div>
+            <div className="px-2 py-1.5 bg-slate-50 dark:bg-slate-800 rounded border border-slate-100 dark:border-slate-700 flex items-center justify-between text-[11px]">
+              <span>Automated Station Dispatch</span>
+              <span className="text-[9px] font-bold px-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">PLANNED</span>
+            </div>
+          </div>
+        </CollapsibleSection>
+      </div>
+    </div>
+  );
 
   return (
-    <aside className="w-56 flex-shrink-0 bg-white border-r border-slate-200 overflow-y-auto">
-      <div className="px-3 py-3 border-b border-slate-100">
-        <div className="flex items-center justify-between mb-1">
-          <h2 className="text-sm font-semibold text-navy-900">Filters</h2>
-          {activeFilterCount > 0 && (
-            <button
-              onClick={clearAllFilters}
-              className="text-xs text-navy-600 hover:text-navy-800 font-medium"
-            >
-              Clear all ({activeFilterCount})
-            </button>
-          )}
-        </div>
-      </div>
+    <>
+      {/* Desktop Sticky/Fixed Sidebar */}
+      <aside className="hidden lg:flex w-60 lg:w-64 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col h-full overflow-hidden transition-colors duration-200">
+        {panelContent}
+      </aside>
 
-      <div className="px-3 py-3">
-        <FilterGroup
-          label="Risk Level"
-          options={['HIGH', 'MEDIUM', 'LOW']}
-          selected={filters.riskLevel}
-          onToggle={(v) => toggleFilterValue('riskLevel', v)}
-        />
-
-        <FilterGroup
-          label="AI Abnormality"
-          options={['HIGH', 'ELEVATED', 'NORMAL']}
-          selected={filters.abnormalityLevel}
-          onToggle={(v) => toggleFilterValue('abnormalityLevel', v)}
-        />
-
-        <FilterGroup
-          label="False Alarm Concern"
-          options={['LOW', 'MEDIUM', 'HIGH']}
-          selected={filters.falseAlarmConcern}
-          onToggle={(v) => toggleFilterValue('falseAlarmConcern', v)}
-        />
-
-        <FilterGroup
-          label="Thermal Movement"
-          options={['MOVING', 'STATIONARY', 'INSUFFICIENT_DATA']}
-          selected={filters.movementStatus}
-          onToggle={(v) => toggleFilterValue('movementStatus', v)}
-        />
-
-        <FilterGroup
-          label="Persistence"
-          options={['persistent', 'short_lived_repeated', 'isolated']}
-          selected={filters.persistenceCategory}
-          onToggle={(v) => toggleFilterValue('persistenceCategory', v)}
-        />
-
-        <FilterGroup
-          label="Satellite"
-          options={['NOAA-20', 'NOAA-21']}
-          selected={filters.satellite}
-          onToggle={(v) => toggleFilterValue('satellite', v)}
-        />
-
-        {/* Date Range */}
-        <div className="mb-4">
-          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-            Date Range
-          </h3>
-          <div className="space-y-1.5">
-            <input
-              type="date"
-              value={filters.dateRange?.start ?? ''}
-              onChange={(e) => {
-                const start = e.target.value;
-                const end = filters.dateRange?.end ?? '2026-08-30';
-                if (start) {
-                  toggleFilterValue('dateRange', { start, end } as unknown as string);
-                }
-              }}
-              className="w-full px-2 py-1 text-xs border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-navy-500"
-            />
-            <input
-              type="date"
-              value={filters.dateRange?.end ?? ''}
-              onChange={(e) => {
-                const end = e.target.value;
-                const start = filters.dateRange?.start ?? '2026-08-01';
-                if (end) {
-                  toggleFilterValue('dateRange', { start, end } as unknown as string);
-                }
-              }}
-              className="w-full px-2 py-1 text-xs border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-navy-500"
-            />
+      {/* Mobile / Tablet Slide-Over Drawer */}
+      {isMobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-[1400] flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+            onClick={onCloseMobile}
+            aria-hidden="true"
+          />
+          {/* Slide-in Drawer */}
+          <div className="relative w-[300px] max-w-[85vw] h-full bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden animate-slideRight z-10 border-r border-slate-200 dark:border-slate-800">
+            {panelContent}
+            {/* Mobile bottom Done action */}
+            <div className="p-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 flex-shrink-0">
+              <button
+                type="button"
+                onClick={onCloseMobile}
+                className="w-full py-2 px-3 rounded-lg text-xs font-bold text-white bg-navy-900 hover:bg-navy-800 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors shadow-xs"
+              >
+                Apply & View ({matchingCount !== null ? formatNumber(matchingCount) : '—'} Clusters)
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Coming Soon Section */}
-        <div className="mt-6 pt-4 border-t border-slate-100">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-            Future Modules
-          </h3>
-          <div className="space-y-1 text-xs text-slate-400">
-            <div className="px-2 py-1 bg-slate-50 rounded">Vulnerability-Aware Risk</div>
-            <div className="px-2 py-1 bg-slate-50 rounded">CloudShield</div>
-            <div className="px-2 py-1 bg-slate-50 rounded">Station Alerting</div>
-          </div>
-        </div>
-      </div>
-    </aside>
+      )}
+    </>
   );
 }
+

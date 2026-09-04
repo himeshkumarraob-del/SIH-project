@@ -46,6 +46,19 @@ async function apiGet<T>(path: string, params?: Record<string, string>): Promise
   return res.json();
 }
 
+async function apiPost<T>(path: string, body?: any): Promise<T> {
+  const url = new URL(`${API_BASE}${path}`, window.location.origin);
+  const res = await fetch(url.toString(), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    throw new Error(`API error ${res.status}: ${res.statusText}`);
+  }
+  return res.json();
+}
+
 // ---------------------------------------------------------------------------
 // Filter helpers
 // ---------------------------------------------------------------------------
@@ -291,6 +304,84 @@ export async function fetchActiveAlerts(): Promise<ThermalAlert[]> {
     updated_at: a.updated_at ?? '',
     is_decision_support_only: a.is_decision_support_only ?? true,
   }));
+}
+
+export async function fetchAllAlerts(params?: {
+  severity?: string;
+  status?: string;
+  suppressed?: boolean;
+}): Promise<ThermalAlert[]> {
+  if (USE_MOCK) return [];
+  const query: Record<string, string> = {};
+  if (params?.severity && params.severity !== 'ALL') query.severity = params.severity;
+  if (params?.status && params.status !== 'ALL') query.status = params.status;
+  if (params?.suppressed !== undefined) query.suppressed = String(params.suppressed);
+
+  const data = await apiGet<any[]>('/alerts', query);
+  return data.map((a: any) => ({
+    alert_id: a.alert_id,
+    cluster_id: a.cluster_id,
+    severity: a.severity ?? 'LOW',
+    status: a.status ?? 'ACTIVE',
+    evidence_confidence: a.evidence_confidence ?? 'INSUFFICIENT',
+    suppressed: a.suppressed ?? false,
+    suppression_reason: a.suppression_reason ?? '',
+    risk_score: a.risk_score ?? null,
+    risk_level: a.risk_level ?? 'LOW',
+    classification_label: a.classification_label ?? 'Unknown / Insufficient Evidence',
+    classification_score: a.classification_score ?? null,
+    false_alarm_indicator: a.false_alarm_indicator ?? 'MEDIUM',
+    detection_reliability: a.detection_reliability ?? 'MEDIUM',
+    observation_count: a.observation_count ?? 1,
+    active_days: a.active_days ?? 1,
+    persistence_category: a.persistence_category ?? 'isolated',
+    max_frp: a.max_frp ?? null,
+    max_bright_ti4: a.max_bright_ti4 ?? null,
+    bt_diff_max: a.bt_diff_max ?? null,
+    movement_direction: a.movement_direction ?? null,
+    movement_bearing_degrees: a.movement_bearing_degrees ?? null,
+    movement_rate_km_per_day: a.movement_rate_km_per_day ?? null,
+    movement_pattern: a.movement_pattern ?? 'insufficient_evidence',
+    latitude: a.latitude ?? null,
+    longitude: a.longitude ?? null,
+    nearest_station_name: a.nearest_station_name ?? '',
+    station_distance_km: a.station_distance_km ?? null,
+    station_available: a.station_available ?? false,
+    reasons: a.reasons ?? '',
+    alert_rationale: a.alert_rationale ?? '',
+    created_at: a.created_at ?? '',
+    updated_at: a.updated_at ?? '',
+    is_decision_support_only: a.is_decision_support_only ?? true,
+  }));
+}
+
+export async function postAcknowledgeAlert(alertId: string): Promise<{
+  alert_id: string;
+  cluster_id: number;
+  status: string;
+  severity: string;
+  updated_at: string;
+  detail: string;
+}> {
+  return apiPost(`/alerts/${encodeURIComponent(alertId)}/acknowledge`);
+}
+
+export async function postResolveAlert(alertId: string): Promise<{
+  alert_id: string;
+  cluster_id: number;
+  status: string;
+  severity: string;
+  updated_at: string;
+  detail: string;
+}> {
+  return apiPost(`/alerts/${encodeURIComponent(alertId)}/resolve`);
+}
+
+export async function fetchAlertHistory(alertId?: string, clusterId?: number): Promise<any[]> {
+  const query: Record<string, string> = {};
+  if (alertId) query.alert_id = alertId;
+  if (clusterId !== undefined) query.cluster_id = String(clusterId);
+  return apiGet<any[]>('/alerts-history', query);
 }
 
 export async function fetchStatistics(): Promise<DashboardStats> {

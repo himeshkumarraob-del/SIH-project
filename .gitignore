@@ -1,5 +1,9 @@
 # Secrets
 .env
+.env.*
+*.key
+Key.txt
+key.txt
 
 # Python
 __pycache__/
@@ -7,6 +11,14 @@ __pycache__/
 .pytest_cache/
 .venv/
 *.egg-info/
+.dist/
+*.bak/
+*.bak
+
+# Logs
+*.log
+reports/logs/*
+!reports/logs/.gitkeep
 
 # Data (raw/interim/processed are regenerable from FIRMS; don't commit large CSVs)
 data/raw/*
@@ -16,9 +28,7 @@ data/interim/*
 data/processed/*
 !data/processed/.gitkeep
 
-# Logs and model artifacts
-reports/logs/*
-!reports/logs/.gitkeep
+# Models
 models/*.joblib
 models/*.pth
 models/*.pt
@@ -32,5 +42,8 @@ web/node_modules/
 web/dist/
 web/.env
 web/.env.local
+web/tsconfig.tsbuildinfo
+
 # OS
 .DS_Store
+Thumbs.db
