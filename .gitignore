@@ -27,8 +27,21 @@ data/raw/*
 !data/raw/.gitkeep
 data/interim/*
 !data/interim/.gitkeep
+# The backend loads these processed datasets at runtime (SIH demo / Render),
+# so they must ship in the repo; everything else under data/processed stays ignored.
 data/processed/*
 !data/processed/.gitkeep
+!data/processed/firms_ai_results.csv
+!data/processed/gis_thermal_events.csv
+!data/processed/firms_false_alarm.csv
+!data/processed/firms_risk_results.csv
+!data/processed/thermal_movement.csv
+!data/processed/firms_industrial_classification.csv
+!data/processed/satellite_context.csv
+!data/processed/emergency_alerts.csv
+!data/processed/thermal_alerts.csv
+!data/processed/thermal_alert_meta.json
+!data/processed/fire_stations.csv
 
 # Models
 models/*.joblib

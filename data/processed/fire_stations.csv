@@ -1,0 +1,1480 @@
+osm_type,osm_id,name,latitude,longitude
+node,13576336800,Fire station (unnamed),6.026389,80.795217
+way,495353942,Fire brigade,6.035303,80.218083
+way,249359901,Fire station (unnamed),6.288013,81.118538
+node,1804658556,Balai Bomba & Penyelamat Langkawi,6.321197,99.848923
+way,1356115546,Fire station (unnamed),6.328253,99.851127
+way,496339085,Fire & Rescue Kalutara,6.585859,79.961536
+node,12386989002,Kulhudhuffushi Fire Station,6.61722,73.067534
+node,3885891657,Fire & Rescue,6.678661,80.403148
+way,385287169,Fire station (unnamed),6.68558,80.401523
+node,1153959887,Fire Brigade Horana,6.714786,80.062129
+way,1548948969,Moratuwa Fire Station,6.777478,79.884046
+node,14088419297,Moratuwa Fire Station,6.777488,79.884042
+node,1825441924,Dehiwala Mount-Lavinia Fire Station,6.840591,79.87838
+node,1934839393,Kottawa Cemetery,6.844843,79.966002
+node,625839629,Colombo Fire & Rescue,6.923068,79.862267
+way,949700674,Fire station (unnamed),6.924072,79.89023
+node,3592963444,Colombo Fire And Rescue (Sub Unit),6.947741,79.870632
+node,14080337540,colombo fire station,6.948177,79.87122
+node,4693135745,Fire Brigade (Hettiyawatte Sub Unit),6.950175,79.857492
+way,479994759,SLPA Fire Brgade,6.95311,79.857699
+node,5571136341,Fire & Rescue Unit,6.966848,80.769125
+way,376359989,Fire Brigade Gampaha,7.094782,79.995077
+node,11343493252,Airport fire and rescue,7.179596,79.887318
+way,562749160,Fire station (unnamed),7.281601,80.622713
+node,1837389472,Fire Brigade Kandy,7.28161,80.622721
+node,6167241087,Fire station (unnamed),7.326338,80.796841
+node,12599872146,อาคารป้องกันและบรรเทาสาธารณภัย ย่านตาขาว,7.376952,99.673775
+way,621857273,สถานีดับเพลิง,7.554847,99.609829
+way,594752261,Fire station (unnamed),7.577029,79.798752
+node,12949812319,fire station - chilaw,7.577038,79.798718
+node,11000981397,Fire station (unnamed),7.770212,98.318069
+way,178423471,Huai Yot Fire Station,7.786986,99.634829
+node,4704255992,Fire station (unnamed),7.817278,98.310736
+way,1181095675,Fire station (unnamed),7.8209,98.400817
+way,615085563,Fire station (unnamed),7.863125,98.371619
+way,1081933791,Fire station (unnamed),7.874067,98.391256
+way,1185931890,สถานีป้องกันและบรรเทาสาธารณะภัย เทศบาลตำบลวิชิต (ศูนย์สุรกุล),7.890618,98.373107
+node,683890538,Fire station (unnamed),7.898065,98.304045
+node,4013110748,Fire station (unnamed),7.941234,81.002624
+node,11148514630,Fire station (unnamed),8.066404,98.30284
+node,13677532948,Fire station (unnamed),8.096086,98.990607
+node,13677496994,Fire station (unnamed),8.100624,98.979603
+way,542782508,Fire Station 2,8.104853,98.301414
+way,542782498,Fire Station 1,8.11438,98.309937
+node,5003290157,Fire station (unnamed),8.177842,77.42595
+way,828938531,Fire Station Minicoy,8.281264,73.054563
+node,1623278706,Kollencode Fire Station,8.284415,77.117171
+node,8987498155,"Fair and rescue Station, Poovar",8.325157,77.075175
+way,979397756,Fire and Rescue Station Poovar,8.325223,77.075161
+way,910677527,Anuradhapura Fire Rescue Office,8.326159,80.407746
+way,497633471,Anuradhapura Fire Rescue Office,8.326247,80.407785
+node,1685476665,Tisaiyanvillai Fire Station,8.337157,77.853051
+way,762837766,"Fire and Rescue Station, Parassala",8.347103,77.160279
+node,8835878279,"Fire and Rescue Station, Parassala",8.34713,77.160284
+way,823169727,"Fire and Rescue Station, Vizhinjam",8.384916,76.983457
+way,1002562442,fire station,8.406858,77.083463
+way,823170810,"Fire and Rescue Station, Neyyattinkara",8.406862,77.083463
+way,475936728,"Fire and Rescue Station, Chackai",8.489801,76.914993
+way,954615532,"Fire and Rescue Station, Kattakkada",8.494311,77.062499
+way,750328231,"Fire and Rescue Station, Chengalchoola",8.494489,76.952538
+node,14003936738,VSSC Fire Staton,8.52446,76.880589
+way,954615533,Fire and Rescue Station Neyyar Dam,8.524811,77.130405
+way,750328423,Fire and Rescue Station Technopark,8.559818,76.878139
+node,7701313019,Fire station (unnamed),8.581093,81.227653
+way,954615534,"Fire and Rescue Station, Nedumangadu",8.615451,76.981603
+node,14089000492,Fire station (unnamed),8.669007,99.924434
+way,972577671,"Fire and Rescue Station, Vithura",8.669326,77.083492
+way,954620623,"Fire and Rescue Station, Keezhayikkonam",8.70434,76.904648
+node,7130230413,Fire and Rescue Station Keezhayikonam,8.704496,76.904489
+way,774543662,"Fire and Rescue Station, Poovanpara, Attingal",8.710948,76.812628
+way,1442919035,Airport Fire Station,8.728376,78.024356
+way,954620624,"Fire and Rescue Station, Varkkala",8.733353,76.727514
+node,12621901264,Fire And Rescue Service Station,8.802312,78.153765
+way,954620625,"Fire and Rescue Station, Paravoor",8.814694,76.671379
+way,1102553611,Fire station (unnamed),8.824964,76.921976
+way,1102553610,fire and rescue station kadakkal,8.824971,76.92194
+way,959109240,Fire station (unnamed),8.825319,76.921195
+way,697723070,สถานีดับเพลิง 2,8.828194,98.367982
+way,822112392,Fire station (unnamed),8.851979,98.3446
+way,816145854,Fire station (unnamed),8.865783,98.340526
+way,410454664,"Fire and Rescue Station, Chamakkada",8.883985,76.584394
+node,8068250599,Fire&Rescue Station Chamakkada,8.888476,76.583697
+way,1452265922,"Fire and Rescue Station, Kadappakkada",8.889736,76.60208
+way,790305249,"Fire and Rescue Station, Kollam",8.891946,76.603245
+way,801761916,"Fire and Rescue Station, Kundara",8.965625,76.67138
+node,1918542001,Surandai Fire Station,8.97083,77.420194
+way,954620626,"Fire and Rescue Station, Kottrakkara",9.004065,76.78405
+node,8559616288,Fire station (unnamed),9.005842,76.536004
+way,753624335,"Fire and Rescue Station, Chavara",9.006332,76.537127
+way,954620628,"Fire and Rescue Station, Sasthamcotta",9.010023,76.929475
+way,1452602445,Fire & Rescue Pathanapuram,9.042172,76.855438
+way,800267764,Fire and Rescue Station Sasthamcotta,9.046761,76.626952
+node,8067982146,Fire Station Sasthamcotta,9.046764,76.626958
+node,8567498773,Fire station (unnamed),9.048459,76.629239
+way,758306707,Fire and Rescue Station,9.05478,76.534324
+way,323781603,Fire Station 2,9.1324,99.1409
+way,323781605,Fire station (unnamed),9.133885,99.142261
+way,1513978054,Fire Station 1,9.135297,99.143681
+way,1094222679,Fire station (unnamed),9.140272,99.321761
+way,755415145,Fire and Rescue Station Adoor,9.159449,76.724396
+way,750328729,"Fire and Rescue Station, Kayamkulam",9.179936,76.496898
+node,10035962365,Fire and Rescue Station,9.187315,76.518601
+way,366858550,Fire and Rescue Station Konni,9.229098,76.852039
+node,9287373633,FIRE STATION KONNI,9.229288,76.852021
+way,755415622,"Fire and Rescue Station, Mavelikara",9.245292,76.53373
+way,979397755,"Fire and Rescue Station, Pathanamthitta",9.264875,76.793422
+node,7453415391,Fire and Rescue Station Pathanamthitta,9.264886,76.793397
+node,10139117384,"Fire and Rescue Service, Kumarapuram",9.277837,76.441889
+way,954620629,"Fire and Rescue Station, Harippad",9.278858,76.443199
+way,798473311,"Fire and Rescue Station, Chengannur",9.317967,76.617152
+way,979397754,"Fire and Rescue Station, Seethathodu",9.332376,76.971536
+node,14045983574,Sattur Fire Station,9.362232,77.91675
+way,690019838,Fire and Rescue Station Thiruvalla,9.381213,76.569731
+way,684178694,"Fire and Rescue Station, Changanassery",9.443749,76.541888
+node,9060927690,District Fire Office,9.497228,76.348815
+way,644454817,"Fire and Rescue Station, Alappuzha",9.497242,76.348859
+way,639214831,"District Fire & Rescue Office Alappuzha (Assistant Divisional Office), Alappuzha",9.497969,76.349096
+node,12280775271,Fire station (unnamed),9.516751,77.631596
+node,4078143021,Fire station (unnamed),9.521742,99.940641
+way,739764020,"Fire and Rescue Station, Kanjirappaly",9.560838,76.800202
+way,554513197,"Fire and Rescue Station, Pampady",9.570315,76.639246
+way,956323974,"Fire and Rescue Station, Perumade",9.57543,76.992092
+node,3816579578,"Fire and Rescue Station, Perumade",9.575444,76.992046
+way,798315531,"Fire and Rescue Station, Kottayam",9.587628,76.520772
+node,9060927689,Regional Fire Office,9.587654,76.520787
+node,9060927688,Office of District Fire Officer,9.587682,76.520788
+node,4419269499,Virudhunagar Fire Station,9.593434,77.953921
+way,620246127,"Fire and Resccue Station, Kottayam",9.641756,76.37161
+way,581529246,Fire station (unnamed),9.673782,80.033234
+node,3564749671,Fire Brigade,9.673872,80.033287
+way,627797054,"Fire and Rescue Station, Cherthala",9.679342,76.340588
+way,979393619,"Fire and Rescue Station, Erattupetta",9.685062,76.77841
+way,888926911,"Fire and Rescue Station, Pala",9.720322,76.688341
+way,802696318,"Fire and Rescue station, Palai",9.720382,76.690634
+node,7517648167,Fire and Rescue Station Vaikom,9.749682,76.412518
+way,1088095495,Fire and rescue Station Vaikom,9.749805,76.412539
+way,784216591,"Fire and Rescue Station, Kattapana",9.752062,77.109858
+way,979354527,"Fire and Rescue Station, Kaduthuruthy",9.755649,76.503542
+way,979354528,Fire and Rescue Station MOOLAMATTOM,9.789213,76.853
+way,1223453326,Fire station (unnamed),9.795872,80.069003
+way,979370893,"Firea and Rescue Station, Nedumkandam",9.836579,77.160297
+way,1105131964,Madurai Airport Fire Station,9.837,78.093434
+way,979370892,"Fire and Rescue Station, Cheruthony",9.853304,76.969826
+way,1001635940,"Fire and Rescue Station,Koothatukulam",9.864164,76.591618
+way,1014144875,"Fire Station,Piravom",9.87181,76.489739
+way,620544868,"Fire And Rescue Station, Aroor",9.882936,76.301208
+way,979354525,"Fire and Rescue Station, Thodupuzha",9.898442,76.703537
+way,966163917,"Fire & Rescue Station, Mulanthuruthy",9.912264,76.406803
+node,9381658867,"Fire and rescue station ,Tripunithra",9.935814,76.352054
+way,798527825,"Fire and Rescue Station, Tripunithura",9.935838,76.352137
+way,755416674,"Fire and Rescue Station, Mattancherry",9.958849,76.257697
+node,13308188901,ศูนย์ป้องกันและบรรเทาสาธารณภัยเทศบาลเมืองระนอง (ดับเพลิงระนอง),9.96332,98.640857
+node,13316683801,Fire station (unnamed),9.96333,98.640486
+way,1486478518,Fire station (unnamed),9.963535,98.640415
+way,799120097,"Fire and Rescue Station, Kalloorkad",9.964904,76.671103
+node,7463868461,Fire and Rescue Station,9.96914,76.284833
+way,1360903747,Fire station (unnamed),9.974252,76.295541
+way,755416485,District Fire & Rescue Station,9.974281,76.295558
+node,11704367166,မီးသတ်,9.97788,98.548253
+way,979455647,Fire and Rescue Station Muvattupuzha,9.989477,76.584783
+way,798196259,"Fire and Rescue Station, Adimali",10.007305,76.968125
+node,10083145455,Fire and Rescue Station,10.007372,76.967841
+way,978980109,"Fire and Rescue Station, Thrikkakara",10.019514,76.334107
+way,798017068,Fire station (unnamed),10.057106,76.617227
+way,730818942,Fire station (unnamed),10.064272,78.776016
+node,4708279357,Fire and Rescue Station Vallarpadam,10.069504,76.313641
+node,9976314646,Fire Station,10.072167,76.317397
+way,667715321,Fire station (unnamed),10.075995,76.318063
+way,798646673,Fire and Rescue Station Aluva,10.107517,76.350908
+way,620064155,"Fire and Rescue Station, Perumbavoor",10.117285,76.493352
+node,9298333288,"Fire Station, North Paravur",10.149217,76.234507
+way,978980108,"Fire and Rescue Station, Paravur",10.151729,76.242019
+node,8843840992,"Fire Station, North Paravur",10.151738,76.242026
+way,254120196,CIAL Fire Station,10.155701,76.403173
+node,9285630419,Kerala fire and rescue station,10.178251,76.37411
+way,474863896,Fire and Rescue Station Angamaly,10.179423,76.378518
+way,955378583,"Fire And Rescue Station, Mala",10.225389,76.249083
+way,801664171,Fire and Rescue Station,10.226087,76.249483
+node,9289451217,Fire station,10.23963,76.205354
+way,666195391,"Fire and Rescue Station, Kodungallur",10.239638,76.205331
+node,8541103819,Fire station (unnamed),10.268209,78.539599
+node,10712065073,Fire Station Chalakudy,10.301481,76.337998
+node,12290232366,Fire And Rescue Services Station,10.359544,77.968078
+way,717866687,"Fire and Rescue Station, Irinjalakuda",10.361284,76.213267
+way,801998481,"Fire and Rescue Station, Valappad",10.401313,76.118122
+way,952249806,"Fire And Rescue Station, Pudukkad",10.416587,76.271353
+node,5411866270,Fire station (unnamed),10.494521,99.179882
+node,8077369885,FIRESTATION THRISSUR,10.51713,76.217015
+node,9058337974,District Fire and Rescue Office Thrissur,10.517502,76.216872
+way,453249819,"Fire and Rescue Station, Viyyur",10.555862,76.22375
+way,843061098,Fire and Rescue Station Thrissur,10.558678,76.226531
+node,2167520192,Fire station (unnamed),10.587115,92.557784
+way,866552481,"Fire and Rescue Station, Guruvayoor",10.594347,76.045051
+way,843060674,"Fire and Rescue Station, Vadakkencherry",10.604549,76.499773
+way,978980107,"Fire and Rescue Station, Alathur",10.644876,76.547702
+way,843061940,Fire station (unnamed),10.658339,76.071461
+node,8078222391,"Fire and Rescue Station, Kunnamkulam",10.65883,76.067632
+way,978980106,"Fire and Rescue Station, Kunnamkulam",10.658905,76.067625
+way,760457109,"Fire and Rescue Station, Wadakkanchery",10.665915,76.250364
+way,376042235,"Fire and Rescue Station, Chittur",10.687715,76.717803
+node,7348066258,Koothanallur Fire  Station,10.718776,79.523731
+node,9058337949,District Fire Office.Palakkad,10.759825,76.659118
+way,194947978,"Fire and Rescue Station, Palakkad",10.759868,76.659166
+node,9058337948,"Regional Fire Office, Fire and Rescue Services, Palakkad",10.759897,76.659118
+way,454614813,Fire station (unnamed),10.763592,78.718709
+way,1535747103,BHEL Fire Station,10.767851,78.789464
+way,978926466,"Fire and Rescue Station, Ponnani",10.767928,75.923394
+way,373856193,"Fire and Rescue Station, Shoranur",10.776419,76.280489
+node,11810827239,Fire station (unnamed),10.781329,79.607638
+way,372546200,"Fire and Rescue Station, Kanjikode",10.792085,76.728057
+way,1102514788,Fire and Rescue Office,10.805507,76.194275
+node,9331495523,"Fire Station, Peringod",10.866104,76.478723
+node,1603833215,Fire station (unnamed),10.866351,72.194204
+way,884350172,"Fire and Rescue Station, Tirur",10.913016,75.924835
+way,978926465,"Fire and Rescue Station, Perinthalmanna",10.973565,76.23428
+way,942908659,"Fire and Rescue Station, Mannarkad",10.984421,76.4244
+node,13673513631,Fire station (unnamed),10.987174,76.844744
+node,10026140197,Government Fire Station,10.99389,75.868004
+way,1385752911,Coimbatore Fire Staion,10.997955,76.968512
+way,663434710,Kangeyam Fire Station,11.008049,77.561336
+way,1302295327,Fire and Rescue Services Station,11.019251,77.127932
+way,1016623992,Fire station (unnamed),11.034173,77.042936
+node,942754044,Ganapathy FireStation,11.039199,76.997501
+way,594656061,Tamilnadu fire and rescue services,11.044095,76.948516
+way,746271913,"District Fire and Rescue Office, Malappuram",11.052802,76.090725
+node,7515405364,"Fire and Rescue Station, Manjeri",11.109145,76.119888
+way,803429404,Fire and Rescue Station Manjeri,11.109219,76.119861
+node,13621977252,Fire station (unnamed),11.121769,77.331308
+way,965521117,Airport Fire Station,11.139094,75.95361
+node,13621972630,Fire station (unnamed),11.187571,77.279229
+way,959795303,"Fire and Rescue Office, Thiruvali",11.201405,76.179381
+node,2651969438,Fire station (unnamed),11.206968,99.508915
+node,9057816794,"Fire and Rescue Station, Meenchanda",11.214533,75.799301
+way,746271888,"Fire and Rescue Station, Meenchanda",11.214553,75.799273
+way,746271741,"Fire And Rescue Station, Kozhikode Beach",11.254822,75.773501
+node,10598653371,Fire station (unnamed),11.261577,98.763941
+way,959811021,"Fire & Rescue Station, Nilambur",11.272591,76.229814
+way,800663934,Fire and Rescue Station Vellimaadukunnu,11.290721,75.816487
+node,10721291559,"Fire and Rescue Station, Vellimadukunnu",11.290808,75.816646
+way,792949590,"Fire and Rescue Station, Vellimaadukunnu",11.290823,75.81667
+node,1473264367,Mettupalayam Fire Station,11.293845,76.951239
+way,839778381,"Fire and Rescue Station, Mukkam",11.327488,75.988264
+node,10030914135,"Fire Force, Mukkam",11.327766,75.988439
+node,12395555373,Erode District Fire Station,11.332637,77.727253
+node,6353479485,Fire station (unnamed),11.344091,99.555517
+way,247350565,Fire station (unnamed),11.345491,99.560759
+way,946944918,"Kerala Fire and Rescue Station, Narikkuni",11.372718,75.852627
+node,6032167264,Fire Station Chidambaram,11.393961,79.702725
+node,2576823001,Fire station (unnamed),11.401132,99.516792
+node,7456302701,Fire and Rescue Station Koyilandy,11.443714,75.693613
+way,978980105,"Fire and Rescue Station, Koyilandy",11.443733,75.693623
+node,8422730392,Fire Station,11.443928,75.693427
+way,803033363,"Fire and Rescue Station, Perambra",11.562807,75.747288
+way,803587469,"Fire and Rescue Station, Kalpetta",11.598703,76.080355
+way,846694910,"Fire and Rescue Station, Vadakara",11.610258,75.590853
+way,846694909,"Fire and Rescue Station, Vadakara",11.610268,75.59065
+node,14019213388,Fire station (unnamed),11.647433,92.735797
+node,4305461798,Fire station (unnamed),11.653941,78.151135
+node,13980252374,Fire station (unnamed),11.66699,92.743248
+way,858033838,"Fire and Rescue Station, Sulthan Bathery",11.669548,76.262038
+node,13621883557,Fire station (unnamed),11.671229,77.129744
+node,5252129921,Fire station (unnamed),11.674235,92.73729
+node,7388516548,"Fire and Rescue Station, Chelakadu",11.684318,75.682274
+way,978922873,"Fire and Rescue Station, Chelakadu",11.68434,75.682289
+way,836177898,Kallakurichi Fire Station,11.739404,78.948198
+way,744212695,"Fire and Rescue Station, Thalassery",11.748179,75.487168
+way,978980104,"Fire and Rescue Station, Panoor",11.760175,75.583812
+node,5918012538,အရန်မီးသတ်,11.793529,99.628817
+node,5918012529,မီးသတ်စခန်း,11.794598,99.633486
+node,11846087225,Mettur FIre and Rescue Dept.,11.801849,77.826911
+way,978922872,"Fire and Rescue Station, Mananthavadi",11.802167,76.031439
+way,979455646,"Fire and Rescue Station, Koothuparamba",11.831646,75.574845
+way,815847567,Fire station (unnamed),11.833129,93.029784
+way,726095732,"Fire and Rescue Station, Kannur",11.864161,75.367603
+way,744212589,Fire and Rescue Station Kannur,11.867579,75.367379
+way,895243014,"Fire and Rescue Station, Peravoor",11.895904,75.732808
+way,653356117,"Fire and Rescue Station, Kannur Airport 1",11.912062,75.537767
+node,13821605823,Fire station (unnamed),11.916433,99.753751
+way,653356110,"Fire and Rescue Station, Kannur Airport Station 2",11.918581,75.555252
+way,1192455106,Fire station (unnamed),11.924528,79.832447
+node,4316621643,Pondicherry Fire Department;Villa Labourdonna's Guest House,11.926059,79.831986
+node,6453838002,ကျေးရွာမီးသတ်ဌာန,11.935414,99.074319
+way,754481450,"Fire and Rescue Station, Mattannur",11.937943,75.56112
+way,1454237136,Villupuram Fire Station,11.943265,79.487333
+node,6485835443,Fire Control Room,11.951915,79.800112
+way,978816828,"Fire and Rescue Station, Iritty",11.990796,75.672278
+node,10091634792,Fire and Rescue Station,12.00475,75.541425
+node,10091440620,Fire and Rescue Station,12.029822,75.506369
+way,978816827,"Fire and Rescue Station, Taliparamba",12.043248,75.379071
+node,5249927921,Fire station (unnamed),12.085222,99.007573
+way,978816826,"Fire and Rescue Station, Payyanur",12.119564,75.209557
+way,744212544,"Fire and Rescue Station, Trikkaripur",12.163629,75.177499
+way,964994432,"Fire and Rescue Station, Peringome",12.225791,75.313536
+node,6453838038,တကူမီးသတ်,12.259075,99.038326
+node,6453837904,မီးသတ်ရုံး,12.290823,99.036041
+node,6359499505,Fire station (unnamed),12.295967,78.074067
+way,1075468272,Saraswathipuram Fire Station,12.303735,76.63456
+node,11248279569,Fire station (unnamed),12.310576,76.317391
+way,800646444,"Fire and Rescue Station, Kanhangad",12.313113,75.090435
+node,12320021520,Fire Station,12.332831,78.348946
+way,315426772,Fire Station,12.343285,76.656502
+node,4733435849,Fire station (unnamed),12.393501,99.988264
+node,6630947655,Fire station (unnamed),12.417297,76.688124
+node,1900761944,Fire station (unnamed),12.425265,75.727155
+way,1544838660,Fire station (unnamed),12.434872,98.604616
+node,14051704701,ကန်ဘောင်ရိုး မီးသတ်,12.434873,98.604617
+way,1544839208,ပါရမီ မီးသတ်,12.438468,98.604637
+node,3084268475,မြိတ်ခရိုင်မီးသတ်တပ်ဖွဲ့,12.441664,98.600351
+node,4238695534,Dawei Su Fire Service,12.443368,98.598149
+way,788093608,"Fire and Rescue Station, Kuttikkol",12.47755,75.208933
+node,14004482756,Fire station (unnamed),12.506199,92.93215
+way,802852196,"Fire and Rescue Station, Karandakkad",12.5093,74.986316
+node,9056899016,District Fire Office,12.509359,74.986253
+node,7903002235,Fire station (unnamed),12.524657,78.217143
+way,268713037,Fire station (unnamed),12.536555,76.914654
+way,1552033919,Fire station (unnamed),12.543262,78.36501
+node,2189276216,Fire station (unnamed),12.567933,99.955512
+node,1987151036,Fire station (unnamed),12.575539,75.385099
+way,978807041,"Fire and Rescue Station, Ambar",12.660414,74.925147
+way,1050547521,Ramanagara Fire Station,12.742994,77.310621
+node,13097016990,Fire station (unnamed),12.755166,77.801805
+node,4746281682,Fire station (unnamed),12.783279,99.967984
+node,5304198425,Fire station (unnamed),12.831017,80.222431
+way,231411029,Electronics City Fire Station,12.835499,77.662697
+way,1134831507,Anjanapura Fire Station,12.858841,77.563454
+way,1459205289,Fire station (unnamed),12.859807,74.841405
+way,1134831508,Hulimavu Fire Station,12.872352,77.598815
+node,4693434964,Vellore Fire station,12.914123,79.131245
+way,232431996,Sarjapura Road Firestation,12.916813,77.673857
+way,1134831509,Banashankari Fire Station,12.922146,77.561183
+node,10859732817,Fire station (unnamed),12.929797,79.329197
+way,788256779,Jayanagara Fire Station,12.933795,77.600289
+way,1134831506,Nagarbhavi Fire Station,12.935415,77.510028
+node,3029313653,Tamil Nadu Fire and Rescue Services,12.943636,80.133596
+way,485799116,Fire Station Gudiyattam,12.946122,78.873833
+way,327984740,Fire House,12.958846,74.888337
+way,1134831510,Bengaluru North Fire Station,12.962504,77.563432
+way,328099012,Old Fire House,12.963206,74.889114
+way,1428296785,Fire station (unnamed),12.96857,79.154408
+way,325781833,Office of the Chief Fire Officer,12.972836,77.610257
+node,10603435260,Fire station (unnamed),12.973446,98.638853
+way,1134831504,Sunkadakatte Fire Station,12.97537,77.425043
+node,5354315736,Fire service station;Fire Force Service center,12.976853,80.227634
+way,450938307,Fire Service မြို့နယ်မီးသတ်,12.977096,98.644092
+node,10579312537,Bengaluru Secretariat Fire Station,12.977764,77.588805
+way,1076398554,High Grounds Fire Station,12.980594,77.579931
+way,1136503963,Rajajinagar Fire Station,12.980657,77.548502
+way,1101376586,Whitefield Fire Station,12.98732,77.732111
+way,1096512891,Fire station (unnamed),12.988477,80.171679
+way,620705901,Chennai International Airport Fire Station 2,12.992503,80.166022
+way,668040798,Mahadevapura Fire Station,12.99847,77.702364
+node,6991535449,ITI Fire Station,13.003798,77.67864
+node,2373933275,Hassan Fire Station,13.008726,76.122579
+way,1364481599,Banaswadi Fire Station,13.011612,77.645997
+way,1134831513,Fire Station,13.022621,77.549913
+way,1134831512,Peenya Fire Station,13.02795,77.520561
+node,11939010319,Fire station (unnamed),13.028018,77.520817
+node,2427727851,Fire station (unnamed),13.035131,80.230692
+way,217731034,Fire and Rescue station,13.035212,80.230626
+way,211274291,Fire station (unnamed),13.042939,80.277719
+node,302899362,Teynampet FS,13.047447,80.249119
+node,928264962,Hebbal Fire Station,13.048249,77.618528
+node,264480826,Fire station (unnamed),13.063776,80.235682
+way,1134831514,Hoskote Fire Station,13.065981,77.778987
+way,1107911283,Egmore fire and Rescue station,13.068633,80.261333
+way,1122111815,Esplanade Fire Station,13.086478,80.286063
+node,6112964504,Nelamangala Fire Station,13.09972,77.389359
+way,1172399106,Washermanpet Fire & Rescue Station,13.10244,80.274401
+way,1105414357,Moolakothalam Fire Station,13.105508,80.278214
+way,1075921840,Fire station (unnamed),13.113332,80.296372
+way,1134831516,Yelahanka Fire Station,13.125144,77.600951
+node,13264599101,Fire station (unnamed),13.126604,99.873611
+node,12181440340,Thiruvallur fire station,13.137825,79.907707
+way,1396722475,Mulbagal Fire Station,13.178769,78.415939
+way,1110808756,Airport Rescue and Fire Fighting Station,13.193503,77.702467
+way,251882757,Airport Rescue and Fire Fighting Station,13.200908,77.703821
+way,1157152068,Fire Brigade Diglipur,13.245556,92.975843
+way,1134831515,Doddaballapur Fire Station,13.246288,77.551647
+way,1074457140,NCTPS Fire Station,13.251232,80.327245
+node,1465647252,Fire Station,13.258896,76.465006
+node,5118895338,Fire station (unnamed),13.326636,76.247051
+node,11247473279,Udupi Fire Station,13.327723,74.740036
+way,1087704156,Fire station (unnamed),13.375369,77.866019
+way,316759056,Fire station (unnamed),13.531283,99.823433
+node,8919834459,Gauribidanur Fire Station,13.602388,77.524062
+node,8919834460,Gudibanda Fire Station,13.672789,77.708281
+node,405392184,Tirumala Fire Station,13.685232,79.35138
+node,13617387174,Fire station (unnamed),13.705016,80.016542
+way,1327803143,Fire station (unnamed),13.792978,76.263636
+node,11861029198,Fire station (unnamed),13.868244,98.262818
+node,1813605986,Shimoga Fire Brigade,13.930133,75.567526
+node,4269529792,Fire Station,13.97523,98.118937
+node,3073582840,Fire station (unnamed),14.020851,99.530363
+node,13077596956,Fire station (unnamed),14.040077,99.545926
+node,6860042066,ဇရစ်မီးသတ်တပ်ဖွဲ့,14.070635,98.190646
+node,6860042065,မြန်မာနိုင်ငံမီးသတ်တပ်ဖွဲ့,14.083582,98.195099
+node,7318461685,Fire station (unnamed),14.116776,98.149076
+way,1292168478,Fire Station,14.118114,78.157452
+node,7318461785,Fire station (unnamed),14.163744,98.521979
+node,10609397888,Fire station (unnamed),14.239183,98.191204
+node,5700717721,สถานีดับเพลิง อู่ทอง,14.37479,99.892214
+node,1789651737,Davanagere Fire Station,14.458971,75.933042
+way,222720965,Fire Station,14.78119,75.13545
+node,5016657227,Fire station (unnamed),14.783026,76.000076
+node,5003334123,Fire station (unnamed),14.834821,76.232507
+node,12033842756,Fire Station,14.99046,78.987025
+way,568934024,Canacona Fire Station and Emergency Station,15.00681,74.057914
+node,3081416874,Fire station (unnamed),15.078051,76.540727
+way,351498421,Ballari Fire Station,15.155023,76.912846
+node,3207088571,BMM Fire station,15.1698,76.378404
+way,430889485,Curchorem Fire Station,15.260332,74.103651
+node,4269710993,Margao Fire Station,15.26933,73.970303
+node,4868934824,ဘုရားသုံးဆူ မီးသတ်စခန်း,15.307224,98.380348
+way,851636896,Fire station (unnamed),15.356733,75.079431
+way,1482886951,Verna IDC fire Station,15.369663,73.935543
+node,3797602962,Fire station (unnamed),15.388547,99.843311
+node,4283907393,Fire station (unnamed),15.399766,73.82004
+node,1474289502,Fire station (unnamed),15.427377,75.640398
+way,1323671622,Fire station (unnamed),15.486861,73.817444
+node,13974009301,fire station kuknur,15.496213,75.993683
+node,13976806601,Fire station (unnamed),15.496213,75.993683
+way,1124603005,Old Goa Fire Station,15.500167,73.914187
+node,13341600672,Fire station (unnamed),15.509315,80.047444
+way,1356611457,Porvorim Fire Station,15.523016,73.829576
+way,1372586493,Pilerne FIre Station,15.532984,73.794031
+way,1181844072,Mapusa Fire Station,15.59028,73.80905
+way,1178513108,Manohar International Airport Fire Station,15.738443,73.854469
+way,1178522830,Manohar International Airport Satellite Fire Station,15.747183,73.861708
+node,6369635014,"Fire Station, Yemmiganur",15.755751,77.45824
+node,6845945393,Belgaum Fire Station,15.842796,74.507966
+node,11993365461,Fire Station,15.907441,80.473013
+node,13833381803,Fire station (unnamed),16.004764,99.800798
+way,711095156,Fire station (unnamed),16.024564,80.915246
+node,5693972081,Fire station (unnamed),16.045558,98.11684
+way,599909940,တံခွန်တိုင် နယ်မြေမီးသတ်စခန်း,16.073981,97.905714
+way,1503478140,Fire station (unnamed),16.074272,99.857018
+way,1524634205,Fire station (unnamed),16.122291,99.32902
+node,6761263185,Fire station (unnamed),16.152189,94.756923
+node,12252407644,Fire station (unnamed),16.186395,81.135548
+way,1420327676,Fire station (unnamed),16.196913,81.199347
+node,13900464946,อปพร.,16.203539,99.317022
+node,6259755751,Fire station (unnamed),16.290143,97.540294
+way,1525797635,Fire station (unnamed),16.293026,99.366731
+node,6259755490,Fire station (unnamed),16.391724,97.552635
+way,1545965690,Fire station (unnamed),16.434164,97.700793
+node,4302877491,Fire Station ,16.436056,97.513068
+node,6259757127,Fire station (unnamed),16.436485,97.512568
+node,5031744370,Fire station (unnamed),16.447033,95.724528
+node,5807326206,မြိုင်သာယာနယ်မြေမီးသတ်,16.454406,97.655003
+node,5807026975,မောင်ငံ နယ်မြေမီးသတ်စခန်း,16.456124,97.632324
+node,6259754814,မုဒူးမီးသတ်ရုံး,16.458348,97.543278
+node,6259756353,Fire station (unnamed),16.461689,97.519265
+node,4117117989,Fire station (unnamed),16.464444,97.623959
+way,1546262852,Fire station (unnamed),16.466467,99.890408
+node,12063375969,Fire station (unnamed),16.482803,99.524525
+node,5807026970,နယ်မြေမီးသတ်စခန်း,16.48436,97.67558
+node,5807026977,ပြည်နယ်မီးသတ်ဦးစီးဌာန,16.493525,97.623596
+node,6837577307,"Fire Station, Nagarkurnool",16.500783,78.286998
+node,12991121069,Agni Mapaka Kendram,16.5037,80.674089
+way,1324599675,Fire station (unnamed),16.513534,80.517681
+way,1184836661,New Fire Station,16.528641,80.800169
+node,6636327977,မုတ္တမ နယ်မြေ မီးသတ်စခန်း,16.533773,97.597005
+node,5051609255,Bhimavaram Fire station,16.543177,81.53403
+node,5638844723,Fire station (unnamed),16.602532,94.930033
+node,4411544292,Fire station (unnamed),16.630481,97.45474
+way,991657852,"Fire Brigade, Rajapur",16.657337,73.5148
+node,6542307887,မီးသတ္ဌာန,16.684678,98.508429
+node,6636327975,ဇင်းကျိုက်ကျေးရွာအုပ်စု မီးသတ်ရုံး,16.68998,97.426867
+way,1041140211,Fire station (unnamed),16.702763,98.547444
+node,6636327976,ရြာမီးသတ္ရံုး,16.712953,97.30105
+way,545607318,Fire Station,16.756248,96.160379
+node,8116992449,Tanuku fire station,16.764174,81.688691
+node,6068692488,Fire station (unnamed),16.775964,96.158464
+node,12247870085,Pathein Fire Station,16.777998,94.739616
+node,12247870086,Regional Fire Bridge Station,16.779106,94.739337
+node,4850972224,Fire station (unnamed),16.780829,94.731305
+node,5463786821,Fire station (unnamed),16.783506,96.126828
+node,6636327978,ရင်းငြိမ် (တောင်) မီးသတ်ရုံး,16.786695,97.386734
+node,6636327979,ရင်းငြိမ်မီးသတ်,16.789869,97.386641
+node,5948174488,Fire station (unnamed),16.79319,96.203466
+node,5463735924,Fire station (unnamed),16.795303,96.122961
+node,5439279936,Mingalar Taung Nyunt Fire Station,16.798793,96.186761
+way,270273906,Tarmwe Fire Department,16.803537,96.173877
+node,5292257121,Fire station (unnamed),16.80364,96.133253
+node,2910460595,Fire Station စမ်းချောင်း မီးသတ်ဦးစီးဌာန,16.804013,96.133041
+node,4512578297,သာကေတ မီးသတ်စခန်း,16.8078,96.218153
+node,4576633032,Tamwe Fire Station,16.81071,96.174616
+node,5447884539,fire_station,16.812458,96.122109
+node,2959452413,TGGN,16.83271,96.197487
+way,563974607,တောင်ဥက္ကလာပ မီးသတ်စခန်း,16.840677,96.183111
+node,5444378220,Daing Su fire station guard,16.843639,96.09541
+way,564018780,Fire station (unnamed),16.850646,96.124822
+node,5434829215,လှုိင်မီးသတ်စခန်း Hlaing Fire Station,16.850663,96.124824
+node,3884055052,Dagon Myothit (South) Fire Station,16.854924,96.223217
+way,1354141627,Fire station (unnamed),16.863285,75.802691
+node,2587483319,Bayint Naung,16.863426,96.107549
+way,542030822,Mayangone Fire Station,16.864658,96.120872
+node,2936718916,Mayangone Township Fire Station,16.864669,96.120932
+node,4386670089,Myanmar Fire Force (headquarter),16.868981,96.155107
+way,155023248,Fire station (unnamed),16.870125,80.019608
+way,565704405,မီးသတ္ Hlaing Thar Yar Township Fire Station,16.872138,96.044385
+node,5447579406,မီးသတ္ Hlaing Thar Yar Township Fire Station,16.872139,96.04436
+node,5440501233,Fire Station,16.875824,96.068855
+way,564752694,Fire Station,16.875897,96.068838
+node,8064622478,မီးသတ်,16.878132,96.207572
+node,4597410490,Fire station (unnamed),16.886671,96.10156
+node,1138445845,အင်းစိန် မီးသတ်,16.886722,96.101288
+node,11932210583,အိမ်မဲမြို့နယ်မီးသတ်,16.892879,95.179445
+node,2936720601,North Oakkalarpa Fire Station,16.895158,96.157161
+node,5448090498,SHEW LIN BAN fire guard,16.910141,96.068461
+node,5441360421,စဉ့်ငူရပ်ကွက်အရန်မီးသတ် SintGu Reserve Fire Brigade,16.914226,96.097351
+node,8754623420,Fire station (unnamed),16.916099,96.149055
+way,563984739,မီးသတ်ဌာန ၂,16.917357,96.159187
+node,5447283622,အရန်မီးသတ် Reserve Fire Brigade,16.921891,96.097827
+node,5434886221,မီးသတ်ဦးစီးဌာန,16.945923,96.078848
+way,1111736336,Fire station (unnamed),16.956519,82.233065
+node,10171081034,Fire station,16.956523,82.233048
+node,5434893483,မီးသတ်ဌာန  Fire Station,16.95967,96.07688
+node,4535236389,Fire station (unnamed),16.973747,96.076128
+node,4850944222,Fire station (unnamed),16.976368,94.991874
+way,265430048,Fire station (unnamed),16.981956,79.943691
+node,3076342595,Fire Station,16.991085,81.777527
+node,3076342596,Fire Station,17.010722,81.770695
+node,2583674183,Fire station (unnamed),17.014718,99.821647
+node,6364028885,Fire station (unnamed),17.016299,81.733023
+node,2602823048,Fire station (unnamed),17.023728,99.685312
+node,13705967933,Fire station (unnamed),17.035317,99.887798
+node,12994256693,Nyaungdon Fire Services Department,17.049796,95.637913
+node,4376875895,Islampur agnishaman,17.056859,74.262491
+way,1454593298,Nalgonda Fire Station,17.061881,79.266138
+node,13336349897,Nalgonda Fire Station,17.06197,79.265897
+node,6936336836,မြန်မာနိုင်ငံမီးသတ်တပ်ဖွဲ့စခန်း,17.10314,96.234135
+way,1424032795,Jnagareddygudem Fire Station,17.123275,81.312543
+node,6768374353,ရွှေလှေမီးသတ်,17.162868,97.245435
+node,6768374352,အများပိုင်မီးသတ်,17.164132,97.163008
+node,6768374354,မီးသတ်ဌာန,17.204696,97.075177
+node,6768374351,တောင်စွန်းမီးသတ်စခန်း,17.214004,97.134647
+node,13626320332,Fire station (unnamed),17.216555,96.199796
+way,1062100300,Rajiv Gandhi International Airport ARFF Main Station,17.234391,78.445957
+node,798089786,Fire station (unnamed),17.256674,80.148906
+node,4637266390,Fire station (unnamed),17.302462,95.19645
+node,11928799854,ကျိုက်ထိုမြို့နယ်မီးသတ်တပ်ဖွဲ့,17.308662,97.010245
+node,1728241587,No. (2) Fire Station,17.335937,96.482056
+node,4223489475,မီးသတ်တပ်ဖွဲ့,17.345025,95.332674
+node,5041287397,FIRE STATION,17.357013,82.537597
+node,8978092814,مغل پورہ فائر اسٹیشن,17.359502,78.476775
+node,3628741330,Malakpet Fire Station,17.368467,78.501844
+node,8111098052,panjagutta firestation,17.412705,78.408885
+node,3200943739,Fire station (unnamed),17.422421,78.538458
+node,11885839703,Fire station (unnamed),17.430354,81.789249
+node,582824404,S P Road Fire Station,17.443083,78.485514
+way,1497250889,Fire station (unnamed),17.445793,99.12087
+way,357036757,Fire St.,17.450731,78.466417
+way,1497905122,Fire station (unnamed),17.471346,99.356698
+node,13626320340,Fire station (unnamed),17.483482,96.451755
+node,11736392871,Fire station (unnamed),17.491359,78.391086
+way,475941769,Fire station (unnamed),17.551612,78.522665
+node,3872640361,Gwa Fire Station,17.594677,94.577124
+node,12989769148,Fire station (unnamed),17.598256,95.183309
+node,13893248267,Fire station (unnamed),17.614498,99.219755
+way,475875258,Fire station (unnamed),17.628415,78.401725
+node,4842988425,Fire station (unnamed),17.636135,95.453132
+node,2572614080,Hinthada Central Fire Station,17.651884,95.461594
+node,5824770275,Fire station (unnamed),17.652437,95.783496
+node,5621265135,Pedda Gantyada Fore Station,17.668024,83.207823
+node,3534960334,fire station,17.676593,77.622747
+way,1410443101,Visakhapatnam Central Fire Station,17.709104,83.293289
+node,11568650732,Fire station (unnamed),17.709511,83.298744
+node,13626429529,Fire station (unnamed),17.716102,96.498198
+node,13543686113,Sabbavaram Fire Station,17.791567,83.127368
+node,2618261363,ศูนย์ป้องกันและบรรเทาสาธารณภัย,17.803493,98.362824
+node,13895469883,อปพร,17.874913,99.346284
+node,12892324871,Chittivalasa Fire Station,17.904534,83.405308
+way,1224826508,Kottavalasa Fire Station,17.90788,83.185648
+way,1456219954,Fire station (unnamed),17.908511,99.310811
+node,6837577306,"Mulkalagudem, 33/11 KV Sub Station",17.913565,79.534375
+node,13167485130,Bidar Fire Station,17.922074,77.5207
+way,422579637,City Fire Station,17.955574,96.722663
+way,776433489,Fire station (unnamed),17.9864,79.593249
+node,7243989343,Fire station (unnamed),18.001074,79.564553
+node,4512923731,ป้องกันและบรรเทาสาธารณภัย อบต.แม่ตะตวน,18.065902,97.932682
+node,8386142246,Fire station (unnamed),18.107766,78.824671
+way,1279876670,SKota Fire Station,18.115875,83.13856
+node,13953194491,Fire station (unnamed),18.127609,99.507124
+node,8850425161,Fire Station Podia,18.188544,81.545762
+node,13859390911,Fire station (unnamed),18.207092,99.42009
+way,1483109259,Fire station (unnamed),18.210351,98.616334
+way,1552795064,Fire station (unnamed),18.217063,99.341485
+way,1517874925,Fire station (unnamed),18.229395,99.391679
+node,11086003452,ကြို့ပင်ကောက်မီးသတ်,18.23045,95.648968
+way,1530957230,Fire station (unnamed),18.262351,99.473476
+way,1548993929,Fire station (unnamed),18.272543,99.519229
+way,1551359197,Fire station (unnamed),18.273575,99.652203
+way,1463268489,อาคาร 4,18.288832,99.48908
+node,13352396082,บรรเทาสาธารณะภัยหน่วย ๒ บ้านปงสนุก,18.298543,99.495799
+node,13860308376,งาน ปภ.,18.309341,99.454637
+node,12484335979,Kyangin Fire Station,18.3393,95.243562
+node,4934443721,Fire station (unnamed),18.435751,94.321498
+node,8115058870,FIRE STATION,18.452286,83.638971
+node,4204725189,Nanded City Fire Station,18.460237,73.796494
+way,552183184,Kondhwa Fire Station,18.461489,73.889931
+node,4805862752,Fire Station Thandwe,18.463168,94.367763
+node,1304723072,"Suncity Road Fire Station, Pune",18.475477,73.815447
+node,671451162,Pune Cantonment Fire Station,18.498565,73.884322
+node,2192111450,Kothrud Fire Station,18.498889,73.81348
+way,515129936,Kothrud Fire Station,18.498892,73.813446
+node,11942759805,Janta Fire Brigade station,18.499617,73.848468
+way,218881239,Pune Main Fire Station,18.506519,73.865226
+way,218697330,Erandvana Fire Station,18.506717,73.832804
+way,821306773,Fire station (unnamed),18.507177,73.739451
+way,1098563726,Fire station (unnamed),18.513307,96.390179
+way,380417657,Dayaram Rajguru Agnishamak Kendra,18.529936,73.870605
+way,413347762,สถานีควบคุมไฟป่า ดอยอินทนนท์,18.541989,98.591757
+way,1346021103,Baner Fire Station,18.560262,73.776962
+way,261258201,Aundh Fire Station,18.560578,73.814275
+way,359554796,Fire station (unnamed),18.578936,73.740628
+way,359552051,Hinjawadi Fire Station - Phase 1,18.584845,73.735095
+way,1275546893,Pune Municipal Corporation Fire Station Wagholi,18.588777,73.969217
+node,10566607673,Rahatani Fire Station,18.596235,73.781716
+node,10725036852,Late.Mahadu Sakharam Tingare,18.596983,73.906553
+node,10590397253,Thergaav Fire Station,18.612189,73.778806
+way,1411851629,Life Republic Fire Station,18.621806,73.715984
+node,8585616661,Life Republic Fire Station,18.622011,73.716068
+node,10566692810,Main PCMC Fire Station,18.622762,73.818048
+node,11503008061,Fire station (unnamed),18.651917,99.116327
+node,3274045651,ศูนย์อำนวยการป้องกันฝ่ายพลเรือน,18.653773,99.038294
+node,3724085539,Fire station (unnamed),18.656588,98.681649
+node,10566635071,Fire Station Pradhikaran,18.659248,73.771741
+node,10566662372,Chikhali Fire Station,18.66441,73.817798
+way,265801014,Fire station,18.676323,78.104298
+node,12598531408,Fire station (unnamed),18.69904,99.058021
+node,11143875815,ရွှေတောင်မီးသတ်တပ်ဖွဲ့,18.702883,95.207429
+way,1536412161,Fire station (unnamed),18.703141,99.566719
+node,2670849284,Fire station (unnamed),18.72466,98.925117
+node,8672761130,Fire station (unnamed),18.741667,99.192526
+way,526450102,Fire station (unnamed),18.743047,99.013384
+way,404688741,Fire station (unnamed),18.745151,98.994357
+way,931930510,Fire station (unnamed),18.746765,99.116128
+node,1583694573,Fire station (unnamed),18.750476,98.889327
+node,3428219302,Fire station (unnamed),18.753243,99.0019
+relation,7857802,Fire station (unnamed),18.762609,98.96777
+way,101792752,Fire station (unnamed),18.768529,99.007051
+node,1413038756,Fire station (unnamed),18.770021,99.036904
+node,13144484779,Chakan Fire station,18.77367,73.869374
+node,6593022579,Fire station (unnamed),18.776722,84.09481
+way,537679529,Fire station (unnamed),18.781719,98.984805
+way,511654292,สถานีดับเพลิง หน่วยสันป่าข่อย,18.785212,99.007587
+node,5178195703,Fire station (unnamed),18.785506,99.031802
+node,5466155231,Jagtial Fire Station,18.789197,78.914784
+node,1616068615,อาคารป้องกันและบรรเทาสาธารณภัย,18.794882,98.998299
+way,204644570,Fire station (unnamed),18.801112,98.982
+way,1539335855,Fire station (unnamed),18.809269,99.04213
+node,3244491831,Fire station (unnamed),18.815241,99.006786
+way,256273904,Fire station (unnamed),18.825522,98.994413
+node,3367703729,Fire station (unnamed),18.827289,98.999079
+way,1548867668,สถานีดับเพลิงและกู้ภัยเทศบาลตำบลสันทรายหลวง,18.840739,99.043265
+way,175696575,Fire station (unnamed),18.845212,99.027274
+way,1458594884,Fire station (unnamed),18.845798,99.028565
+node,5485685754,Fire station (unnamed),18.847645,98.730275
+way,1108465163,Fire station (unnamed),18.856848,98.969562
+way,1351053098,Kashinagar Fire Station,18.882514,83.884919
+node,14006033859,Rasayani Fire Station,18.883236,73.169117
+node,4418739800,Fire station (unnamed),18.897126,98.976742
+node,1388436928,Fire station (unnamed),18.900429,99.049918
+node,836465780,Fire station (unnamed),18.903077,99.003253
+node,6772439845,Fire Services Department,18.909035,95.547382
+node,623417932,Colaba Fire Station,18.915455,72.826053
+way,988399710,Fire station (unnamed),18.92028,73.002603
+way,1421481421,Fire station (unnamed),18.921281,99.331504
+way,207413375,Nariman Point Fire Station,18.923006,72.826081
+way,356173988,Nariman Point Fire Station,18.923092,72.826008
+node,2168679530,Fort Fire Brigade,18.935074,72.834642
+way,207324977,Fire station (unnamed),18.935121,72.8346
+node,605222184,Fire station (unnamed),18.941482,72.829157
+node,12100000913,တောင်ငူ ခရိုင် မီးသတ်ရုံး,18.942299,96.443998
+way,989702298,Fire station (unnamed),18.944965,72.940446
+node,861411346,Umerkhadi Fire Station,18.957962,72.832639
+way,39834515,Gowalia Tank Fire Station,18.96172,72.812734
+node,700725781,Byculla,18.972456,72.831962
+way,642215376,Ulwe Fire Station,18.975726,73.028119
+way,779874353,Fire station (unnamed),18.98323,99.610771
+way,1413795344,Dinkar Balu Patil Navi Mumbai International Airport Fire Station,18.988697,73.068572
+node,1261803303,New Panvel Fire Brigade,18.996077,73.118969
+way,354294947,Babasaheb Worlikar Fire Station,19.013219,72.823534
+way,116072855,Dadar Fire Brigade,19.01418,72.845705
+way,353760968,Nerul Fire Station,19.02371,73.025417
+way,356190537,Fire station (unnamed),19.024405,73.040596
+way,372606474,Kalamboli Fire Station,19.026006,73.105093
+node,9024751917,Fire station (unnamed),19.033118,72.841209
+way,353758946,Kharghar Fire Station,19.038845,73.063524
+node,5102719433,Tawa Delight,19.039279,73.099231
+node,2187315849,Testing Fire Station,19.039624,72.853887
+node,12022280020,ကြို့ပင်မီးသတ်,19.045541,94.901927
+way,434887905,Bandra Fire Brigade,19.050443,72.837564
+node,2311428475,Chembur Fire Station,19.054525,72.89352
+node,5681276728,Dep. of Fire Service မြို့နယ်မီးသတ်ဦးစီးဋ္ဌာန,19.056157,96.664554
+node,3761594600,Fire station (unnamed),19.068187,73.131667
+node,1122048181,Vashi Fire Station,19.076405,72.998471
+way,353174234,Kurla Agnishaman Kendra,19.08443,72.885935
+way,1243105383,Mini Fire Station,19.085369,72.831273
+way,1376380212,Aerodrome Rescue and Fire Fighting,19.091366,72.873611
+way,1330412751,Vikhroli Fire Brigade,19.101129,72.918244
+node,12787664087,ရေနံ့သာမီးသတ်စခန်း,19.102179,95.039913
+node,2614071357,Fire station (unnamed),19.105249,99.000507
+relation,21105810,Marol fire brigade,19.109561,72.877878
+way,1071065218,Koparkhairne Fire Station,19.111331,73.006442
+way,1479265653,Andheri Fire Station,19.112162,72.840863
+way,1066739652,Airoli Fire station,19.151294,72.989524
+way,621466311,Goregaon Fire Station,19.153497,72.840329
+node,352677571,Fire station (unnamed),19.153935,73.241343
+way,545191333,Fire Station,19.155698,96.344993
+way,935761727,Fire station (unnamed),19.163898,73.0738
+way,492808852,สถานีดับเพลิง 1 งานป้องกันและบรรเทาสาธารณภัยเทศบาลเมืองพะเยา,19.16609,99.906323
+way,359074975,Dindoshi Fire Station,19.175061,72.860998
+way,665687016,Mulund Fire Brigade,19.175132,72.942533
+way,1497015826,Fire station (unnamed),19.175459,99.621473
+way,534387045,Fire station (unnamed),19.176702,99.891312
+node,14115189485,Fire station (unnamed),19.176726,99.834614
+way,354797910,Fire Station Thane (E),19.183011,72.975953
+way,680592900,Jawahar Bag Fire Station,19.191599,72.978556
+way,680592899,Jawahar Bag Fire Station,19.191687,72.978249
+way,945059965,Fire station (unnamed),19.196251,72.822467
+way,128123470,Malwani Fire Station,19.19661,72.82258
+way,674040658,Fire station (unnamed),19.204094,99.868755
+way,352973116,Kandivali Fire Station,19.206027,72.850536
+node,2125657222,งานป้องกันและบรรเทาสาธารณภัย,19.206537,99.517652
+way,822533725,Rustomjee Fire Station,19.208902,72.991645
+way,948969308,Fire station (unnamed),19.217487,72.982732
+way,944086589,Balkum Fire Station,19.217771,72.982878
+node,5304591191,Fire station (unnamed),19.223612,99.958837
+way,257439666,Borivali Firestation,19.22982,72.840002
+node,14113974596,Fire station (unnamed),19.242823,99.827098
+way,1330557955,Kalyan Fire Station,19.248687,73.121944
+node,5255263122,Fire station (unnamed),19.280594,72.872239
+node,13646905610,Fire station (unnamed),19.284551,96.214152
+node,7486324686,Mira Bhayander Mahanagarpalika Fire Bridage and Emergency centre,19.292598,72.851921
+node,7503415136,Fire station,19.312459,84.789544
+node,6275800386,Fire station (unnamed),19.334106,95.180657
+node,2128238192,Fire station (unnamed),19.338757,99.509712
+node,6392671387,Chatrapur Fire Station,19.358266,84.994251
+node,12069450782,Tayawgone Fire Brigate,19.371629,95.215913
+node,8949470739,Fire station (unnamed),19.394126,74.647987
+node,4689269189,Fire station (unnamed),19.40567,72.827469
+node,4821972821,Fire station (unnamed),19.405702,72.827853
+node,13339891149,Purushottampur Fire Station,19.512035,84.872582
+node,6631508917,Fire station (unnamed),19.534213,99.743285
+node,7881207605,Fire station (unnamed),19.534918,98.96214
+node,4472486777,Fire station (unnamed),19.551229,99.756617
+way,265816770,adilabad fire station,19.665681,78.530454
+way,1491822106,Fire Brigade office Igatpuri,19.694045,73.554166
+way,1087155971,မီးသတ်စခန်း (အကွက်ကြီး-၂),19.729947,96.065627
+node,4397256509,Pyinmana fire Station,19.736087,96.195408
+way,286362289,Naypyitaw Central Fire Station,19.738371,96.092115
+node,4397254368,Pyinmana Fire Station,19.738416,96.211899
+node,2935214942,balugaon fire station,19.762381,85.215249
+node,3024160262,No.1 Fire Station,19.795112,96.126752
+way,758288227,Fire station (unnamed),19.803077,99.674702
+way,1499805638,Fire station (unnamed),19.829253,96.156066
+node,3242344367,fire station,19.86243,75.32174
+node,14041627485,Fire station (unnamed),19.875353,75.353644
+way,460263831,ฝ่ายป้องกันและบรรเทาสาธารณภัย,19.891826,99.83669
+node,11769073760,Fire Station Konark,19.898239,86.114943
+node,2053533857,Fire station (unnamed),19.919533,99.213896
+way,570699079,Fire station (unnamed),19.957095,99.881058
+node,4376877994,CMC fire station,19.962083,79.294837
+node,11358179081,မြို့နယ်မီးသတ်ဦးစီးဌာန,19.967111,95.035085
+way,1469959277,Fire station (unnamed),19.968416,73.768626
+node,13673808203,Gop Fire Station,19.969735,86.025832
+node,11753075267,Kakatpur Fire Station,19.991203,86.224614
+node,11972389028,မီးသတ်,20.005536,95.546001
+node,8316131973,Fire station (unnamed),20.018418,76.045308
+node,10758108621,မြေပုံမြို့နယ်မီးသတ်ဌာန,20.043754,93.372655
+way,1092545264,Fire safety department,20.05348,78.949073
+node,11591421136,Nimapada Fire Station,20.053575,86.002904
+node,4285863237,Fire Station,20.075271,94.469783
+node,7263363404,Fire station (unnamed),20.093798,99.283276
+node,11396423170,မကွေးနယ်မြေမီးသတ်စခန်း,20.119373,94.94472
+node,2148609278,ดับเพลิง อบต.แม่จัน,20.133028,99.862773
+way,1351050614,မြို့နယ်မီးသတ်ရုံး,20.133828,96.201887
+node,12375856690,ရက္ခိုင်ပြည်နယ်မီးသတ်ဦးစီးဌာန,20.137838,92.888598
+node,11396351075,တိုင်း မီးသတ်,20.145078,94.920961
+node,2134742418,งานป้องกันและบรรเทาสาธารณภัยเทศบาลตำบลแม่จัน,20.147703,99.852627
+way,617845614,KHURDHA FIRE STATION,20.170526,85.613024
+way,767720343,Fire station (unnamed),20.18512,79.993148
+way,619212563,BEGUNIA FIRE STATION,20.202037,85.444467
+node,12912876737,စကု နယ်မြေ မီးသတ်စခန်း,20.223188,94.76635
+way,236816398,Fire station (unnamed),20.254423,85.813714
+way,490263013,Baramunda Fire Station,20.279055,85.799301
+node,12839112247,လယ်ကိုင်းနယ်မြေမီးသတ်စခန်း,20.314783,94.740098
+node,6376938985,สถานีควบคุมไฟป่าดอยตุง,20.31998,99.821495
+node,10765218892,ပုဏ္ဏားကျွန်း မီးသတ်စခန်း,20.335381,93.005704
+node,12874555785,ကျောင်းတော်ရာနယ်မြေမီးသတ်စခန်း,20.357117,94.764893
+way,1125918041,မင်းပြားမြို့နယ် မီးသတ်စခန်း,20.362035,93.274535
+node,11396177077,ပွင့်ဖြူမြို့နယ်မီးသတ်,20.363369,94.669027
+node,11909485347,ကုန်းဇောင်းမီးသတ်,20.419837,94.763126
+way,407495157,สถานีดับเพลิงเมืองแม่สาย,20.426312,99.884718
+way,1237333072,ခရိုင်မီးသတ်,20.431397,96.131491
+way,1237333076,မြို့နယ်မီးသတ်,20.432115,96.14063
+node,12803587552,Myanmar Fire Service Department,20.450956,94.246834
+node,10763534658,ရသေ့တောင် မီးသတ်စခန်း,20.479837,92.759081
+way,1126068385,Myaung-Bway Fire Station,20.493205,93.278851
+node,7802555153,မီးသတ်ဦးစီး ဌာန,20.578922,94.657187
+node,6043924686,ပျော်ဘွယ်မီးသတ်,20.585653,96.05237
+node,3129279680,Mrauk-U Fire Station,20.593153,93.194323
+node,4583460206,Fire station (unnamed),20.657752,96.927865
+node,12564867004,Sinphyukyun Fire Services Department,20.658359,94.691556
+node,12041985961,ပြည်နယ်မီးသတ်ဝင်း,20.752944,97.060505
+way,1300029052,Fire station (unnamed),20.76531,96.948403
+node,8491054034,Shwe Nyaung Fire Station,20.765349,96.948497
+node,11556722443,ကန်သာမီးသတ်,20.78039,97.02883
+node,5813917253,ျပည္နယ္မီးသတ္ တပ္ဖြဲ႔မွဴး႐ံုး,20.799893,97.043115
+node,12880834090,ဂွေးချို မီးသတ်,20.802045,95.017709
+node,2734334850,Fire station (unnamed),20.8446,95.125743
+node,4584799943,Fire station (unnamed),20.856736,95.824269
+way,911719804,Birmaharajpur Fire Station,20.86714,84.049397
+node,12301094408,မြို့နယ်မီးသတ်ရုံး,20.877503,92.522749
+way,1202311230,မီးသတ်,20.9088,94.789637
+node,11933181758,ဆိပ်ဖြူမြို့နယ်မီးသတ်,20.908808,94.789617
+node,12048705309,Pindaya Township Fire Department,20.928997,96.665471
+node,6059829987,Fire station (unnamed),20.936439,95.205424
+way,1223485255,ကဇွန်းမနယ်မြေမီးသတ်စခန်း,21.003408,94.411194
+node,12464861924,တောင်ဇင်း မီးသတ် ဌာန,21.032285,95.012779
+way,463386325,Fire station (unnamed),21.095483,79.048134
+way,463386324,Fire station (unnamed),21.09551,79.048196
+node,4376848791,Fire station (unnamed),21.09925,95.645461
+node,6983064785,Narendra Nagar Fire Station,21.107117,79.080682
+node,4984615984,Fire station,21.107275,79.080336
+way,588067364,Fire station (unnamed),21.11643,72.739952
+way,387788295,"Fire Brigade and Emergency Services, Sakkardara",21.119737,79.1144
+node,3144755492,Bagan Fire Station,21.130737,94.856834
+node,12037508919,ပန်းအိုင်မီးသတ်,21.132357,95.631066
+node,12459113925,ငါ့သရောက်မီးသတ်,21.150395,95.132897
+way,1346900328,ငါ့သရောက်မီးသတ်,21.150557,95.132864
+way,1312264984,ရွာငံ မီးသတ်ဦးစီးဌာန,21.162071,96.447476
+node,12146412817,ရွာငံ မီးသတ်ဦးစီးဌာန,21.162099,96.447474
+node,5026226651,Fire station (unnamed),21.172202,94.805357
+node,4446184707,Airport Fire Station,21.183723,81.738507
+node,2629372542,Fire Station,21.199815,72.821162
+node,3141388161,Nyaung-U Fire Station,21.2022,94.909324
+node,13686160391,Kalmeshwar Fire Station,21.231129,78.924155
+node,11019832297,Mahadula Fire Station,21.249533,79.081763
+way,440729119,Fire station (unnamed),21.252488,92.128827
+node,12106691388,Taungtha Fire Station,21.271902,95.448241
+node,12395354377,ကျိုင်းတုံခရိုင်မီးသတ်ဦးစီးမှူးရုံး,21.305779,99.613749
+node,5467669121,Fire station (unnamed),21.330779,95.068554
+way,1202045735,မီးသတ်တပ်ဖွဲ့,21.354003,95.104752
+way,1513276501,Talaja fire station,21.355682,72.040934
+way,1301981962,Pyinsi Highway Fire Station,21.395548,95.896165
+way,1302653344,မီးသတ်ဝင်း,21.446608,94.48342
+node,11357430651,မြို့နယ်မီးသတ်,21.446624,94.483522
+way,1416867271,မြို့ကြီးမီးသတ်ရုံး,21.452285,96.370717
+node,6063516486,Fire station (unnamed),21.469369,95.396021
+node,11749844984,Manikhamb Fire Station,21.495072,86.937898
+way,1086465948,Kaptipada fire station,21.510397,86.541059
+node,9604962402,Kaptipada Fire station,21.510519,86.541316
+way,1456196135,ဟံမြင့်မိုရ် အရံမီးသတ်,21.515517,96.181646
+node,12074841553,ပခန်းကြီးမီးသတ်,21.531722,95.202506
+node,9604825045,Fire Station Udala,21.573032,86.569874
+node,4428579332,Fire Brigade,21.593126,78.531513
+node,12020344851,မြို့နယ်မီးသတ်တပ်ဖွဲ့,21.629048,95.245321
+way,1309208874,Fire station (unnamed),21.629148,95.245172
+way,375131403,Fire station (unnamed),21.645524,69.609532
+way,553652569,Fire Station,21.647452,69.657229
+node,6625402785,Fire station (unnamed),21.652942,92.312948
+way,1300683810,မြို့နယ်မီးသတ်ဦးစီးဌာန,21.700141,94.09935
+node,12047311550,မြို့နယ်မီးသတ်ဦးစီးဌာန,21.700258,94.099309
+way,1238060803,မီးသတ်တပ်ဖွဲ့,21.760283,95.031191
+node,12718724681,Lingadaw FireStation,21.760288,95.031191
+way,864023717,Municipal Fire Station,21.768624,72.132086
+way,1231937227,Thanchi Fire Service & Civil Defence,21.813181,92.432337
+node,11425928255,Thanchi Fire Service & Civil Defence,21.81323,92.432315
+node,12086689350,‌မြောင်မီးသတ်,21.833609,95.421012
+node,4120563293,Myitnge Railway Private Fire Station,21.855317,96.068956
+node,5603480021,Fire station (unnamed),21.899287,96.312767
+node,6078594187,Fire station (unnamed),21.905137,96.081427
+node,12263162157,မြင်းမူမြို့နယ်မီးသတ်ဦးစီးဌာန,21.929263,95.567806
+node,2702239050,Htan Koe Pin Fire Service Station,21.950773,96.11616
+node,12063170226,မဟာမြိုင် (၂) မီးသတ်,21.960467,96.111023
+node,12063096247,မဟာအောင်မြေမြို့နယ်မီးသတ်,21.962743,96.111463
+node,4992146408,ျမဳိ႕နယ္စည္ပင္ဦးစီးဌာန,21.972018,95.082184
+node,12433443892,ဆားလင်းကြီးမီးသတ်စခန်း,21.973888,95.082535
+node,2699567867,Central Fire Station,21.978539,96.082357
+node,5224176221,Fire station (unnamed),21.991004,96.076129
+node,4903110921,အောင်မြေသာစံရပ်ကွက် အရံမီးသတ်စခန်း,21.991143,96.074904
+way,601207199,Fire station (unnamed),21.992258,91.95225
+node,4323722048,Nan Shae Fire Station နန်းေရှ့ မီးသတ်,21.992655,96.110846
+way,433224934,NanShae Fire Station (နန်းေရှ့ မီးသတ်),21.992699,96.110849
+node,8070921785,မင်းတဲ မီးသတ်,21.9942,96.069012
+node,8070921885,အောင်မြေသာစံ မီးသတ်စခန်း,21.99436,96.06484
+node,8070903288,မေဃ မီးသတ်,21.996704,96.08057
+node,8070921786,ပြည်လုံးချမ်းသာ အရံမီးသတ်တပ်ဖွဲ့,22.001554,96.08235
+node,5502410321,Fire station (unnamed),22.005368,96.085753
+node,8070921886,ဌာနီအနောက် မီးသတ်တပ်ဖွဲ့,22.005446,96.086028
+way,1304252920,အုန်းတောမီးသတ်,22.007105,95.828646
+node,12078385896,အုန်းတောမီးသတ်,22.007213,95.828583
+node,4353697489,Fire Brigade,22.025503,96.467046
+node,7920669112,Fire Brigade Pyin Oo Lwin,22.033794,96.49375
+way,425464402,Fire station (unnamed),22.034316,89.967815
+node,11037717628,တောင်ရှည်မီးသတ်,22.062084,96.878215
+way,480355295,Yinmarbin Fire Department,22.080691,94.911949
+way,529879244,Satkania Fire Service & Civil Defence Station,22.097803,92.074067
+way,1124686687,Fire station (unnamed),22.144953,90.233424
+node,5225734368,Amtali Fire Station,22.145039,90.233411
+way,594561331,Fire service,22.1586,90.10763
+way,1050510523,Jaynagar Fire Station,22.160839,88.434804
+node,11357389030,ခရိုင်မီးသတ်,22.165503,94.13853
+node,11357397614,မြို့နယ်မီးသတ်ဦးစီးဌာ,22.179056,94.137688
+node,11243227563,Royangchhori Fire Service,22.179895,92.336413
+way,1301897611,Fire station (unnamed),22.210883,96.10111
+node,12058488662,မတ္တရာမီးသတ်ဌာန,22.210892,96.101258
+way,497025073,Anowara Fire Station,22.224784,91.900978
+node,12096634837,ဘန့်ဘွေးမီးသတ်,22.225512,94.99735
+way,605153709,Fire Station,22.241044,97.405293
+way,1487293919,Fire station (unnamed),22.243607,68.96131
+node,11734389456,"Fire Station of Padma Oil Company Limited, Patenga, Chattogram",22.267495,91.810117
+node,11734328286,"Karnafully fire service, M. A Aziz Rd, Chattogram",22.276709,91.787537
+node,11618093216,"Kornophully Modern Fire Station, Chittagong-Anwara-Banshkhali Rd, Daulatpur, Chattogram",22.28849,91.868308
+way,1068590923,Patya Fire Station,22.290646,91.985101
+way,1068206474,CEPZ Fire Station,22.292892,91.781138
+node,2344004347,Fire station (unnamed),22.300113,73.201638
+node,11380836180,"Bandar Fire Station, Port Internal Rd, Chattogram",22.313397,91.801324
+way,322435730,Vadiwadi Fire Sation,22.314729,73.166517
+way,578416187,Fire station (unnamed),22.326919,69.85701
+node,4452852889,မီးသတ်ဦးစီးဌာန,22.331,96.79604
+way,694654447,နောင်ချို မီးသတ်ဦးစီးဌာန,22.331014,96.796052
+node,11342853752,"Agrabad Fire Service Staff Quarter, Fire Service & Civil Defence, Chattogram",22.335089,91.813622
+way,1068206472,Agrabad Fire Station,22.335291,91.813205
+node,11342872608,"Bangladesh Fire Service and Civil Defense, Dewan Haat, Sheikh Mujib Rd, Chattogram",22.335363,91.812777
+way,1089508853,লামারবাজার ফায়ার স্টেশন,22.335399,91.850391
+way,321793270,Fire station (unnamed),22.34018,69.851263
+way,1172752032,Baruipur Fire Station,22.341708,88.450106
+way,321792373,Fire station (unnamed),22.345715,69.873682
+way,1069580154,Chandanpura Fire Station,22.349947,91.83874
+way,321959899,Fire station (unnamed),22.355443,69.887174
+node,9422310866,Fire Station,22.364598,91.373171
+way,323860643,Fire station (unnamed),22.375103,69.835876
+way,1068777748,Boalkhali Fire Station,22.382766,91.923421
+node,12250750380,"Myanmar Fire Service Department, Budalin",22.387121,95.147936
+way,516803188,Bayazid Fire Service & Civil Defence,22.391916,91.811347
+node,11786089827,Bayazid Fire Service & Civil Defence,22.391954,91.811395
+node,2341954425,Fire Service and Civil Defense,22.392043,91.811371
+node,5580070464,Bauphal Fire Station,22.4093,90.56893
+way,322837436,Fire station (unnamed),22.426326,69.854695
+way,321671312,Fire station (unnamed),22.432259,69.865433
+node,6541779885,Usha fire brigade,22.501376,88.361766
+way,517819305,Hathazari Fire Service হাটহাজারী ফায়ার সার্ভিস,22.503321,91.811281
+way,172425257,Kalighat Fire Brigade,22.523293,88.343653
+way,527792106,কুমিরা ফায়ার সার্ভিস স্টেশন,22.527394,91.702851
+way,439113612,Fire Department Building,22.5324,92.892696
+way,531626189,Raozan Fire Station রাউজান ফায়ার সার্ভিস ও সিভিল স্টেশন,22.534012,91.903136
+node,4569759993,Fire station (unnamed),22.535655,97.034161
+node,5714021822,Kyaukme Fire Station,22.535935,97.034103
+node,5714021522,Fire station (unnamed),22.535965,97.034066
+node,2813628983,West Bengal Fire Service HQ,22.557893,88.35487
+way,358886929,Fire station (unnamed),22.568059,88.432726
+way,359129222,Shibpur Fire Brigade,22.570447,88.326271
+node,9567719217,C R Avenue Fire Station,22.577837,88.360628
+relation,14226213,Manicktala Fire Station,22.583369,88.391694
+way,527753780,"Fire Service and Civil Defense, Sitakund, Chittagong",22.607788,91.665477
+node,2873924323,ফায়ার সার্ভিস ও সিভিল ডিফেন্স,22.617038,90.070443
+node,1323840125,Fire station (unnamed),22.617342,97.300634
+node,5776723114,Fire Service and Civil Defence Statio,22.649325,92.184971
+way,827459241,Fire station (unnamed),22.649414,92.184908
+way,1067409041,Baranagar Fire Station,22.652446,88.372335
+node,14027258601,Uttarpara Fire Brigade,22.656004,88.349282
+node,10961444605,မီးသတ်ဌာန ကျည်တောက်ပေါက်ရွာ,22.689336,96.01528
+node,1740713596,Fire station (unnamed),22.691409,72.863991
+way,636232108,Madhyamgram Fire Station,22.691767,88.466828
+way,531216360,"Fatikchhari Fire Service & Civil Defence Station, Chittagong - Khagrachhari Rd, Chattogram",22.699359,91.788874
+way,1111296924,বরিশাল ফায়ার সার্ভিস ও সিভিল ডিফেন্স,22.701732,90.374125
+node,13922508893,"Fire Service and Civil Defence, Nazirpur",22.708036,89.971998
+node,4954029196,Ywar Lel Mee Kin,22.729637,95.464095
+way,1531956800,Serampore Fire Station,22.739534,88.351114
+node,12189834601,"Fire Station, Pipariya",22.754244,78.350244
+node,12873727429,မီးသတ်,22.772825,95.621822
+way,636032962,Tutpara Fire Station,22.805089,89.570855
+way,754823451,Babuganj Fire Se33rvice,22.815045,90.324915
+way,527727351,উজিরপুর ফায়ার সার্ভিস,22.821301,90.240815
+way,636032961,Khulna Divisional Fire Station,22.830962,89.546297
+node,12544254924,Kabirhat Fire Service,22.838197,91.179805
+way,1526450230,Ashokenagar Fire Station,22.845313,88.631097
+way,636032960,Khalishpur Fire Station,22.858187,89.547168
+node,9788202924,ফায়ার সার্ভিস ও সিভিল ডিফেন্স ষ্টেশন,22.859512,91.394786
+way,547042154,Fire station (unnamed),22.870994,89.533188
+node,5285867019,Fire station (unnamed),22.871013,89.533168
+way,636032959,Daulatpur Fire Station,22.872449,89.519259
+way,913700901,Fire Station Maidji,22.873546,91.095855
+node,13929240872,তারকেশ্বর অগ্নিনির্বাপন পরিষেবা কেন্দ্র,22.882049,88.024627
+way,1539423478,Arambagh Fire Station,22.906591,87.772081
+way,1299546535,လားရှိုးခရိုင်မီးသတ်ဦးစီးမှူးရုံး,22.919045,97.748045
+way,636032958,Khan Jahan Ali Fire Station,22.929625,89.485864
+way,1304381066,ဇီးကုန်းမီးသတ်,22.930409,95.563428
+node,5868611895,Zigon Fire Station,22.930449,95.563472
+node,6125930197,Fire station (unnamed),22.937628,97.746046
+node,4419888489,Lashio Gyi Fire Station,22.97288,97.761389
+way,1553565826,Bopal Fire Station,23.012532,72.471548
+node,11011114254,Bopal Fire Station,23.012538,72.471545
+way,534840248,Noapara Fire Station নোয়াপাড়া ফায়ার স্টেশন,23.022523,89.406369
+node,429410556,Bodakdev Fire Station,23.039812,72.516317
+node,436106992,Memnagar Fire Station,23.045506,72.551001
+way,229021982,Thaltej Fire Dpt.,23.053753,72.499106
+way,1395129396,Sardar Vallabhbhai Patel International Airport Fire Station,23.077832,72.630547
+way,1074780708,Fire station (unnamed),23.099273,88.547895
+way,532686248,Jhikargacha Fire Station ঝিকরগাছা ফায়ার স্টেশন,23.104723,89.103006
+way,432065216,Fire station (unnamed),23.107748,90.859851
+way,531425078,Khagrachhari Fire Service খাগড়াছড়ি ফায়ার সার্ভিস,23.108088,91.970469
+node,10105387883,মনোহরগঞ্জ ফায়ার স্টেশন (ফায়ার সার্ভিস ও সিভিল ডিফেন্স),23.148809,91.063658
+way,1104331990,মনোহরগঞ্জ ফায়ার স্টেশন (ফায়ার সার্ভিস ও সিভিল ডিফেন্স),23.148844,91.063649
+way,268890378,Fire Service,23.161163,89.209969
+way,544503667,GIFT Fire Station,23.166325,72.683827
+way,1183742847,New Fire Station,23.18241,80.051769
+way,1183742846,Fire station (unnamed),23.182527,80.05172
+way,979798522,Old Fire St.,23.184527,80.059827
+way,1353849720,Fire station (unnamed),23.19876,90.456236
+way,376238117,Fire station (unnamed),23.231464,77.458132
+way,1283603358,"Tekerhat Port land cum river fire station, Fire station, Tekerhat",23.232777,90.023422
+node,11909722802,"Tekerhat Port land cum river fire station, Fire station, Tekerhat",23.232875,90.02317
+node,13931624157,Fire Fighting Headquarter Bhopal,23.238806,77.423128
+node,1545194126,Fire station (unnamed),23.239127,69.68164
+node,8294732968,Bankura Fire Station,23.239888,87.034874
+relation,10123801,Fire Service and Civil Defence Station,23.242454,91.312833
+node,10268919429,Fire Service and Civil Defence Station,23.242475,91.31265
+way,890933048,Fire station (unnamed),23.313664,85.328216
+node,11880916661,"Zajira Fire Station, Fire station, Zajira",23.327749,90.30322
+way,1279860581,"Zajira Fire Station, Fire station, Zajira",23.327784,90.303183
+node,3822901583,Fire station (unnamed),23.332046,86.362422
+way,516914811,Jharkhand Fire Services HQ,23.344262,85.326777
+node,3784862669,Barura Fire Station,23.379137,91.050978
+way,812715585,Nabadwip Fire Service,23.398162,88.367247
+way,1215553026,Fire station (unnamed),23.412902,98.644143
+node,1620980063,Fire station (unnamed),23.463907,91.172291
+node,2815355405,Chandina Fire Service,23.487503,90.995205
+way,526388434,Daudkandi Fire Station দাউদকান্দি ফায়ার স্টেশন,23.531752,90.727147
+way,533516180,Faridpur Fire Station ফরিদপুর ফায়ার স্টেশন,23.537151,89.654142
+node,6757753082,Fire station (unnamed),23.538463,87.295119
+way,533097135,Jhenaidah Fire Station ঝিনাইদহ ফায়ার স্টেশন,23.544068,89.165119
+node,2407514251,Darsana Fire Station,23.546213,88.793689
+way,533970610,Fire Service & Civil Defence ফায়ার সার্ভিস এন্ড সিভিল ডিফেন্স,23.604061,89.836075
+node,4496283273,Mehsana Muncipalty fire cantrol room,23.60651,72.390229
+node,10538924174,Gandacherra Fire Service,23.612972,91.819947
+way,330071740,BANDAR FIRE STATION,23.615538,90.509382
+way,536878508,Hazigonj Fire Station হাজীগঞ্জ ফায়ার স্টেশন,23.633369,90.51414
+way,604532830,Muradnagar Fire Service & Civil Defense,23.638702,90.939239
+way,1511568603,Bolpur Fire Station,23.67109,87.692791
+node,7466818593,Asansol Fire Brigade,23.685537,86.976102
+way,961102113,Asansol Fire Station,23.685549,86.976168
+node,388311374,Keranigonj Fire Station,23.697645,90.345775
+node,513000466,Kotowali Fire Station,23.706545,90.408857
+node,415894873,Unknown,23.713972,90.498067
+node,5233901522,Fire station (unnamed),23.721622,90.390323
+node,11801232248,"Mosque of Bangladesh Fire Service & Civil Defence Headquarter, Kazi Alauddin Rd, Dhaka",23.722122,90.405918
+way,499591431,Fire Service & Civil Defence,23.722684,90.405774
+way,234114776,Fire Service & Civil Defence,23.722719,90.406321
+way,463407071,Fire Service & Civil Defence,23.72444,90.371201
+node,12025590730,Fire Service & Civil Defence Station,23.725081,90.37017
+node,12043386528,Dhaka Inland Container Depot (ICD) Fire Station,23.725423,90.428561
+node,6534986752,ফায়ার সার্ভিস ও সিভিল ডিফেন্স খিলগাঁও,23.746025,90.430784
+way,936817748,Rajbari Fire Station,23.74701,89.64554
+way,1129736047,Hazaribag Fire Station,23.747484,90.387093
+way,450074515,Bangladesh Fire Service and Civil Defence,23.756518,90.372327
+way,456595481,Fire station (unnamed),23.758565,90.373365
+way,1531151893,বাংলাদেশ ফায়ার সার্ভিস এন্ড সিভিল ডিফেন্স,23.75862,90.373481
+way,456595482,Fire station (unnamed),23.758655,90.373546
+node,4524600092,Fire station (unnamed),23.764521,90.400623
+node,5735414102,মেহেরপুর ফায়ার সার্ভিস,23.770533,88.641169
+node,5622157049,Community Fire Response Team and Development Community,23.783387,90.411917
+node,2419473509,Colombo Fire Station Head Office,23.788517,90.419798
+way,323600522,Fire Service and Civil Defence Station Baridhara,23.79703,90.424352
+relation,6655519,Fire Service and Civil Defence Training Complex,23.807693,90.36758
+node,12553722574,"Fire Service and Civil Defence Station, Fire station",23.810165,90.130507
+way,1137211166,Maharaj Ganj Bazar Fire Station,23.824996,91.285063
+node,9231655517,Maharajgang,23.825449,91.285061
+node,4386346523,Kurmitola Fire Station,23.826009,90.405856
+node,12478305982,"Fire Service And Civil Defence Station - Savar, Fire station",23.82843,90.259011
+way,542007984,Fire Service & Civil Defence Station - Savar ফায়ার সার্ভিস ও সিভিল ডিফেন্স স্টেশন - সাভার,23.828509,90.259161
+way,718462920,ranirbazar fire station,23.828851,91.375941
+node,6746947176,Ranirbazar fire service station,23.828958,91.375963
+node,4365328107,Fire Fighting Instruments,23.829133,90.403042
+node,5739367024,ႁူင်းၶေႇၾႆး ပွၵ်ႈ(6),23.832089,97.591651
+node,2681745519,Fire station (unnamed),23.832437,91.269386
+node,4796856928,ႁူင်းလူတ်ႉၶႄ ၾႆး မၢၼ်ႈဝဵင်းလူင်,23.833845,97.595233
+way,1301592200,Rescue Fire Fighting Stationq,23.834235,90.413716
+node,9903237709,Purbachal Fire Service & Civil Defence,23.839177,90.485791
+way,1214808843,Purbachal Fire Service & Civil Defence,23.839266,90.485894
+node,5304943490,"Fire Service & Civil Defence Station, Manikganj",23.851573,90.001725
+way,490645040,Fire station (unnamed),23.852255,90.398539
+node,3486588504,Fire Station HSIA,23.852394,90.398761
+node,6754560852,Fire station (unnamed),23.858127,91.290615
+node,12573911259,"Fire Service and Civil Defense Station, Fire station",23.889544,89.876957
+way,1301592205,Tongi Fire Service and Civil Defence Stationq,23.889947,90.402237
+way,1186047961,Fire station (unnamed),23.890096,91.24341
+node,12087182126,ဝန်းသိုမီးသတ်,23.900855,95.691634
+node,12468730304,"Modern Fire Service And Civil Defence Station, Fire station",23.922174,90.262867
+way,375705231,Kandi Fire Station,23.949181,88.030421
+node,12578737741,Fire Service and Civil Defense Station Daulatpur,23.965473,89.837309
+node,12126672890,Fire Service And Civil Defence,23.977322,90.377012
+node,8552402076,Fire station (unnamed),23.98286,85.375229
+way,912876765,Fire Service,23.99856,89.236903
+node,12350986515,"Konabari Fire Station, Fire station",24.0093,90.310089
+node,5117009763,কালিয়াকৈর ফায়ার স্টেশন,24.060475,90.223707
+node,12592806776,"Fire Service and Civil Defense Station, Fire station",24.065486,89.880058
+node,7466314985,Bera Fire Service & Civil Defence,24.073293,89.611588
+node,11210676391,ပင်လယ်ဘူး မီးသတ်,24.078516,95.369922
+node,12373513913,"Fire Service And Civil Defense, Fire station",24.095846,90.138066
+node,5172551430,Madhabpur Fire Station,24.099508,91.294924
+node,11627396288,Fire service building,24.118854,90.567607
+way,530197435,Baghabari Fire Station,24.130568,89.581873
+node,12686461400,ကသာမြို့နယ်မီးသတ်စခန်း,24.174211,96.342269
+node,12686461389,ကသာခရိုင်မီးသတ်စခန်း,24.181523,96.325643
+node,7138539459,Fire station (unnamed),24.214777,94.303347
+node,6634969790,Fire station (unnamed),24.222671,96.794836
+node,11903077258,မိုးမောက် မီးသတ်ဦးစီးဌာန,24.245215,97.324362
+node,4369050893,Fire station (unnamed),24.249335,97.34649
+node,2798152374,Fire Service and Civil Defence,24.25061,89.919757
+node,4245950808,ဗန်းမော်မီးသတ်,24.257538,97.225642
+node,7092835178,Shayestaganj Fire Service & Civil Defence Station,24.268179,91.45247
+way,532917518,Shayestaganj Fire Service & Civil Defence Station,24.268786,91.452279
+way,497981641,Bangladesh Fire Service and Civil Defence,24.285613,89.697286
+node,4871970248,Fire Service and Civil Defence,24.309224,91.7264
+way,1170463228,"Fire Service & Civil Defense Station, Dhaka - Natore Hwy, Bonpara, Natore",24.31024,89.07821
+node,3588044201,রাজশাহী ফায়ার সার্ভিস অ্যান্ড সিভিল ডিফেন্স,24.367307,88.589756
+way,527497965,Fire Service and Civil Defence ফায়ার সার্ভিস ও সিভিল ডিফেন্স,24.367567,88.654952
+way,499142538,Rajshahi Fire Service and Civil Defense,24.367611,88.589804
+way,626875030,Habiganj Fire Service and Civil Defense,24.370649,91.416234
+node,12397559755,"Kalihati Fire Station, Fire station",24.381928,89.982618
+way,540946563,Bhaluka Fire Station,24.409799,90.398974
+node,10839216804,"Fire Service and Civil Defense Station, Rajshahi - Dhaka Hwy, Natore",24.412027,88.991433
+node,4561962405,Fire station (unnamed),24.412061,88.990779
+way,862912687,德宏州消防支队,24.435948,98.594855
+node,13844383501,Fire Service and Civil Defense ফায়ার সার্ভিস অ্যান্ড সিভিল ডিফেন্স,24.436166,90.778783
+way,538463188,Moulvibazar Fire Service,24.482558,91.765904
+node,10803592453,"Naldanga Upozila Fire Service Station, Naogaon Highway, Naldanga, Natore",24.494932,88.951151
+node,12852981842,"Fire Service and Civil Defence, Fire station",24.532616,89.51259
+way,538949748,Trishal Fire Station ত্রিশাল ফায়ার স্টেশন,24.56468,90.398623
+way,1160796043,"Atrai Fire Service, Natore - Naogaon Hwy, Atrai, Naogaon",24.615244,88.97107
+node,12944603480,"Nandigram Fire Station, Fire station",24.647355,89.240376
+way,1285907440,Nandigram Fire Station,24.647418,89.240355
+node,5868212538,Kendua Upazila Fire Service,24.65528,90.826386
+node,12638189267,"Dhanbari Fire Service, Fire station",24.665782,89.957227
+way,497980330,Fenchuganj Fire Station,24.678695,91.929489
+way,1285902410,Dhunat Fire Station,24.679451,89.530891
+way,529897428,Bangladesh Fire Service and Civil Defense বাংলাদেশ ফায়ার সার্ভিস ও সিভিল ডিফেন্স,24.685285,89.409916
+node,12869846312,"Bangladesh Fire Service and Civil Defense, Fire station",24.685374,89.409921
+way,1144323865,Shibganj Fire Service শিবগঞ্জে ফায়ার সার্ভিস,24.69025,88.157107
+node,12596310775,Lalitpur Fire Station,24.691946,78.415293
+way,528388080,শিবগঞ্জ ফায়ার সার্ভিস,24.692215,88.156749
+way,312572471,Fire station (unnamed),24.717143,84.999561
+node,6875219312,Madan Fire Service,24.719563,90.934861
+node,5166969488,Osmani Nogor Fire Station,24.720666,91.751177
+node,12211527599,Fire Service and Civil Defence Training Center,24.722179,90.400664
+node,10779097219,"Raninagar Fire Service and Civil Defense Station,Raninagar, Naogaon-Natore Highway,Naogaon",24.742043,88.961229
+way,788999102,Fire station (unnamed),24.760038,93.893338
+node,12925609068,"Fire Service And Civil Defence Station, Fire station",24.768568,89.348217
+node,4610106101,Sarishabari Fire Service And Civil Defence Station,24.770088,89.843626
+node,2388196226,Fire Brigade,24.792561,93.002607
+node,10947499224,Imphal Fire Station,24.804942,93.935377
+way,529602450,Naogaon Fire Service & Civil Defence Station নওগাঁ ফায়ার সার্ভিস ও সিভিল ডিফেন্স স্টেশন,24.805512,88.95177
+node,12165663057,Haseen Habib Trading (Pvt) Ltd,24.830443,67.071445
+way,1284368601,"Fire Service & Civil Defense Station, Bogura.",24.831333,89.376077
+node,4830025634,Beanibazar Fire Station,24.835311,92.161454
+node,5133191784,Landhi Fire Station,24.842165,67.198918
+way,1284782732,"Fire Service And Civil Defence Station, Kahaloo, Bogura",24.844071,89.268163
+way,1484103674,Fire station (unnamed),24.858924,67.089184
+node,5144995473,Manzoor Colony Fire Station,24.858977,67.089189
+way,724176537,Saddar Fire Station,24.863672,67.029682
+way,539949414,Mohanganj Fire Station. মোহনগঞ্জের ফায়ার স্টেশন।,24.87181,90.970419
+way,1024380645,"Fire Service & Civil Defence Station, Gotatikor",24.875016,91.89165
+way,1284367586,"Fire Service and Civil Defence Station, Gabtali",24.880141,89.458837
+way,337536050,Fire station (unnamed),24.882087,90.735816
+way,1284357571,Shariakandi Fire Station,24.882231,89.546598
+node,12263988673,Madina CNG 2,24.883889,67.055051
+node,4767920535,Shah Faisal Town Fire station,24.884804,67.14267
+way,1175223031,Karsaz Fire Station,24.885744,67.096221
+way,1089107238,Zakiganj Fire Service,24.887143,92.364818
+way,1210135610,AKU Fire Station,24.893518,67.07685
+way,1185602804,CAA Fire Station,24.901756,67.163245
+node,4762522310,Gulshan-e-Iqbal Fire Station,24.913734,67.091135
+node,12289972909,Gulshan-e-Iqbal Fire Station,24.914152,67.091573
+node,12184399097,NAZIMABAD FIRE STATION,24.920823,67.032386
+node,12692495931,"Jamalpur Fire Service And Civil Defense Station, Fire station",24.921166,89.951209
+node,8042827935,Jamalpur Fire Service & Civil Defense,24.921304,89.951344
+way,1154010111,"Mohadevpur Fire Station, Main Road, Mohadevpur, Naogaon",24.927696,88.7493
+node,5087779613,Orangi Fire Station CDGK,24.936947,67.007417
+node,12183980455,Sohrab Goth Fire Station,24.944594,67.083103
+way,540114738,Phulpur Fire Service ফুলপুর ফায়ার সার্ভিস,24.959713,90.358361
+way,1151944814,"Badalgachhi Fire Station, Badalgachhi, Naogaon",24.965759,88.89938
+node,12782546756,"Nakla Upzilla Fire Station, Fire station",24.96579,90.185374
+way,540354454,Nakla Upzilla Fire Station,24.965843,90.18497
+node,13768969090,Malda Fire Brigade,25.005946,88.124745
+way,1289843509,Kanaighat Fire Service Station,25.016896,92.252212
+node,12819301737,"Fire Service and Civil Defense Station, Fire station",25.018756,90.024894
+way,530997735,"Fire Service and Civil Defence Station, Patnitala, Naogaon",25.043743,88.75742
+way,1284782731,"Fire Service & Civil Defence Station, Sonatola, Bogura",25.044268,89.490914
+node,2304877345,Fire station (unnamed),25.082878,89.783579
+way,540117698,Haluaghat Upazilla Fire Service and Difence হালুয়াঘাট উপজেলা ফায়ার সার্ভিস ও ডিফেন্স,25.107807,90.336288
+way,1145551354,"Sapahar Fire Service Station, Shapahar - Patnitala Rd, Sapahar",25.118872,88.600594
+way,356338238,Durgapur Fire Station,25.125611,90.685175
+way,1147636329,"Dhamoirhat Fire Station, Dhamoirhat Bazar Road, Dhamoirhat",25.148201,88.838371
+node,10222809619,Fire Brigade,25.16873,93.018977
+way,1076141152,Bakshiganj Fire Service,25.173566,89.872454
+node,8909040185,Fire station (unnamed),25.188853,73.448679
+way,539772170,Fire Service And Civil Defence Station Ghoraghat,25.256038,89.253174
+node,4499475491,Malik,25.25866,86.996773
+node,11755384332,Fire station (unnamed),25.258786,91.734551
+node,6247524986,မိုးကောင်းမီးသတ်,25.304554,96.940397
+node,1081588354,Fire Brigade,25.373077,68.363795
+node,5252043365,Hali Road Fire Station,25.376556,68.375035
+node,9859999115,Birampur Fire Station,25.399616,88.985298
+node,13037245440,"Fire Service and Civil Defence Station, Fire station",25.432164,89.306803
+node,2301227533,Fire Station,25.447821,81.839889
+way,525634561,Phulbari Fire Station ফুলবাড়ী ফায়ার স্টেশন,25.503815,88.943692
+node,13045546687,"Mithapukur Fire Station, Fire station",25.548295,89.281219
+node,8411203149,AIIMS Patna Firestation,25.559891,85.041172
+node,12862184700,Kaliyaganj Fire Station,25.62727,88.322196
+node,11744699156,Fire station (unnamed),25.667046,91.900519
+way,1219954251,漾濞县森林消防中队,25.66751,99.9669
+way,1456585133,Badarganj Fire Service and Civil Defence Station,25.668558,89.041307
+way,1219954253,漾濞县消防救援大队,25.674512,99.965754
+node,6255335872,Fire Brigade,25.713509,94.104079
+way,438436629,Fire Service,25.747289,89.259088
+way,386153715,Fire station (unnamed),25.760275,87.463905
+way,540950474,Kaunia Fire Service Station কাউনিয়া ফায়ার সার্ভিস স্টেশন,25.769781,89.420544
+node,12613224026,Chapra fire station,25.782026,84.762149
+way,580868521,Kurigram Fire Service,25.809154,89.645705
+node,13159581113,"Fire Service and Civil Defense Nilphamari, Fire station",25.941286,88.846732
+node,4723581163,Fire station (unnamed),26.004469,79.453624
+way,682629618,জলঢাকা ফায়ার সার্ভিস ও সিভিল ডিফেন্স স্টেশন,26.013872,89.013139
+way,538924760,Thakurgaon Fire Station ঠাকুরগাঁও ফায়ার স্টেশন,26.029726,88.474523
+way,1360324736,FIRE STATION,26.107032,84.495996
+node,13167450877,"Debiganj Fire Service, Fire station",26.112755,88.75723
+node,3381802068,Dimla Fire Station,26.160406,88.919394
+way,1455130588,Basni Fire Station,26.230609,73.00719
+node,11133587107,"Fire and Emergency Services Station, Raha",26.234028,92.526013
+way,1063677898,Islampur Fire Station,26.254156,88.184808
+way,1455131127,Shastri Nagar Fire Station,26.272333,73.002544
+way,980095631,Fire station (unnamed),26.291776,78.228072
+node,4506616174,Cooch Behar Fire Service,26.320336,89.45329
+node,11907782293,မီးသတ်,26.324628,95.438938
+node,2717151882,Fire Station,26.329747,94.531568
+node,8377811524,Mekliganj Fire Brigade,26.345714,88.907358
+node,13160145332,Kokrajhar Fire Station,26.392888,90.302215
+way,975341590,FIRE STATION,26.484352,81.559192
+node,7037458773,Golaghat Fire Brigade,26.498313,93.961008
+node,10775939739,IIT Kanpur Fire Station,26.51195,80.230065
+way,1354252177,Jalpaiguri Fire Station,26.515106,88.730657
+node,8115471341,微型消防站,26.53721,99.896838
+way,558281022,Siliguri Fire Station,26.70292,88.417402
+node,8168454969,Matigara Fire Brigade Office,26.725292,88.385883
+way,1171543422,Fire station (unnamed),26.72826,84.187014
+way,1347716166,Maharishi Valmiki International Airport Fire Station,26.747553,82.152495
+way,358944917,Jorhat Fire Station,26.754795,94.211426
+node,12593221466,fire station,26.754843,83.372765
+way,1023608102,Ayodhya City Fire Station,26.781132,82.17835
+node,11974609608,Dharan Fire Fighter,26.801775,87.273416
+node,2044163259,Fire station (unnamed),26.802044,84.500647
+way,1124288529,Fire station (unnamed),26.812876,80.904464
+way,1366169593,Police Fire Station,26.870075,80.907547
+way,1497725901,Indira Nagar Fire Station,26.872701,80.984069
+way,1453106116,Mal Fire Station,26.878385,88.74699
+node,11968266506,Suwarna RM Fire Fighter,26.909868,85.02824
+node,2596961786,Gas Well,26.927838,69.281676
+node,4427339589,Fire station (unnamed),26.936952,75.757327
+node,2596961700,Gas Well,26.957354,69.302577
+way,1347725323,Donyi Polo Airport Fire Station,26.971531,93.640385
+node,5265565022,Garamur fire & emergency services station,26.974781,94.157911
+node,2596960398,Gas Well,26.98735,69.331145
+node,2596959088,Gas Well,27.004456,69.312332
+node,2114145168,Darjeeling Fire Station,27.023165,88.255068
+way,349476874,Dali Fire Station,27.02317,88.25507
+node,2596967295,Gas Well,27.043133,69.257629
+way,349477597,Darjeeling Fire Station,27.043275,88.264769
+node,2596966243,Gas Well,27.047747,69.292228
+node,2596967220,Gas Well,27.047877,69.269358
+node,2596966997,Gas Well,27.051288,69.278449
+node,10248419033,Fire station (unnamed),27.062827,88.463512
+node,2596967403,Gas Well,27.070836,69.299671
+node,10243715009,Fire station (unnamed),27.072557,89.879414
+way,357361706,Fire Station,27.107268,93.69367
+node,2596950742,Gas Well,27.147768,69.25178
+node,2596951583,Gas Well,27.148857,69.226267
+way,1260676192,Fire station (unnamed),27.166378,88.36424
+node,3759834557,Fire station (unnamed),27.175087,77.99951
+way,1258330543,Fire station (unnamed),27.178243,75.718997
+node,4925330240,Singtam firestation,27.233032,88.498947
+node,8058855486,Gangtok fire station,27.332104,88.613987
+way,83797865,Fire station (unnamed),27.356413,95.319443
+way,1153904258,Airport Emergency Services,27.408116,89.419951
+node,4539827094,Fire station (unnamed),27.459908,89.642935
+node,11930199270,fire station,27.460249,89.642893
+node,13140741227,Fire station (unnamed),27.475522,77.336428
+node,4275697996,Fire station (unnamed),27.514796,83.595789
+way,1212764572,जुद्ध बारुण यन्त्र,27.671106,85.420131
+way,177582761,Phulchowk Fire Station,27.675535,85.314972
+way,72008538,Fire station (unnamed),27.692821,68.872992
+way,211751501,Fire station (unnamed),27.696268,85.36118
+node,12596061770,sravsti fire police,27.707329,81.908483
+node,9722113225,Fire station (unnamed),27.73176,85.365543
+node,1679203242,Fire station (unnamed),27.739373,86.712289
+way,1226507299,香格里拉市消防救援大队,27.796536,99.707007
+node,3546863558,Jonai Fire Service Station,27.82244,95.230042
+way,1472098444,迪庆藏族自治州消防支队,27.830204,99.714499
+node,4367704790,Fire station (unnamed),27.911413,85.141272
+node,5377584576,Kusamba Devi Glass House,28.067353,81.635872
+way,552964243,Fire station (unnamed),28.101047,81.669381
+node,11693022646,Fire station (unnamed),28.115353,75.389332
+node,9763352317,तुलसीपुर दमकल,28.130969,82.298117
+node,13386524883,Fire station (unnamed),28.17595,77.614388
+way,422627119,Fire station (unnamed),28.18683,84.01746
+way,506424190,Fire Brigade,28.210012,83.990476
+way,143698431,NIT Faridabad Fire Station,28.390052,77.305591
+way,1554048069,Fire station (unnamed),28.39773,85.326632
+node,332066858,Sushant Lok Fire Station,28.463707,77.072964
+way,152007422,Fire station (unnamed),28.496035,77.06393
+way,414134628,Fire Station 1,28.548243,77.094762
+way,1426212239,Fire Station Nehru Place,28.54925,77.256732
+way,1429449939,Indira Gandhi International Airport Fire Station,28.566569,77.09878
+node,1114871812,Fire Station,28.568567,77.184312
+node,14017793403,Fire Station Mathura Road,28.572523,77.257487
+node,372717372,Fire station (unnamed),28.572801,77.166982
+way,1381376816,Safdarjung Fire Station,28.586333,77.213313
+node,9263241345,Birendranagar -Damkal,28.595491,81.623096
+node,4438230893,Sector 6 Fire Station,28.597318,77.064024
+node,5136715532,Fire Station Chanakyapuri,28.602644,77.190365
+way,217457954,Fire station (unnamed),28.61226,76.976766
+node,6507760867,Fire station (unnamed),28.614703,86.143807
+way,1065558131,Fire station (unnamed),28.617079,77.309231
+node,13072373294,"Delhi Fire Service ,Kalyanvas Fire Station",28.617231,77.309172
+way,283776526,Fire station (unnamed),28.620498,77.336814
+node,13506157296,Janakpuri Fire Station,28.621215,77.091114
+node,5483331672,Fire station (unnamed),28.621435,77.207645
+node,13455393955,Hari Nagar Fire Station,28.62229,77.110136
+way,999345671,Fire station (unnamed),28.625177,77.307249
+way,351561090,Barakhamba Road Fire Station,28.632012,77.223356
+node,6225480221,Fire Station Naraina,28.632996,77.139003
+way,158040926,Fire Station Shankar Road,28.640699,77.175764
+node,2165822097,Fire station (unnamed),28.647076,77.181207
+node,11308955288,Fire station (unnamed),28.651822,77.23368
+way,262517138,Fire station (unnamed),28.659227,77.143944
+node,6539125899,Fire station (unnamed),28.659476,77.216097
+node,13644854430,Moti Nagar Fire Station,28.659862,77.145579
+node,12596618844,CBD Shahdara Fire Station,28.661811,77.296707
+node,2683027313,Fire station (unnamed),28.66232,77.079627
+way,350581161,Fire station (unnamed),28.669048,77.100265
+way,259024075,Fire station (unnamed),28.674562,77.284132
+way,1498869884,Fire station (unnamed),28.677459,77.36111
+node,13472788004,Keshavpuram Fire Station,28.681511,77.147805
+node,13110127586,Roop Nagar Fire Station,28.685006,77.202908
+way,1170518400,Fire station (unnamed),28.68539,77.315157
+node,11696932831,FIRE STATION,28.686171,77.285905
+node,12495396871,Fire Brigade Station,28.698237,77.204953
+way,696345396,Fire Station Gokulpuri,28.700391,77.291098
+way,78595558,Fire Safety Management Academy,28.706895,77.128527
+way,1236877577,Fire station (unnamed),28.731007,77.120855
+way,852495478,Fire station (unnamed),28.733645,77.78658
+way,852495477,Fire station (unnamed),28.733835,77.786519
+way,852495476,Fire Department Building,28.733845,77.786717
+way,1136674909,Fire station (unnamed),28.734156,77.174969
+node,11691641330,Fire station (unnamed),28.736157,77.297457
+node,10807128721,Fire station (unnamed),28.737415,77.153923
+way,1418186598,"Fire Station, Rajiv Gandhi Education City",28.944346,77.102127
+way,1194323859,Fire Station Rudrapur,28.975459,79.390877
+node,11086014212,"Uttarakhand Fire and Emergency Station, Sidcul",29.001315,79.417525
+node,8315757704,Fire station (unnamed),29.178114,81.871961
+way,891175139,Haldwani Fire Station,29.194852,79.515
+way,990692275,Fire station (unnamed),29.226125,88.922286
+node,12596118627,Fire station (unnamed),29.317359,76.31687
+node,348323469,Thermal Plant,29.343756,75.863358
+node,12595604887,Fire Brigade Station Safidon,29.41259,76.665934
+way,1056654583,西藏森林消防总队训练大队,29.632804,91.192919
+way,1282235440,西藏自治区森林消防总队,29.656331,91.158287
+way,1378615599,左贡县消防救援大队,29.663992,97.852083
+node,11698683039,Saharanpur Fire Station,29.955263,77.540311
+node,4344846604,Shamshan Ghat Arnetu,29.95544,76.202423
+way,258331283,Fire station (unnamed),29.969606,76.864997
+node,10946268605,Forest Fire Crew Station,30.003494,79.569165
+node,1481122651,Bhatha,30.070611,75.930545
+node,1481130480,Bhatha,30.079124,75.931221
+node,6126907734,Fire Brigade Office,30.194744,67.017069
+way,500325004,Fire station (unnamed),30.211953,74.937868
+node,1485625688,Bhatha,30.270854,75.873922
+node,1957973153,"Fire Brigade,Rampura Phul",30.277863,75.236116
+node,1485625760,Bhatha,30.280007,75.886904
+node,12049327970,Fire station (unnamed),30.300828,79.050638
+node,13272413960,Fire station (unnamed),30.318872,78.04045
+node,6115840284,Fire Station,30.34508,78.018823
+node,835661329,Fire Brigade Station,30.373246,75.541502
+node,11349070130,Fire station (unnamed),30.373779,77.857433
+node,1248415462,Fire Brigade,30.40693,74.027096
+node,13971703527,Mussoorie Fire Station,30.461549,78.059359
+node,11672445202,Fire station Nahan,30.558598,77.300694
+node,12681417507,察雅县公安消防大队,30.654066,97.552132
+node,10295654117,Fire station (unnamed),30.692786,76.855417
+way,129453737,Fire station (unnamed),30.706497,76.778531
+way,129774350,Sector 17,30.735813,76.780549
+way,129475678,Fire Station,30.741665,76.747102
+way,129790733,Fire station (unnamed),30.757232,76.785811
+node,7397658615,Fire station (unnamed),30.810264,73.442131
+way,892787218,Fire Station Parwanoo,30.838221,76.962359
+way,1378292300,Fire station (unnamed),30.853729,98.268591
+way,1378615598,贡觉县消防救援大队,30.854147,98.268139
+node,12766499849,贡觉县消防大队,30.856806,98.271962
+node,1349277499,Cantonment Board Ferozepur,30.918434,74.613567
+node,1487554971,Firebrigade Station,30.919314,75.85046
+node,1012095695,Shimla Fire Station,31.104768,77.172949
+way,531447067,昌都市消防训练基地,31.11414,97.199571
+node,6155160585,Rescue 1122 Jhang Sadar,31.277818,72.325503
+node,5763462267,Fire station (unnamed),31.411477,76.863413
+node,5259596756,Fire Brigade Faisalabad,31.446056,73.090441
+way,544741402,Rescue 1122,31.472738,74.392405
+node,4238855991,Rescue 1122,31.519365,74.32744
+way,447966523,Rescue 1122,31.5416,74.316475
+node,4910219512,Fire Brigade Shahdara,31.624033,74.289335
+node,10911277208,Mandi fire station,31.682908,76.94498
+node,5577800978,Fire Station Mandi,31.70198,76.944476
+node,6507760870,Fire station (unnamed),31.729372,88.846444
+way,1486191887,Nasir Fire Brigade Service,31.760537,72.902136
+way,1526686703,Fire station (unnamed),31.863941,74.399647
+node,12351668418,中国消防救援,31.884677,93.785332
+node,12358373501,巴青县公安消防大队,31.920583,94.04749
+node,4528007691,rescue 1122,31.964446,73.974414
+node,6039040586,Fire station (unnamed),32.071134,72.682852
+node,6611410538,Fire station (unnamed),32.098081,76.283304
+node,2888418501,Agnishaman Kendra,32.116808,76.539135
+node,7507202850,Rescue 1122,32.163287,74.187453
+node,13244945138,囊谦县公安消防大队,32.20047,96.48942
+node,5087818814,Dharamsala Fire Brigade,32.215155,76.318125
+node,13606980567,Fire station (unnamed),32.338199,74.337528
+node,7530514897,Rescue 15,32.432766,74.115706
+way,1184027578,Fire station (unnamed),32.53159,74.366022
+node,7538668058,Fire Birgade,32.570302,74.07985
+way,907648962,Fire Birgade,32.638975,74.207114
+way,835485762,pucca dunga fire station,32.740754,74.868765
+way,762071608,Fire station (unnamed),32.768395,74.835942
+way,1293386117,Fire station (unnamed),32.976341,75.720279
+way,1038249440,Mirpur Fire Station,33.149374,73.738548
+node,13702956327,Fire station (unnamed),33.500276,73.114132
+node,4975593621,Rescue 1122 Bahria Station,33.540896,73.115097
+way,795824687,Fire station (unnamed),33.545232,72.825873
+way,1187056494,Fire station (unnamed),33.553827,72.82436
+node,2390850352,Fire station (unnamed),33.561985,73.114144
+node,6397285029,Rescue 1122,33.572559,73.039308
+node,2640848987,Cantonment Board Fire Station,33.603868,73.057927
+way,1204471362,Fire station (unnamed),33.61018,72.965184
+way,263744258,Rescue 1122,33.630028,73.073075
+node,4975593623,"Central Rescue Station, Rawalpindi",33.630101,73.072928
+node,4887841042,Fire Brigade,33.672938,73.016817
+node,297647905,Islamabad Fire Department,33.699597,73.073139
+node,3387132177,Fire brigade,33.780591,72.358666
+node,9642669885,Fire Service Station,33.925776,75.117529
+node,9067256077,Fire Service Station,33.998325,74.792298
+node,4496776893,Fire Brigade,34.027995,71.575393
+way,1099480535,Gowkadal Fire station,34.074568,74.811465
+way,676084548,Fire Station Headquarter Srinagar,34.074684,74.79776
+way,1533426800,J&K Fire Station,34.091565,74.800725
+node,9107554153,Fire and Emergency Station Safakadal,34.095256,74.787096
+way,1442077372,Nowshera Fire Station,34.129039,74.805689
+way,1026395851,Fire station (unnamed),34.133925,77.54427
+node,13249656100,曲麻莱县约改消防站,34.141017,95.799904
+node,14142939586,Firestation Pattan,34.159998,74.553916
+node,4546395891,Fire Brigade,34.220426,71.566371
+node,7677301202,Fire Service Station,34.290543,74.620427
+node,1381305792,Fire station (unnamed),34.419878,70.456311
+node,13824599803,Fire and Emergency service,34.424168,74.632179
+way,1337059800,Kabul Fire brigade,34.520224,69.181964
+node,12465669883,Fire station (unnamed),34.550669,76.137032
+way,454012663,Fire station (unnamed),34.753732,72.356248
+node,1469138994,د بامیان د پولیسو د اطفايې مرکز,34.805898,67.828415
+node,4361264368,Fire station (unnamed),35.922994,74.309294
+way,1313653954,都兰县消防救援大队,36.308369,98.096206
+way,1426003410,Fire station (unnamed),36.417876,94.895512
+node,12782305410,于田县消防救援大队,36.855275,81.655374
+way,867919296,Fire station (unnamed),37.037434,79.875729
+node,4751354915,Fire station (unnamed),37.228762,67.261443
+way,922518978,和田县消防救援大队,37.239,79.84622
+way,173761660,пожарне ди по,37.487367,71.552841
+node,4556088167,Дидбонгоҳи алоҳидаи ҳарбикунонидашудаи хадамоти давлатии оташнишонӣ оид ба муҳофизати шӯрообод,37.755553,69.840069
+way,336037255,Пожарная часть,37.830469,68.772148
+way,1141847826,叶城县消防大队,37.852672,77.444519
+way,275103772,ХДО Кулоб,37.917295,69.790395
