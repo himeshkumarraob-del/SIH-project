@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import RiskGauge from './RiskGauge';
 import EmergencyResponseModal from './EmergencyResponseModal';
 import EvidenceExplorer from './EvidenceExplorer';
@@ -18,13 +18,17 @@ import type {
   MovementVector,
 } from '../types';
 import { formatCoordinate, formatDistance, formatRate, formatDegrees } from '../utils/formatters';
+import { triggerIncidentReportDownload } from '../utils/reportGenerator';
+import LocalIncidentMap from './LocalIncidentMap';
 
 interface EventDetailPanelProps {
   event: ThermalEvent | null;
   onClose: () => void;
+  compact?: boolean;
 }
 
-export default function EventDetailPanel({ event, onClose }: EventDetailPanelProps) {
+export default function EventDetailPanel({ event, onClose, compact = false }: EventDetailPanelProps) {
+
   const [detail, setDetail] = useState<ClusterDetail | null>(null);
   const [classification, setClassification] = useState<ClassificationDetailData | null>(null);
   const [risk, setRisk] = useState<RiskDetailData | null>(null);
@@ -185,16 +189,18 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
 
   const panelContent = (
     <div className="flex flex-col h-full overflow-hidden select-none">
-      {/* Top Dossier Header */}
+      {/* Top Local Incident Header */}
       <div className="bg-white dark:bg-slate-900 px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex-shrink-0 shadow-2xs">
         <div className="flex items-center justify-between gap-2 mb-1.5">
-          <div className="flex items-center gap-1.5">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-navy-900 dark:bg-navy-700 text-white shadow-2xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Cluster #{event.cluster_id}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white shadow-2xs ${
+              riskLevel === 'HIGH' || riskLevel === 'CRITICAL' ? 'bg-red-700 animate-pulse' : riskLevel === 'MEDIUM' ? 'bg-amber-600' : 'bg-emerald-700'
+            }`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+              {riskLevel} THERMAL INCIDENT
             </span>
-            <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-              {event.instrument || 'VIIRS'} SENSOR
+            <span className="text-xs font-bold text-navy-900 dark:text-slate-100">
+              Cluster #{event.cluster_id}
             </span>
           </div>
           <button
@@ -208,6 +214,18 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
           </button>
         </div>
 
+        {/* Prominent Local Location Display */}
+        <div className="mb-2">
+          <h2 className="text-sm font-extrabold text-navy-900 dark:text-sky-400 leading-tight">
+            {detail?.location?.formatted_location_header || 'Location intelligence loading...'}
+          </h2>
+          {detail?.location?.display_name && detail.location.display_name !== 'Not available' && (
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5" title={detail.location.display_name}>
+              {detail.location.display_name}
+            </p>
+          )}
+        </div>
+
         <div className="flex items-center justify-between gap-2">
           <button
             onClick={handleCopyCoord}
@@ -219,27 +237,80 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <span>{coordText}</span>
-            <span className="text-[10px] text-slate-400 dark:text-slate-500 ml-0.5">{copiedCoord ? 'âœ“ Copied' : 'â§‰'}</span>
+            <span className="text-[10px] text-slate-400 dark:text-slate-500 ml-0.5">{copiedCoord ? '✓ Copied' : '⧉'}</span>
           </button>
 
-          {detail && (
-            <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-              {detail.active_days} {detail.active_days === 1 ? 'day active' : 'days active'}
-            </span>
-          )}
+          <button
+            onClick={() => triggerIncidentReportDownload(event.cluster_id)}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-navy-900 hover:bg-navy-800 dark:bg-sky-600 dark:hover:bg-sky-500 text-white text-xs font-bold shadow-xs transition-colors"
+            title="Generate & download official PDF incident report"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>GENERATE REPORT</span>
+          </button>
         </div>
 
-        {/* At-a-glance stat strip (sticky with header while dossier scrolls) */}
+        {/* At-a-glance stat strip */}
         <div className="mt-2.5 grid grid-cols-4 gap-1.5">
-          {headerStat('Risk', hasScoreData ? Math.round(riskScore).toString() : 'â€”', riskTone)}
+          {headerStat('Risk', hasScoreData ? Math.round(riskScore).toString() : '—', riskTone)}
           {headerStat('Anomaly', abnormality, abnormalTone)}
-          {headerStat('Signal', detail?.detection_reliability || 'â€”', detail ? reliabilityTone : 'text-slate-400 dark:text-slate-500')}
-          {headerStat('Peak FRP', frpValue && frpValue > 0 ? `${frpValue.toFixed(1)} MW` : 'â€”', 'text-slate-700 dark:text-slate-200')}
+          {headerStat('Signal', detail?.detection_reliability || '—', detail ? reliabilityTone : 'text-slate-400 dark:text-slate-500')}
+          {headerStat('Peak FRP', frpValue && frpValue > 0 ? `${frpValue.toFixed(1)} MW` : '—', 'text-slate-700 dark:text-slate-200')}
         </div>
       </div>
 
       {/* Scrollable Dossier Content */}
       <div className="flex-1 overflow-y-auto p-3.5 space-y-3.5">
+        {/* LOCAL LOCATION INTELLIGENCE CARD */}
+        {detail?.location && (
+          <div className="bg-slate-50 dark:bg-slate-800/60 rounded-xl p-3 border border-slate-200 dark:border-slate-700/60 shadow-2xs">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-sky-500" />
+                <h3 className="text-xs font-bold text-navy-900 dark:text-slate-100 uppercase tracking-wider">
+                  Local Location Intelligence
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500">Real Geospatial</span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="bg-white dark:bg-slate-900/80 p-2 rounded border border-slate-100 dark:border-slate-800">
+                <span className="block text-[9px] font-bold text-slate-400 uppercase">State</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{detail.location.state}</span>
+              </div>
+              <div className="bg-white dark:bg-slate-900/80 p-2 rounded border border-slate-100 dark:border-slate-800">
+                <span className="block text-[9px] font-bold text-slate-400 uppercase">District</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{detail.location.district}</span>
+              </div>
+              <div className="bg-white dark:bg-slate-900/80 p-2 rounded border border-slate-100 dark:border-slate-800">
+                <span className="block text-[9px] font-bold text-slate-400 uppercase">City / Town</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{detail.location.city_town}</span>
+              </div>
+              <div className="bg-white dark:bg-slate-900/80 p-2 rounded border border-slate-100 dark:border-slate-800">
+                <span className="block text-[9px] font-bold text-slate-400 uppercase">Locality / Colony</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{detail.location.locality_colony}</span>
+              </div>
+              <div className="bg-white dark:bg-slate-900/80 p-2 rounded border border-slate-100 dark:border-slate-800">
+                <span className="block text-[9px] font-bold text-slate-400 uppercase">Street / Road</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{detail.location.street_road}</span>
+              </div>
+              <div className="bg-white dark:bg-slate-900/80 p-2 rounded border border-slate-100 dark:border-slate-800">
+                <span className="block text-[9px] font-bold text-slate-400 uppercase">PIN Code</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{detail.location.postcode}</span>
+              </div>
+            </div>
+            {detail.location.landmark !== 'Not available' && (
+              <div className="mt-2 bg-white dark:bg-slate-900/80 p-2 rounded border border-slate-100 dark:border-slate-800 text-xs">
+                <span className="block text-[9px] font-bold text-slate-400 uppercase">Nearby Landmark</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{detail.location.landmark}</span>
+              </div>
+            )}
+          </div>
+        )}
+
         {loading && (
           <div className="py-12 text-center">
             <div className="w-8 h-8 border-2 border-navy-800 dark:border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
@@ -970,13 +1041,38 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
 
   return (
     <>
-      {/* Desktop Side Panel */}
-      <aside
-        ref={panelRef}
-        className="hidden lg:flex w-80 lg:w-96 flex-shrink-0 bg-slate-50/80 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex-col overflow-hidden h-full transition-colors duration-200"
-      >
-        {panelContent}
-      </aside>
+      {compact ? (
+        /* Desktop Side Panel for MapPage */
+        <aside
+          ref={panelRef}
+          className="hidden lg:flex w-80 lg:w-96 flex-shrink-0 bg-slate-50/80 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex-col overflow-hidden h-full transition-colors duration-200"
+        >
+          {panelContent}
+        </aside>
+      ) : (
+        /* Full-Width Split Incident Intelligence Workspace for Catalog/Alerts Pages */
+        <div
+          ref={panelRef as any}
+          className="w-full min-h-[680px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xl flex flex-col lg:flex-row transition-all duration-200"
+        >
+          {/* Left Column: Intelligence Dossier & Report */}
+          <div className="w-full lg:w-[420px] flex-shrink-0 border-b lg:border-b-0 lg:border-r border-slate-200 dark:border-slate-800 flex flex-col h-full overflow-hidden">
+            {panelContent}
+          </div>
+
+          {/* Right Column: Interactive Local OSM Map & Area Categorization */}
+          <div className="flex-1 flex flex-col min-w-0 h-[480px] lg:h-full bg-slate-950 p-2 sm:p-3">
+            <LocalIncidentMap
+              event={event}
+              detail={detail}
+              classification={classification}
+              risk={risk}
+              response={response}
+              movement={movement}
+            />
+          </div>
+        </div>
+      )}
 
       {emergencyOpen && clusterId !== null && (
         <EmergencyResponseModal clusterId={clusterId} onClose={() => setEmergencyOpen(false)} />
@@ -1000,6 +1096,7 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
     </>
   );
 }
+
 
 
 

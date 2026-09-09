@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import type { ThermalAlert } from '../types';
 import { formatNumber } from '../utils/formatters';
+
 
 /**
  * Visual popup for a decision-support THERMAL ALERT.
@@ -27,8 +29,35 @@ function severityAccent(severity: string): string {
     : 'border-l-orange-500';
 }
 
+function playAlertChime() {
+  try {
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(554.37, ctx.currentTime + 0.35);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.35);
+  } catch (e) {
+    // Ignore browser autoplay restrictions
+  }
+}
+
 function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
-  const label = alert.severity === 'CRITICAL' ? 'CRITICAL THERMAL ALERT' : 'HIGH THERMAL ALERT';
+  useEffect(() => {
+    if (alert.severity === 'CRITICAL' || alert.severity === 'HIGH') {
+      playAlertChime();
+    }
+  }, [alert.alert_id, alert.severity]);
+
+  const label = alert.severity === 'CRITICAL' ? 'CRITICAL THERMAL INCIDENT' : 'HIGH THERMAL INCIDENT';
   const classification = alert.classification_label ?? 'Unknown / Insufficient Evidence';
   const reasons = (alert.reasons ?? '')
     .split('|')
@@ -40,7 +69,7 @@ function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
     <div
       role="alert"
       aria-live="assertive"
-      className={`thermal-toast-enter w-[360px] max-w-[calc(100vw-1.5rem)] rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 border-l-4 ${severityAccent(alert.severity)} overflow-hidden`}
+      className={`thermal-toast-enter w-[360px] max-w-[calc(100vw-1.5rem)] rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 border-l-4 ${severityAccent(alert.severity)} ${alert.severity === 'CRITICAL' ? 'animate-pulse' : ''} overflow-hidden`}
     >
       <div className="px-3 pt-2.5 pb-2">
         {/* Header */}
@@ -125,9 +154,9 @@ function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
           <button
             type="button"
             onClick={() => onView(alert)}
-            className={`flex-1 rounded px-3 py-1.5 text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-offset-1 ${severityChip(alert.severity)} hover:opacity-90 focus:ring-red-400`}
+            className={`flex-1 rounded px-3 py-1.5 text-xs font-bold text-white focus:outline-none focus:ring-2 focus:ring-offset-1 ${severityChip(alert.severity)} hover:opacity-90 focus:ring-red-400`}
           >
-            VIEW EVENT
+            VIEW INCIDENT
           </button>
           <button
             type="button"
@@ -141,6 +170,7 @@ function ThermalAlertToast({ alert, onView, onDismiss }: ToastProps) {
     </div>
   );
 }
+
 
 interface ToastsProps {
   popups: ThermalAlert[];

@@ -3,6 +3,8 @@ import { useFilters } from '../hooks/useFilters';
 import { fetchClusters } from '../api/client';
 import { formatCoordinate } from '../utils/formatters';
 import type { ClusterSummary } from '../types';
+import { triggerIncidentReportDownload } from '../utils/reportGenerator';
+
 
 interface ClusterTableProps {
   selectedClusterId: number | null;
@@ -115,6 +117,7 @@ export default function ClusterTable({ selectedClusterId, onSelectCluster }: Clu
                 Persistence <SortIcon col="persistence_category" />
               </th>
               <th className="px-3 py-1.5 font-medium">Characterization</th>
+              <th className="px-3 py-1.5 font-medium">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
@@ -156,15 +159,26 @@ export default function ClusterTable({ selectedClusterId, onSelectCluster }: Clu
                 <td className="px-3 py-1.5 text-slate-600 dark:text-slate-400 truncate max-w-[160px]">
                   {cluster.anomaly_characterization?.replace(/_/g, ' ') ?? '—'}
                 </td>
+                <td className="px-3 py-1.5" onClick={(e) => e.stopPropagation()}>
+                  <button
+                    type="button"
+                    onClick={() => triggerIncidentReportDownload(cluster.cluster_id)}
+                    className="px-2 py-0.5 rounded text-[10px] font-bold text-navy-900 dark:text-sky-400 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
+                    title="Download PDF Incident Report"
+                  >
+                    📄 Report
+                  </button>
+                </td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-3 py-6 text-center text-slate-400 dark:text-slate-500">
+                <td colSpan={8} className="px-3 py-6 text-center text-slate-400 dark:text-slate-500">
                   No clusters match current filters
                 </td>
               </tr>
             )}
+
           </tbody>
         </table>
       </div>

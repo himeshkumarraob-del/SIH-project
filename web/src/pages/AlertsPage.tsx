@@ -3,6 +3,8 @@ import { fetchAllAlerts, postAcknowledgeAlert, postResolveAlert } from '../api/c
 import EventDetailPanel from '../components/EventDetailPanel';
 import { formatNumber } from '../utils/formatters';
 import type { ThermalAlert, ThermalEvent } from '../types';
+import { triggerIncidentReportDownload } from '../utils/reportGenerator';
+
 
 const DEFAULT_VIEW = { lat: 20.5937, lon: 78.9629 };
 
@@ -372,6 +374,14 @@ export default function AlertsPage() {
                     )}
                     <button
                       type="button"
+                      onClick={() => triggerIncidentReportDownload(alert.cluster_id)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 transition-colors"
+                      title="Download PDF Incident Report"
+                    >
+                      📄 Generate Report
+                    </button>
+                    <button
+                      type="button"
                       onClick={() =>
                         setSelectedEvent(
                           makeClusterEvent(
@@ -385,6 +395,7 @@ export default function AlertsPage() {
                     >
                       View Intelligence Dossier
                     </button>
+
                   </div>
                 </div>
               </div>

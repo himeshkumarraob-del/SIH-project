@@ -1,2 +1,2 @@
 alert_id,cluster_id,previous_severity,new_severity,status,timestamp,reason
-TAL-01105,1105,,,ACKNOWLEDGED,2026-09-08T17:15:06+00:00,Status changed ACTIVE -> ACKNOWLEDGED
+TAL-01105,1105,,,ACKNOWLEDGED,2026-09-09T07:46:28+00:00,Status changed ACTIVE -> ACKNOWLEDGED

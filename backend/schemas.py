@@ -1,4 +1,4 @@
-﻿"""
+"""
 Pydantic Schemas for FastAPI REST API endpoints.
 
 These schemas define the response shapes that the React frontend expects.
@@ -50,6 +50,20 @@ class DashboardStatistics(BaseModel):
     movement_distribution: Dict[str, int]
 
 
+class LocationDetail(BaseModel):
+    latitude: float
+    longitude: float
+    state: str = "Not available"
+    district: str = "Not available"
+    city_town: str = "Not available"
+    locality_colony: str = "Not available"
+    street_road: str = "Not available"
+    landmark: str = "Not available"
+    postcode: str = "Not available"
+    display_name: str = "Not available"
+    formatted_location_header: str = "Not available"
+
+
 class ClusterDetail(BaseModel):
     cluster_id: int
     latitude: float
@@ -76,6 +90,8 @@ class ClusterDetail(BaseModel):
     classification_rationale: str
     movement_status: str
     total_movement_distance_km: float
+    location: Optional[LocationDetail] = None
+
 
 
 class MovementVector(BaseModel):
@@ -293,4 +309,46 @@ class PrototypeNotificationHistoryEntry(BaseModel):
     send_status: str = ""
     provider_message_id: str = ""
     failure_reason: str = ""
-    failure_reason: str = ""
+
+
+class IncidentReportResponse(BaseModel):
+    title: str
+    report_generated_at: str
+    cluster_id: int
+    severity: str
+    risk_score: float
+    location: LocationDetail
+    observation_count: int
+    first_detected: str
+    last_detected: str
+    active_days: int
+    max_frp: float
+    brightness_temp_ti4: float
+    thermal_contrast_k: float
+    persistence_category: str
+    risk_level: str
+    risk_factors: str
+    false_alarm_concern: str
+    evidence_reliability_level: str
+    classification_label: str
+    classification_confidence: float
+    osm_industrial_context: str
+    sentinel2_cnn_context: str
+    cloud_imagery_limitations: str
+    movement_status: str
+    movement_direction: str
+    direction_confidence: str
+    displacement_km: float
+    movement_rate_km_per_day: float
+    directional_consistency: str
+    movement_disclaimer: str
+    nearby_industrial_infrastructure: str
+    nearby_roads: str
+    nearest_fire_station_name: str
+    distance_to_fire_station_km: str
+    nearby_landmarks: str
+    why_flagged_explanation: str
+    recommended_actions: List[str]
+    action_type: str
+    disclaimer: str
+

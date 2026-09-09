@@ -1,4 +1,4 @@
-﻿/** Detection-level record (from gis_thermal_events.csv â€” 4,524 rows) */
+/** Detection-level record (from gis_thermal_events.csv â€” 4,524 rows) */
 export interface ThermalEvent {
   detection_id: string;
   latitude: number;
@@ -125,6 +125,20 @@ export interface ClassificationData {
   land_cover_class: string;
 }
 
+export interface LocationDetail {
+  latitude: number;
+  longitude: number;
+  state: string;
+  district: string;
+  city_town: string;
+  locality_colony: string;
+  street_road: string;
+  landmark: string;
+  postcode: string;
+  display_name: string;
+  formatted_location_header: string;
+}
+
 /** Cluster-level detail from /api/v1/events/{cluster_id} */
 export interface ClusterDetail {
   cluster_id: number;
@@ -152,7 +166,9 @@ export interface ClusterDetail {
   classification_rationale: string;
   movement_status: string;
   total_movement_distance_km: number;
+  location?: LocationDetail;
 }
+
 
 /** Classification + OSM + satellite context from /api/v1/classification/{cluster_id} */
 export interface ClassificationDetailData {
@@ -332,3 +348,46 @@ export interface PrototypeNotificationHistoryEntry {
   provider_message_id: string;
   failure_reason: string;
 }
+
+export interface IncidentReportResponse {
+  title: string;
+  report_generated_at: string;
+  cluster_id: number;
+  severity: string;
+  risk_score: number;
+  location: LocationDetail;
+  observation_count: number;
+  first_detected: string;
+  last_detected: string;
+  active_days: number;
+  max_frp: number;
+  brightness_temp_ti4: number;
+  thermal_contrast_k: number;
+  persistence_category: string;
+  risk_level: string;
+  risk_factors: string;
+  false_alarm_concern: string;
+  evidence_reliability_level: string;
+  classification_label: string;
+  classification_confidence: number;
+  osm_industrial_context: string;
+  sentinel2_cnn_context: string;
+  cloud_imagery_limitations: string;
+  movement_status: string;
+  movement_direction: string;
+  direction_confidence: string;
+  displacement_km: number;
+  movement_rate_km_per_day: number;
+  directional_consistency: string;
+  movement_disclaimer: string;
+  nearby_industrial_infrastructure: string;
+  nearby_roads: string;
+  nearest_fire_station_name: string;
+  distance_to_fire_station_km: string;
+  nearby_landmarks: string;
+  why_flagged_explanation: string;
+  recommended_actions: string[];
+  action_type: string;
+  disclaimer: string;
+}
+

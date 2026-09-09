@@ -1,4 +1,4 @@
-﻿/**
+/**
  * API client â€” connects to the FastAPI backend.
  *
  * Resolution order:
@@ -21,10 +21,13 @@ import type {
   RiskDetailData,
   ResponseDetailData,
   ThermalAlert,
+  LocationDetail,
+  IncidentReportResponse,
   EmergencyResponseSearchResult,
   PrototypeNotificationResult,
   PrototypeNotificationHistoryEntry,
 } from '../types';
+
 
 // Set to true to use mock data for offline development
 const USE_MOCK = false;
@@ -504,4 +507,30 @@ export async function fetchPrototypeNotificationHistory(clusterId?: number): Pro
   if (clusterId !== undefined) query.cluster_id = String(clusterId);
   return apiGet<PrototypeNotificationHistoryEntry[]>('/emergency-response/notifications-history', query);
 }
+
+export async function fetchClusterLocation(clusterId: number): Promise<LocationDetail> {
+  return apiGet<LocationDetail>(`/location/${clusterId}`);
+}
+
+export async function fetchIncidentReport(clusterId: number): Promise<IncidentReportResponse> {
+  return apiGet<IncidentReportResponse>(`/reports/${clusterId}`);
+}
+
+export async function downloadIncidentReportPdf(clusterId: number): Promise<void> {
+  const response = await fetch(`${API_BASE}/reports/${clusterId}/pdf`);
+  if (!response.ok) {
+    throw new Error(`Failed to download report PDF: status ${response.status}`);
+  }
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `ThermalWatch_Incident_Report_Cluster_${clusterId}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+
 

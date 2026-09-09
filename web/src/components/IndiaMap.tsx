@@ -8,6 +8,8 @@ import type { ThermalEvent, MovementVector } from '../types';
 import type { MapLocation } from '../data/locations';
 import { searchLocations } from '../data/locations';
 import { formatCoordinate, markerColor } from '../utils/formatters';
+import { triggerIncidentReportDownload } from '../utils/reportGenerator';
+
 
 const INDIA_CENTER: [number, number] = [20.5937, 78.9629];
 
@@ -303,7 +305,27 @@ export default function IndiaMap({ selectedEvent, onSelectEvent }: IndiaMapProps
                         <div>Coords: {formatCoordinate(event.latitude, event.longitude)}</div>
                         {event.acq_date && <div>Date: {event.acq_date}</div>}
                       </div>
+                      <div style={{ marginTop: '8px', display: 'flex', gap: '4px' }}>
+                        <button
+                          type="button"
+                          onClick={() => triggerIncidentReportDownload(event.cluster_id)}
+                          style={{
+                            width: '100%',
+                            backgroundColor: '#0f172a',
+                            color: '#ffffff',
+                            border: 'none',
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          📄 GENERATE REPORT
+                        </button>
+                      </div>
                       {mv && mv.movement_status === 'MOVING' && (
+
                         <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1px solid #e2e8f0', color: '#d97706' }}>
                           <div style={{ fontWeight: 600 }}>
                             ↗ Moving {mv.direction ?? ''} ({mv.movement_bearing_degrees.toFixed(0)}°)

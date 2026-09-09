@@ -95,7 +95,8 @@ export default function MapPage() {
       </div>
 
       {/* Right: Event Detail Intelligence Dossier */}
-      <EventDetailPanel event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+      <EventDetailPanel event={selectedEvent} onClose={() => setSelectedEvent(null)} compact={true} />
     </div>
   );
 }
+

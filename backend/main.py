@@ -1,4 +1,4 @@
-﻿"""
+"""
 FastAPI REST API Service for SIH Thermal Intelligence Engine.
 
 Serves real processed datasets from the pipeline output CSVs.
@@ -17,7 +17,7 @@ from typing import Dict, Any, List, Optional
 from pathlib import Path
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Query, HTTPException, Body
+from fastapi import FastAPI, Query, HTTPException, Body, Response
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 
@@ -26,6 +26,8 @@ from backend.schemas import (
     PaginatedEventsResponse,
     DashboardStatistics,
     ClusterDetail,
+    LocationDetail,
+    IncidentReportResponse,
     AlertResponse,
     MovementVector,
     ClassificationDetail,
@@ -46,6 +48,10 @@ from src.models.alert_engine import (
 )
 from src.models.risk_intelligence import build_risk_evidence
 from src.response.emergency_response_agent import EmergencyResponseAgent
+from src.geocoding.reverse_geocoder import ReverseGeocoder
+from src.reports.incident_report_generator import IncidentReportGenerator
+from src.reports.pdf_builder import build_incident_pdf
+
 
 logger = get_logger("backend.main")
 
@@ -589,7 +595,77 @@ def get_cluster_detail(cluster_id: int):
         "classification_rationale": str(row.get("classification_rationale", "")),
         "movement_status": str(row.get("movement_status", "INSUFFICIENT_DATA")),
         "total_movement_distance_km": float(row.get("total_movement_distance_km", 0.0)),
+
+        "location": ReverseGeocoder.get_instance().reverse_geocode(
+            float(row.get("latitude", 0.0)), float(row.get("longitude", 0.0))
+        ).to_dict(),
     }
+
+
+@app.get("/api/v1/location/{cluster_id}", response_model=LocationDetail)
+def get_cluster_location(cluster_id: int):
+    """Return reverse-geocoded local location intelligence for a specific cluster."""
+    rec = _cluster_record(cluster_id)
+    lat = float(rec.get("latitude", 0.0))
+    lon = float(rec.get("longitude", 0.0))
+    return ReverseGeocoder.get_instance().reverse_geocode(lat, lon).to_dict()
+
+
+@app.get("/api/v1/reports/{cluster_id}", response_model=IncidentReportResponse)
+def get_incident_report(cluster_id: int):
+    """Return complete structured incident report data for a specific cluster."""
+    event = _cluster_record(cluster_id)
+    alert = _alert_for_cluster(cluster_id)
+    
+    # Try fetching auxiliary detail dicts gracefully
+    movement_list = get_movement(cluster_id=cluster_id)
+    movement = movement_list[0] if movement_list else None
+    
+    try:
+        classification = get_classification_detail(cluster_id)
+    except Exception:
+        classification = None
+
+    try:
+        risk = get_risk_detail(cluster_id)
+    except Exception:
+        risk = None
+
+    try:
+        response = get_response_detail(cluster_id)
+    except Exception:
+        response = None
+
+    generator = IncidentReportGenerator()
+    report_data = generator.generate_report(
+        event=event,
+        alert=alert,
+        movement=movement,
+        classification=classification,
+        risk=risk,
+        response=response,
+    )
+    return report_data.to_dict()
+
+
+@app.get("/api/v1/reports/{cluster_id}/pdf")
+def get_incident_report_pdf(cluster_id: int):
+    """Generate and return an official PDF incident report for download."""
+    report_dict = get_incident_report(cluster_id)
+
+    # Reconstruct IncidentReportData from dict
+    report_data = IncidentReportGenerator().generate_report(
+        event=_cluster_record(cluster_id),
+        alert=_alert_for_cluster(cluster_id),
+    )
+    pdf_bytes = build_incident_pdf(report_data)
+    filename = f"ThermalWatch_Incident_Report_Cluster_{cluster_id}.pdf"
+    return Response(
+        content=pdf_bytes,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
 
 
 @app.get("/api/v1/classification/{cluster_id}")
