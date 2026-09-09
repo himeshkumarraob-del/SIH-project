@@ -1,0 +1,3 @@
+alert_id,cluster_id,previous_severity,new_severity,status,timestamp,reason
+TAL-01105,1105,,,RESOLVED,2026-09-08T17:15:06+00:00,Status changed ACTIVE -> RESOLVED
+TAL-01105,1105,HIGH,MEDIUM,RESOLVED,2026-09-08T17:15:06+00:00,Severity updated by c2

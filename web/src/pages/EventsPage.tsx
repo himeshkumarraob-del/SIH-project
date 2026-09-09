@@ -178,7 +178,7 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-3 sm:p-4 lg:p-6 space-y-4">
+    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 bg-ambient p-3 sm:p-4 lg:p-6 space-y-4">
       {/* Title */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
@@ -192,7 +192,7 @@ export default function EventsPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-4 shadow-2xs space-y-3">
+      <div className="panel rounded-xl p-3 sm:p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/* Quick Risk Pills */}
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -252,7 +252,7 @@ export default function EventsPage() {
       </div>
 
       {/* Events Table Card */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xs overflow-hidden flex flex-col">
+      <div className="panel rounded-xl overflow-hidden flex flex-col">
         <div className="overflow-x-auto">
           <table className="min-w-[800px] w-full text-xs">
             <thead className="bg-slate-50 dark:bg-slate-950/80 sticky top-0 border-b border-slate-200 dark:border-slate-800">

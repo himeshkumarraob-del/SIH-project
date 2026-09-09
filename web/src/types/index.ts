@@ -143,6 +143,7 @@ export interface ClusterDetail {
   anomaly_characterization: string;
   explanation: string;
   false_alarm_indicator: string;
+  false_alarm_reasons?: string;
   detection_reliability: string;
   risk_score: number;
   risk_level: string;
@@ -165,6 +166,24 @@ export interface ClassificationDetailData {
   prediction_confidence: number;
 }
 
+/** One contribution to the existing Risk Index (raw points out of max_points). */
+export interface RiskEvidenceComponent {
+  key: string;
+  label: string;
+  points: number;
+  max_points: number;
+  detail: string;
+}
+
+/** Backward-compatible breakdown of the existing risk score (final_score === risk_score). */
+export interface RiskEvidence {
+  components: RiskEvidenceComponent[];
+  reliability_multiplier: number;
+  false_alarm_concern: string;
+  base_score: number;
+  final_score: number;
+}
+
 /** Risk intelligence from /api/v1/risk/{cluster_id} */
 export interface RiskDetailData {
   cluster_id: number;
@@ -172,6 +191,7 @@ export interface RiskDetailData {
   risk_level: string;
   risk_factors: string;
   risk_explanation: string;
+  risk_evidence?: RiskEvidence | null;
 }
 
 /** Response/alert detail from /api/v1/response/{cluster_id} */

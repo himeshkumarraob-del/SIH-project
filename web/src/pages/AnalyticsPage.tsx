@@ -62,7 +62,7 @@ export default function AnalyticsPage() {
 
   if (loading || !stats) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8 bg-slate-50 dark:bg-slate-950">
+      <div className="flex-1 flex items-center justify-center p-8 bg-slate-50 dark:bg-slate-950 bg-ambient">
         <div className="text-center space-y-2">
           <div className="w-8 h-8 border-2 border-navy-800 dark:border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-xs text-slate-500 dark:text-slate-400">Loading Intelligence Analytics...</p>
@@ -72,7 +72,7 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-3 sm:p-4 lg:p-6 space-y-4">
+    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 bg-ambient p-3 sm:p-4 lg:p-6 space-y-4">
       {/* Title */}
       <div>
         <h1 className="text-xl sm:text-2xl font-bold text-navy-900 dark:text-slate-100 tracking-tight">
@@ -85,7 +85,7 @@ export default function AnalyticsPage() {
 
       {/* Top 4 Highlight Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="p-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xs">
+        <div className="p-3.5 panel rounded-xl">
           <span className="text-xs text-slate-400 dark:text-slate-500">Tracked Detections</span>
           <div className="text-xl sm:text-2xl font-bold text-navy-900 dark:text-slate-100">
             {formatNumber(stats.total_detections)}
@@ -118,7 +118,7 @@ export default function AnalyticsPage() {
       {/* Main Analytical Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* 1. Risk Score Distribution */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-2xs space-y-3">
+        <div className="panel rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
             <h3 className="text-sm font-bold text-navy-900 dark:text-slate-100">Risk Level Distribution</h3>
             <span className="text-[11px] text-slate-400">Multi-factor score</span>
@@ -151,7 +151,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* 2. AI Abnormality Levels */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-2xs space-y-3">
+        <div className="panel rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
             <h3 className="text-sm font-bold text-navy-900 dark:text-slate-100">AI Anomaly Levels</h3>
             <span className="text-[11px] text-slate-400">Isolation Forest</span>
@@ -184,7 +184,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* 3. False Alarm Concern */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-2xs space-y-3">
+        <div className="panel rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
             <h3 className="text-sm font-bold text-navy-900 dark:text-slate-100">False-Alarm Intelligence</h3>
             <span className="text-[11px] text-slate-400">Contextual Engine</span>
@@ -217,7 +217,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* 4. Thermal Movement Dynamics */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-2xs space-y-3">
+        <div className="panel rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
             <h3 className="text-sm font-bold text-navy-900 dark:text-slate-100">Thermal Propagation</h3>
             <span className="text-[11px] text-slate-400">Centroid Telemetry</span>
@@ -242,7 +242,7 @@ export default function AnalyticsPage() {
         </div>
 
         {/* 5. Persistence Spectrum Breakdown */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-2xs space-y-3 lg:col-span-2">
+        <div className="panel rounded-xl p-4 space-y-3 lg:col-span-2">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
             <h3 className="text-sm font-bold text-navy-900 dark:text-slate-100">Cluster Persistence Breakdown</h3>
             <span className="text-[11px] text-slate-400">Temporal Duration</span>

@@ -103,7 +103,7 @@ _TEXT_KEYS = {
     "classification_label", "false_alarm_indicator", "detection_reliability",
     "persistence_category", "movement_direction", "movement_pattern",
     "nearest_station_name", "reasons", "alert_rationale", "created_at", "updated_at",
-    "alert_id",
+    "alert_id", "event_key",
 }
 
 
@@ -303,6 +303,9 @@ class ThermalAlertEngine:
         return {
             "alert_id": f"TAL-{cluster_id:05d}",
             "cluster_id": cluster_id,
+            # Stable physical-event identity (see src/persistence/event_identity.py).
+            # Survives cluster_id remapping across re-ingestion cycles.
+            "event_key": _clean_str(row.get("event_key")),
             "severity": severity,
             "status": "ACTIVE",
             "evidence_confidence": evidence,

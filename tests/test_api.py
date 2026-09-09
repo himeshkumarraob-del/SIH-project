@@ -170,3 +170,59 @@ def test_api_movement_cluster_id_not_found_returns_empty():
     response = client.get("/api/v1/movement?cluster_id=9999999")
     assert response.status_code == 200
     assert response.json() == []
+
+
+def test_api_risk_detail_includes_evidence_and_stays_backward_compatible():
+    """The risk endpoint keeps all original fields and adds a reconciling evidence breakdown."""
+    response = client.get("/api/v1/risk/1")
+    if response.status_code != 200:
+        pytest.skip("Cluster 1 not present in dataset")
+    data = response.json()
+
+    # Original fields must remain present (backward compatibility)
+    for key in ("cluster_id", "risk_score", "risk_level", "risk_factors", "risk_explanation"):
+        assert key in data
+
+    evidence = data["risk_evidence"]
+    assert evidence is not None
+    assert len(evidence["components"]) == 4
+    assert evidence["final_score"] == data["risk_score"]
+    assert evidence["false_alarm_concern"] in ("LOW", "MEDIUM", "HIGH")
+    assert evidence["reliability_multiplier"] in (0.5, 0.85, 1.0)
+    for comp in evidence["components"]:
+        assert comp["key"]
+        assert comp["label"]
+        assert 0.0 <= comp["points"] <= comp["max_points"]
+
+
+def test_api_risk_evidence_reconciles_across_dataset():
+    """Sampled across the dataset: evidence final_score always equals the API risk_score."""
+    clusters = client.get("/api/v1/clusters?risk_level=HIGH&limit=100").json()
+    if not clusters:
+        pytest.skip("No HIGH risk clusters available")
+    checked = 0
+    for c in clusters[:20]:
+        cid = c["cluster_id"]
+        resp = client.get(f"/api/v1/risk/{cid}")
+        if resp.status_code != 200:
+            continue
+        data = resp.json()
+        ev = data.get("risk_evidence")
+        if ev is None:
+            continue
+        assert ev["final_score"] == data["risk_score"]
+        assert ev["base_score"] == sum(comp["points"] for comp in ev["components"])
+        checked += 1
+    assert checked > 0
+
+
+def test_api_cluster_detail_includes_false_alarm_reasons():
+    """Cluster detail exposes the actual false-alarm detector evidence (terminology preserved)."""
+    response = client.get("/api/v1/events/1")
+    if response.status_code != 200:
+        pytest.skip("Cluster 1 not present in dataset")
+    data = response.json()
+    assert "false_alarm_reasons" in data
+    assert "false_alarm_indicator" in data
+    # Terminology: the detector reports a concern level, never a confirmed false alarm.
+    assert data["false_alarm_indicator"] in ("LOW", "MEDIUM", "HIGH")

@@ -277,6 +277,55 @@
   border: 1px solid rgba(255, 255, 255, 0.35);
 }
 
+/* ==========================================================================
+   Premium command-center design tokens
+   --------------------------------------------------------------------------
+   Shared surface language so panels across pages read as one cohesive,
+   layered system instead of flat rectangles:
+     · .bg-ambient — page canvas with soft, fixed navy/orange/red radial glows
+     · .panel      — card surface (light: crisp white; dark: glassy depth)
+   Both are defined in the components layer so Tailwind utilities can still
+   override them (borders, radii, shadows, responsive tweaks).
+   ========================================================================== */
+
+@layer components {
+  .bg-ambient {
+    background-color: #f8fafc;
+  }
+
+  /* Dark canvas: deep near-black slate with restrained command-center glow.
+     The glows are inspired by the FLAREX palette but kept subtle — nothing
+     neon — so data panels stay the heroes of the screen. */
+  .dark .bg-ambient {
+    background-color: #020617;
+    background-image:
+      radial-gradient(75rem 42rem at -8% -12%, rgba(30, 64, 175, 0.20), transparent 58%),
+      radial-gradient(55rem 34rem at 104% -6%, rgba(190, 18, 60, 0.12), transparent 55%),
+      radial-gradient(60rem 36rem at 52% 118%, rgba(234, 88, 12, 0.08), transparent 58%),
+      linear-gradient(180deg, rgba(2, 6, 23, 0.25), rgba(2, 6, 23, 0));
+    background-attachment: fixed;
+  }
+
+  /* Card / panel surface */
+  .panel {
+    background-color: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow:
+      0 1px 2px rgba(15, 23, 42, 0.04),
+      0 10px 28px -14px rgba(15, 23, 42, 0.14);
+  }
+
+  .dark .panel {
+    background-color: rgba(15, 23, 42, 0.58);
+    border-color: rgba(148, 163, 184, 0.10);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 20px 44px -26px rgba(0, 0, 0, 0.8);
+  }
+}
+
 /* ---------- Scrollbar styling ---------- */
 
 ::-webkit-scrollbar {

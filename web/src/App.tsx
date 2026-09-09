@@ -1,9 +1,10 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { FilterContext, useFilterState } from './hooks/useFilters';
 import { useThermalAlerts } from './hooks/useThermalAlerts';
 import { ThemeProvider } from './hooks/useTheme';
 import AppNavbar from './components/AppNavbar';
+import BootSplash from './components/BootSplash';
 import ThermalAlertCenter from './components/ThermalAlertCenter';
 import ThermalAlertToasts from './components/ThermalAlertToasts';
 import OverviewPage from './pages/OverviewPage';
@@ -37,6 +38,7 @@ function FilterProvider({ children }: { children: React.ReactNode }) {
 
 function AppShell() {
   const navigate = useNavigate();
+  const [booted, setBooted] = useState(false);
 
   const handleAlertClick = useCallback(
     (alert: ThermalAlert) => {
@@ -51,7 +53,10 @@ function AppShell() {
   const activeAlertCount = alertLayer.totalCritical + alertLayer.totalHigh;
 
   return (
-    <div className="h-screen w-full flex flex-col bg-slate-50 dark:bg-slate-950 overflow-hidden transition-colors duration-200">
+    <div className="h-screen w-full flex flex-col bg-slate-50 dark:bg-slate-950 bg-ambient overflow-hidden transition-colors duration-200">
+      {/* Cinematic initialization overlay — covers the app while it boots */}
+      {!booted && <BootSplash onFinish={() => setBooted(true)} />}
+
       {/* Global Multi-Page Top Navigation Bar */}
       <AppNavbar
         activeAlertCount={activeAlertCount}

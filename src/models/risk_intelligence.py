@@ -19,17 +19,85 @@ from src.logging_setup import get_logger
 
 logger = get_logger("models.risk_intelligence")
 
+# Reliability attenuation multipliers for false alarm indicators
+DEFAULT_MULTIPLIERS: Dict[str, float] = {
+    "LOW": 1.0,      # Low false alarm concern -> 100% confidence
+    "MEDIUM": 0.85,  # Medium concern -> 85% confidence
+    "HIGH": 0.50,    # High concern (weak evidence) -> 50% confidence penalty
+}
+
+# Max points available per risk component (must reconcile with _calculate_single_record)
+COMPONENT_MAX_POINTS: Dict[str, float] = {
+    "abnormality": 35.0,  # Statistical abnormality
+    "frp": 25.0,          # Thermal energy / FRP
+    "persistence": 20.0,  # Persistence / recurrence
+    "intensity": 20.0,    # Thermal intensity / contrast
+}
+
+
+def _component_scores(row: pd.Series, multipliers: Dict[str, float]) -> Tuple[float, float, float, float, float]:
+    """Compute the four raw risk components and the reliability multiplier.
+
+    This is the single source of truth for the risk-index breakdown. The risk
+    engine applies it, and the evidence explorer reuses it so the displayed
+    contributions always reconcile with the existing risk score.
+    """
+    abnormality = str(row.get("abnormality_level", "NORMAL")).upper()
+    max_frp = float(row.get("max_frp", 0.0))
+    active_days = int(row.get("active_days", 1))
+    pers_cat = str(row.get("persistence_category", "isolated")).lower()
+    max_ti4 = float(row.get("max_bright_ti4", 0.0))
+    bt_diff = float(row.get("bt_diff_max", 0.0))
+    fa_indicator = str(row.get("false_alarm_indicator", "MEDIUM")).upper()
+
+    # 1. Statistical Abnormality Component (Max 35 pts)
+    if abnormality == "HIGH":
+        abn = 35.0
+    elif abnormality == "ELEVATED":
+        abn = 20.0
+    else:
+        abn = 5.0
+
+    # 2. Thermal Energy / FRP Component (Max 25 pts)
+    if max_frp >= 20.0:
+        frp = 25.0
+    elif max_frp >= 10.0:
+        frp = 18.0
+    elif max_frp >= 5.0:
+        frp = 12.0
+    elif max_frp >= 2.0:
+        frp = 6.0
+    else:
+        frp = 0.0
+
+    # 3. Persistence / Recurrence Component (Max 20 pts)
+    if pers_cat == "persistent" or active_days >= 4:
+        pers = 20.0
+    elif pers_cat == "short_lived_repeated" or active_days >= 2:
+        pers = 12.0
+    else:
+        pers = 3.0
+
+    # 4. Thermal Intensity / Contrast Component (Max 20 pts)
+    if max_ti4 >= 350.0 or bt_diff >= 50.0:
+        inten = 20.0
+    elif max_ti4 >= 335.0 or bt_diff >= 35.0:
+        inten = 12.0
+    else:
+        inten = 4.0
+
+    # 5. Reliability / False Alarm Multiplier Adjustment
+    multiplier = multipliers.get(fa_indicator, 0.85)
+
+    return abn, frp, pers, inten, multiplier
+
+
 class RiskIntelligenceEngine:
     def __init__(self, multipliers: Dict[str, float] = None):
         """
         Initialize the Risk Intelligence Engine.
         """
-        # Reliability attenuation multipliers for false alarm indicators
-        self.multipliers = {
-            "LOW": 1.0,      # Low false alarm concern -> 100% confidence
-            "MEDIUM": 0.85,  # Medium concern -> 85% confidence
-            "HIGH": 0.50,    # High concern (weak evidence) -> 50% confidence penalty
-        }
+        self.multipliers = dict(DEFAULT_MULTIPLIERS)
         if multipliers:
             self.multipliers.update(multipliers)
 
@@ -83,49 +151,32 @@ class RiskIntelligenceEngine:
         bt_diff = float(row.get("bt_diff_max", 0.0))
         fa_indicator = str(row.get("false_alarm_indicator", "MEDIUM")).upper()
 
+        abn, frp, pers, inten, multiplier = _component_scores(row, self.multipliers)
+        base_score = abn + frp + pers + inten
+
         # 1. Statistical Abnormality Component (Max 35 pts)
         if abnormality == "HIGH":
-            base_score += 35.0
             factors.append("High statistical abnormality")
         elif abnormality == "ELEVATED":
-            base_score += 20.0
             factors.append("Elevated statistical abnormality")
-        else:
-            base_score += 5.0
 
         # 2. Thermal Energy / FRP Component (Max 25 pts)
         if max_frp >= 20.0:
-            base_score += 25.0
             factors.append("Strong thermal power (FRP >= 20 MW)")
         elif max_frp >= 10.0:
-            base_score += 18.0
             factors.append("Elevated thermal power (FRP >= 10 MW)")
-        elif max_frp >= 5.0:
-            base_score += 12.0
-        elif max_frp >= 2.0:
-            base_score += 6.0
 
         # 3. Persistence / Recurrence Component (Max 20 pts)
         if pers_cat == "persistent" or active_days >= 4:
-            base_score += 20.0
             factors.append("Persistent multi-day activity")
         elif pers_cat == "short_lived_repeated" or active_days >= 2:
-            base_score += 12.0
             factors.append("Recurring thermal activity")
-        else:
-            base_score += 3.0
 
         # 4. Thermal Intensity / Contrast Component (Max 20 pts)
         if max_ti4 >= 350.0 or bt_diff >= 50.0:
-            base_score += 20.0
             factors.append("Peak thermal intensity / contrast")
-        elif max_ti4 >= 335.0 or bt_diff >= 35.0:
-            base_score += 12.0
-        else:
-            base_score += 4.0
 
         # 5. Reliability / False Alarm Multiplier Adjustment
-        multiplier = self.multipliers.get(fa_indicator, 0.85)
         if fa_indicator == "HIGH":
             factors.append("High false-alarm concern penalty applied")
         elif fa_indicator == "LOW":
@@ -162,3 +213,83 @@ class RiskIntelligenceEngine:
             )
 
         return final_score, level, factors_str, explanation
+
+
+def build_risk_evidence(row: pd.Series, multipliers: Dict[str, float] = None) -> Dict[str, Any]:
+    """Deterministic breakdown of the existing Risk Index into its evidence components.
+
+    Exposes the already-calculated component contributions of the risk engine in a
+    backward-compatible, read-only way. The final score is recomputed with the exact
+    engine formula and must equal the stored ``risk_score`` for the same row. No new
+    risk calculation is introduced and no evidence is invented.
+
+    Returns a dict with:
+    - components: label/points/max/detail per component
+    - reliability_multiplier: attenuation applied for the false-alarm concern
+    - false_alarm_concern: LOW/MEDIUM/HIGH
+    - base_score: sum of raw component points
+    - final_score: round(clip(base_score * multiplier, 0, 100), 1)
+    """
+    mult_map = dict(DEFAULT_MULTIPLIERS)
+    if multipliers:
+        mult_map.update(multipliers)
+
+    abnormality = str(row.get("abnormality_level", "NORMAL")).upper()
+    max_frp = float(row.get("max_frp", 0.0))
+    active_days = int(row.get("active_days", 1))
+    pers_cat = str(row.get("persistence_category", "isolated")).lower()
+    max_ti4 = float(row.get("max_bright_ti4", 0.0))
+    bt_diff = float(row.get("bt_diff_max", 0.0))
+    fa_indicator = str(row.get("false_alarm_indicator", "MEDIUM")).upper()
+
+    abn, frp, pers, inten, multiplier = _component_scores(row, mult_map)
+    base_score = abn + frp + pers + inten
+    final_score = round(float(np.clip(base_score * multiplier, 0.0, 100.0)), 1)
+
+    components = [
+        {
+            "key": "abnormality",
+            "label": "Thermal Abnormality",
+            "points": abn,
+            "max_points": COMPONENT_MAX_POINTS["abnormality"],
+            "detail": (
+                f"Statistical abnormality relative to the analyzed thermal baseline "
+                f"(abnormality level: {abnormality})."
+            ),
+        },
+        {
+            "key": "frp",
+            "label": "FRP Intensity",
+            "points": frp,
+            "max_points": COMPONENT_MAX_POINTS["frp"],
+            "detail": f"Peak Fire Radiative Power of {max_frp:.1f} MW.",
+        },
+        {
+            "key": "persistence",
+            "label": "Persistence",
+            "points": pers,
+            "max_points": COMPONENT_MAX_POINTS["persistence"],
+            "detail": (
+                f"Thermal activity spanning {active_days} active day(s) with persistence "
+                f"category '{pers_cat}'."
+            ),
+        },
+        {
+            "key": "intensity",
+            "label": "Thermal Intensity / Contrast",
+            "points": inten,
+            "max_points": COMPONENT_MAX_POINTS["intensity"],
+            "detail": (
+                f"Peak brightness temperature {max_ti4:.1f} K with spectral contrast "
+                f"{bt_diff:.1f} K."
+            ),
+        },
+    ]
+
+    return {
+        "components": components,
+        "reliability_multiplier": multiplier,
+        "false_alarm_concern": fa_indicator,
+        "base_score": base_score,
+        "final_score": final_score,
+    }

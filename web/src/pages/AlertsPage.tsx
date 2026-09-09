@@ -111,7 +111,7 @@ export default function AlertsPage() {
   const resolvedCount = alerts.filter((a) => a.status === 'RESOLVED').length;
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-3 sm:p-4 lg:p-6 space-y-4">
+    <div className="flex-1 flex flex-col min-h-0 overflow-y-auto bg-slate-50 dark:bg-slate-950 bg-ambient p-3 sm:p-4 lg:p-6 space-y-4">
       {/* Title & Action Notification */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
@@ -140,7 +140,7 @@ export default function AlertsPage() {
         ].map((item, idx) => (
           <div
             key={item.label}
-            className={`relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-xs ${
+            className={`relative overflow-hidden rounded-xl panel p-3 ${
               idx === 4 ? 'col-span-2 sm:col-span-1' : ''
             }`}
           >
@@ -156,7 +156,7 @@ export default function AlertsPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-4 shadow-2xs flex flex-wrap items-center justify-between gap-3">
+      <div className="panel rounded-xl p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3">
         {/* Severity filter pills */}
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mr-1">
@@ -221,7 +221,7 @@ export default function AlertsPage() {
             return (
               <div
                 key={alert.alert_id}
-                className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-l-[3px] rounded-xl p-3.5 sm:p-4 shadow-xs hover:shadow-md transition-all space-y-3 ${
+                className={`panel rounded-xl border-l-[3px] p-3.5 sm:p-4 hover:shadow-md transition-all space-y-3 ${
                   alert.severity === 'CRITICAL'
                     ? 'border-l-red-600'
                     : alert.severity === 'HIGH'
@@ -391,7 +391,7 @@ export default function AlertsPage() {
             );
           })
         ) : (
-          <div className="text-center py-16 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-8">
+          <div className="text-center py-16 panel rounded-xl p-8">
             <h3 className="text-sm font-bold text-navy-900 dark:text-slate-200">No Alerts Match Current Filters</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Try switching severity or status filter to see other alerts.

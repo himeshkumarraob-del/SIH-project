@@ -1,6 +1,7 @@
 ﻿import { useEffect, useRef, useState } from 'react';
 import RiskGauge from './RiskGauge';
 import EmergencyResponseModal from './EmergencyResponseModal';
+import EvidenceExplorer from './EvidenceExplorer';
 import {
   fetchClusterDetail,
   fetchClassificationDetail,
@@ -350,6 +351,18 @@ export default function EventDetailPanel({ event, onClose }: EventDetailPanelPro
 
               </div>
             </div>
+
+            {/* ================================================================= */}
+            {/* AI EVIDENCE EXPLORER: why this event was prioritized              */}
+            {/* ================================================================= */}
+            <EvidenceExplorer
+              event={event}
+              detail={detail}
+              classification={classification}
+              risk={risk}
+              response={response}
+              movement={movement}
+            />
 
             {/* ================================================================= */}
             {/* PRIORITY 2: EVENT SOURCE CLASSIFICATION & OSM CONTEXT             */}

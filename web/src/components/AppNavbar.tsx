@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
+import brandLogo from '../assets/logo.jpeg';
 
 interface AppNavbarProps {
   actions?: ReactNode;
@@ -77,32 +78,58 @@ export default function AppNavbar({ actions, activeAlertCount = 0 }: AppNavbarPr
   ];
 
   return (
-    <nav className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 transition-colors duration-200 flex-shrink-0 z-30 sticky top-0">
+    <nav className="relative bg-white/90 dark:bg-slate-900/75 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/[0.06] transition-colors duration-200 flex-shrink-0 z-30 sticky top-0">
+      {/* Hairline accent inspired by the brand palette (navy → ember) */}
+      <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-blue-600/25 via-transparent to-orange-500/30 dark:from-blue-400/30 dark:to-orange-400/25" />
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
         <div className="flex items-center justify-between h-13">
-          {/* Left: Brand Identity */}
-          <div className="flex items-center gap-3">
-            <NavLink to="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-navy-700 via-navy-800 to-navy-950 dark:from-blue-600 dark:via-blue-700 dark:to-blue-950 flex items-center justify-center shadow-xs ring-1 ring-white/10 group-hover:ring-white/25 transition-all flex-shrink-0">
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3l1.912 5.813L20 10.5l-5.088 1.687L12 18l-2.912-5.813L4 10.5l6.088-1.687L12 3z" />
-                  <circle cx="12" cy="19" r="1.6" fill="currentColor" stroke="none" opacity="0.9" />
-                </svg>
-              </div>
-              <div className="leading-none">
-                <span className="text-sm sm:text-base font-extrabold text-navy-900 dark:text-slate-100 tracking-tight block">
-                  Thermal<span className="text-blue-600 dark:text-blue-400">Watch</span>
+          {/* Left: Brand Identity — command-center lockup: FLAREX logo plate +
+              THERMALWATCH wordmark + descriptor. The logo artwork carries its
+              own white background, so it sits on a crisp white plate (the
+              visual focal point) inside a translucent panel with a restrained
+              ember→cyan hairline echoing the FLAREX palette. */}
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <NavLink
+              to="/"
+              title="ThermalWatch"
+              aria-label="ThermalWatch — home"
+              className="group relative flex items-center gap-2 lg:gap-3 rounded-lg lg:rounded-xl bg-white/70 dark:bg-white/[0.04] pl-1.5 pr-2 sm:pl-2 sm:pr-2.5 lg:pr-3 py-1 ring-1 ring-slate-200/90 dark:ring-white/10 shadow-xs backdrop-blur-md overflow-hidden hover:ring-slate-300 dark:hover:ring-white/20 transition-all flex-shrink-0"
+            >
+              {/* Restrained ember → cyan hairline accent (FLAREX palette echo) */}
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-x-1 top-0 h-px bg-gradient-to-r from-orange-500/40 via-orange-500/5 to-cyan-500/40 dark:from-orange-400/45 dark:via-orange-400/10 dark:to-cyan-400/45"
+              />
+
+              {/* FLAREX logo plate — the visual focal point */}
+              <span className="relative flex items-center rounded-md bg-white px-1 py-0.5 ring-1 ring-slate-200/90 dark:ring-white/15 shadow-2xs">
+                <img
+                  src={brandLogo}
+                  alt="ThermalWatch"
+                  draggable={false}
+                  className="h-6 lg:h-8 w-auto object-contain select-none"
+                />
+              </span>
+
+              {/* Lockup divider */}
+              <span aria-hidden className="hidden lg:block h-8 w-px bg-slate-200/90 dark:bg-white/10" />
+
+              {/* Product wordmark stack */}
+              <span className="flex flex-col justify-center leading-none pr-0.5">
+                <span className="text-[11px] lg:text-sm font-bold tracking-[0.11em] lg:tracking-[0.13em] text-navy-900 dark:text-white">
+                  THERMALWATCH
                 </span>
-                <span className="mt-1 inline-flex items-center gap-1.5 text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-[0.18em] font-semibold">
-                  <span className="w-1 h-1 rounded-full bg-emerald-500" />
-                  Thermal Intelligence
+                <span className="hidden lg:block mt-1 text-[9px] font-semibold tracking-[0.26em] text-slate-500 dark:text-slate-400">
+                  AI FIRE INTELLIGENCE
                 </span>
-              </div>
+              </span>
             </NavLink>
           </div>
 
-          {/* Center: Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-1 lg:space-x-1.5">
+          {/* Center: Desktop Navigation Links. flex-1 keeps the links centered
+              and lets them absorb horizontal squeeze at tablet widths so the
+              right-side controls (bell, theme) are never pushed off-screen. */}
+          <div className="hidden md:flex flex-1 min-w-0 justify-center items-center space-x-1 lg:space-x-1.5">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
@@ -143,14 +170,14 @@ export default function AppNavbar({ actions, activeAlertCount = 0 }: AppNavbarPr
                   <svg className="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
-                  <span className="hidden sm:inline">LIGHT</span>
+                  <span className="hidden lg:inline">LIGHT</span>
                 </>
               ) : (
                 <>
                   <svg className="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                   </svg>
-                  <span className="hidden sm:inline">DARK</span>
+                  <span className="hidden lg:inline">DARK</span>
                 </>
               )}
             </button>
@@ -176,7 +203,7 @@ export default function AppNavbar({ actions, activeAlertCount = 0 }: AppNavbarPr
 
       {/* Mobile Navigation Drawer / Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-3 pt-2 pb-3 space-y-1 animate-fadeIn">
+        <div className="md:hidden border-t border-slate-200/80 dark:border-white/[0.06] bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl px-3 pt-2 pb-3 space-y-1 animate-fadeIn">
           {navItems.map((item) => (
             <NavLink
               key={item.to}

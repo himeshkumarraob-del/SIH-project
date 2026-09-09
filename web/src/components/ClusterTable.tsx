@@ -68,12 +68,17 @@ export default function ClusterTable({ selectedClusterId, onSelectCluster }: Clu
   );
 
   return (
-    <div className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex flex-col flex-shrink-0 transition-colors duration-200 h-[160px] sm:h-[180px]">
+    <div className="bg-transparent border-t border-slate-200/90 dark:border-white/[0.06] flex flex-col flex-shrink-0 transition-colors duration-200 h-[170px] sm:h-[190px]">
       {/* Table header bar */}
-      <div className="px-3 py-1.5 sm:py-2 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
+      <div className="px-3.5 sm:px-4 py-2 sm:py-2.5 border-b border-slate-100 dark:border-white/[0.06] flex flex-wrap items-center justify-between gap-2 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <h2 className="text-xs sm:text-sm font-semibold text-navy-900 dark:text-slate-100">High-Priority Events</h2>
-          <span className="text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+          <div className="w-5 h-5 rounded-md bg-gradient-to-br from-navy-700 to-navy-900 dark:from-slate-700 dark:to-slate-800 text-white flex items-center justify-center shadow-sm ring-1 ring-inset ring-white/15">
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </div>
+          <h2 className="text-xs sm:text-sm font-bold text-navy-900 dark:text-slate-100">High-Priority Events</h2>
+          <span className="text-[10px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/[0.06] px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-white/[0.06]">
             {filtered.length} clusters
           </span>
         </div>
@@ -89,7 +94,7 @@ export default function ClusterTable({ selectedClusterId, onSelectCluster }: Clu
       {/* Scrollable table container */}
       <div className="flex-1 overflow-x-auto overflow-y-auto">
         <table className="min-w-[640px] w-full text-xs">
-          <thead className="bg-slate-50 dark:bg-slate-950/80 sticky top-0 border-b border-slate-200 dark:border-slate-800">
+          <thead className="bg-slate-50/90 dark:bg-slate-950/70 backdrop-blur-sm sticky top-0 border-b border-slate-200/90 dark:border-white/[0.06]">
             <tr className="text-left text-slate-500 dark:text-slate-400">
               <th className="px-3 py-1.5 font-medium cursor-pointer" onClick={() => handleSort('cluster_id')}>
                 Cluster ID <SortIcon col="cluster_id" />

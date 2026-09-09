@@ -1,0 +1,161 @@
+{
+  "results": [
+    {
+      "name": "DESKTOP AI Evidence Explorer section visible",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "DESKTOP Subtitle \"Why this event was prioritized\" visible",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "DESKTOP Risk Score 100 / 100",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "DESKTOP Component Thermal Abnormality = 35/35",
+      "ok": true,
+      "extra": "35/35"
+    },
+    {
+      "name": "DESKTOP Component FRP Intensity = 25/25",
+      "ok": true,
+      "extra": "25/25"
+    },
+    {
+      "name": "DESKTOP Component Persistence = 20/20",
+      "ok": true,
+      "extra": "20/20"
+    },
+    {
+      "name": "DESKTOP Component Thermal Intensity / Contrast = 20/20",
+      "ok": true,
+      "extra": "20/20"
+    },
+    {
+      "name": "DESKTOP False-Alarm Concern LOW",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "DESKTOP Industrial-Context section shown",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "DESKTOP Satellite Unavailable / Cloud-obscured",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "DESKTOP \"Risk Evidence Contribution\" label",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "DESKTOP Experimental footnote present",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "DESKTOP Expandable evidence shows Contribution + Why",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "MOBILE drawer sheet rendered",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "MOBILE AI Evidence Explorer section visible",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "MOBILE Subtitle \"Why this event was prioritized\" visible",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "MOBILE Risk Score 100 / 100",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "MOBILE Component Thermal Abnormality = 35/35",
+      "ok": true,
+      "extra": "35/35"
+    },
+    {
+      "name": "MOBILE Component FRP Intensity = 25/25",
+      "ok": true,
+      "extra": "25/25"
+    },
+    {
+      "name": "MOBILE Component Persistence = 20/20",
+      "ok": true,
+      "extra": "20/20"
+    },
+    {
+      "name": "MOBILE Component Thermal Intensity / Contrast = 20/20",
+      "ok": true,
+      "extra": "20/20"
+    },
+    {
+      "name": "MOBILE False-Alarm Concern LOW",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "MOBILE Industrial-Context section shown",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "MOBILE Satellite Unavailable / Cloud-obscured",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "MOBILE \"Risk Evidence Contribution\" label",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "MOBILE Experimental footnote present",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "MOBILE Expandable evidence shows Contribution + Why",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "No browser console/page errors",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "Local API /api/v1/risk/1105 hit through proxy",
+      "ok": true,
+      "extra": "200 /api/v1/risk/1105"
+    }
+  ],
+  "consoleErrors": [],
+  "apiHits": [
+    "200 /api/v1/clusters",
+    "200 /api/v1/clusters",
+    "200 /api/v1/alerts?status=ACTIVE",
+    "200 /api/v1/alerts?status=ACTIVE",
+    "200 /api/v1/classification/1105",
+    "200 /api/v1/risk/1105",
+    "200 /api/v1/events/1105",
+    "200 /api/v1/response/1105",
+    "200 /api/v1/movement?cluster_id=1105"
+  ]
+}

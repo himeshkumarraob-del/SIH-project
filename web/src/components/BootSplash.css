@@ -1,0 +1,521 @@
+/* ==========================================================================
+   ThermalWatch boot splash — cinematic system-initialization overlay
+   --------------------------------------------------------------------------
+   Layered composition (back → front):
+     1. boot-bg      deep navy/black atmosphere
+     2. boot-earth   faint planet limb + atmospheric sheen
+     3. boot-noise   ultra-faint satellite sensor grain
+     4. boot-cloud   one slow drifting haze band (thin cloud over land)
+     5. boot-map     REAL India geography (GADM boundary + coastline),
+                     graticule, faint interior state linework,
+                     thermal anomaly points + detection rings
+     6. boot-scan    ONE elegant cyan satellite scan beam sweeping L→R
+     7. boot-focus   focal vignette — keeps the background subdued
+     8. boot-center  FLAREX mark, THERMALWATCH, tagline, progress, status
+
+   Timeline (spec):
+     0.00s near-black · 0.20s atmosphere · 0.40s India emerges · 0.60s grid
+     0.80s scan begins · 1.00s thermal signals · 1.20s logo reveal ·
+     1.45s logo settles · 1.60s THERMALWATCH · 1.80s AI FIRE INTELLIGENCE ·
+     2.00s progress draws · 2.15s status text · continuous subtle scan.
+   ========================================================================== */
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #020409;
+  color: #e2e8f0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.boot--exiting {
+  opacity: 0;
+  transform: scale(1.03);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Shared primitives
+   --------------------------------------------------------------------------- */
+
+.boot-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+@keyframes boot-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 1. Atmosphere ------------------------------------------------------------- */
+.boot-bg {
+  background:
+    radial-gradient(120% 85% at 50% 118%, rgba(12, 34, 74, 0.42), transparent 62%),
+    radial-gradient(70% 46% at 8% -10%, rgba(30, 64, 175, 0.16), transparent 58%),
+    radial-gradient(56% 38% at 96% 6%, rgba(194, 65, 12, 0.07), transparent 60%),
+    linear-gradient(180deg, #04060d 0%, #050a16 46%, #03050c 100%);
+  animation: boot-fade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+/* 2. Planet limb / Earth sheen ---------------------------------------------- */
+.boot-earth {
+  background:
+    radial-gradient(90% 34% at 50% 108%, rgba(56, 108, 190, 0.14), rgba(15, 32, 64, 0.05) 52%, transparent 72%),
+    radial-gradient(110% 60% at 50% -28%, rgba(23, 52, 100, 0.18), transparent 64%);
+  animation: boot-fade 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+/* 3. Sensor grain (static SVG turbulence, barely there) ---------------------- */
+.boot-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  animation: boot-fade 1.6s ease 0.4s both;
+}
+
+/* 4. Drifting haze band — reads as thin cloud over the landmass -------------- */
+.boot-cloud {
+  top: 30%;
+  left: -12%;
+  width: 62vw;
+  height: 16vh;
+  background: radial-gradient(closest-side, rgba(148, 197, 255, 0.055), transparent 74%);
+  filter: blur(3px);
+  animation:
+    boot-drift 64s ease-in-out infinite alternate,
+    boot-fade 2.2s ease 1.1s both;
+}
+
+@keyframes boot-drift {
+  from { transform: translateX(-2.5%) translateY(-0.6%); }
+  to   { transform: translateX(2.5%) translateY(0.8%); }
+}
+
+/* 5. Geographic map ----------------------------------------------------------- */
+.boot-map {
+  width: 100%;
+  height: 100%;
+  animation:
+    boot-map-in 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+/* India slowly emerging: fade + a very subtle scale settle (no zoom feel) */
+@keyframes boot-map-in {
+  0%   { opacity: 0; transform: scale(1.014); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.boot-grid {
+  stroke: rgba(148, 163, 184, 0.10);
+  stroke-width: 0.7;
+  animation: boot-fade 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+}
+
+.boot-grid-labels {
+  font-size: 9px;
+  letter-spacing: 1.4px;
+  fill: rgba(203, 213, 225, 0.34);
+  animation: boot-fade 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.72s both;
+}
+
+.boot-geo {
+  animation: boot-fade 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+}
+
+/* Landmass: restrained navy fill + accurate boundary stroke with a soft
+   geospatial glow. The silhouette carries the composition. */
+.boot-geo-fill {
+  fill: rgba(30, 58, 138, 0.13);
+}
+
+.boot-geo-line {
+  fill: none;
+  stroke: rgba(125, 170, 225, 0.34);
+  stroke-width: 1.1;
+  stroke-linejoin: round;
+}
+
+.boot-geo-inner {
+  fill: none;
+  stroke: rgba(148, 163, 184, 0.085);
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+}
+
+.boot-geo path {
+  vector-effect: non-scaling-stroke;
+}
+
+/* Thermal anomalies ----------------------------------------------------------
+   Each site runs on the SAME 14 s cycle as the scan beam. `--t` (computed in
+   TSX from the site's x position) places its detection spike exactly where
+   the beam passes: the point intensifies, a ring expands, then it settles
+   back to a low geospatial glow. ------------------------------------------ */
+
+.boot-thermal {
+  animation: boot-fade 1s ease 1s both;
+}
+
+.boot-thermal g {
+  animation: boot-fade 0.9s ease calc(1s + var(--fade, 0s)) both;
+}
+
+.tp-core {
+  animation: boot-tp 14s linear var(--t, 0s) infinite;
+}
+
+.tp-halo {
+  opacity: 0.19;
+  animation: boot-tp-halo 14s linear var(--t, 0s) infinite;
+}
+
+.tp-ring {
+  fill: none;
+  stroke: rgba(251, 146, 60, 0.5);
+  stroke-width: 1.2;
+  opacity: 0;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: boot-tp-ring 14s linear var(--t, 0s) infinite;
+}
+
+/* Detection spike → decay → low breathing glow */
+@keyframes boot-tp {
+  0%   { opacity: 1; }
+  1.6% { opacity: 0.5; }
+  3.4% { opacity: 0.3; }
+  7%   { opacity: 0.9; }
+  11%  { opacity: 0.48; }
+  17%  { opacity: 0.76; }
+  24%  { opacity: 0.4; }
+  38%  { opacity: 0.66; }
+  55%  { opacity: 0.34; }
+  78%  { opacity: 0.56; }
+  100% { opacity: 0.42; }
+}
+
+@keyframes boot-tp-halo {
+  0%   { opacity: 0.4; }
+  2%   { opacity: 0.18; }
+  8%   { opacity: 0.34; }
+  30%  { opacity: 0.13; }
+  60%  { opacity: 0.24; }
+  100% { opacity: 0.15; }
+}
+
+@keyframes boot-tp-ring {
+  0%    { opacity: 0.6; transform: scale(0.3); }
+  4.5%  { opacity: 0; transform: scale(2.6); }
+  100%  { opacity: 0; transform: scale(2.6); }
+}
+
+/* 6. Satellite scan beam -------------------------------------------------------
+   A 24vw swath with its hairline on the leading (right) edge, sweeping the
+   full geography in 14 s. Beam width + travel are mirrored in the TSX flare
+   delay math so detections line up with the beam. ------------------------- */
+
+.boot-scan {
+  left: -24vw;
+  width: 24vw;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(103, 232, 249, 0.03) 42%,
+    rgba(103, 232, 249, 0.06) 74%,
+    rgba(103, 232, 249, 0.045) 88%,
+    transparent
+  );
+  animation: boot-scan 14s linear 0.8s infinite;
+}
+
+.boot-scan::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(125, 211, 252, 0.34) 18%,
+    rgba(125, 211, 252, 0.42) 50%,
+    rgba(125, 211, 252, 0.34) 82%,
+    transparent
+  );
+}
+
+@keyframes boot-scan {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(100vw + 24vw)); }
+}
+
+/* 7. Focal vignette — subdues the map directly behind the identity ------------ */
+.boot-focus {
+  background: radial-gradient(
+    42% 34% at 50% 50%,
+    rgba(2, 4, 9, 0.62),
+    rgba(2, 4, 9, 0.28) 55%,
+    transparent 78%
+  );
+  animation: boot-fade 1.8s ease 0.9s both;
+}
+
+/* 8. Centerpiece identity ------------------------------------------------------ */
+.boot-center {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 100vw;
+}
+
+.boot-mark {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Aura: a soft ambient light so the navy artwork reads on near-black —
+   deliberately NOT a card, plate or border. */
+.boot-aura {
+  position: absolute;
+  inset: -46% -34%;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(148, 184, 255, 0.085),
+    rgba(125, 211, 252, 0.035) 55%,
+    transparent 76%
+  );
+  animation: boot-fade 1.6s ease 1.05s both;
+}
+
+.boot-logo {
+  display: block;
+  height: clamp(56px, 9.5vh, 88px);
+  width: auto;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter:
+    drop-shadow(0 0 26px rgba(249, 115, 22, 0.16))
+    drop-shadow(0 2px 12px rgba(2, 6, 23, 0.55));
+  opacity: 0;
+  animation: boot-logo-in 1.6s cubic-bezier(0.22, 1, 0.36, 1) 1.2s both;
+}
+
+/* Cinematic reveal: opacity + vertical drift + a very subtle scale settle.
+   Settles at ~1.45s (16% of the 1.6 s window), then holds — no bounce. */
+@keyframes boot-logo-in {
+  0%   { opacity: 0; transform: translateY(14px) scale(0.982); }
+  16%  { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.boot-name {
+  margin-top: 24px;
+  font-weight: 700;
+  font-size: clamp(20px, 4.4vmin, 30px);
+  line-height: 1.1;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em; /* optically re-center the letterspaced line */
+  color: #f1f5f9;
+  text-shadow: 0 2px 26px rgba(2, 6, 23, 0.65);
+  opacity: 0;
+  animation: boot-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.6s both;
+}
+
+.boot-tag {
+  margin-top: 11px;
+  font-size: clamp(9px, 1.7vmin, 11px);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  color: rgba(148, 163, 184, 0.88);
+  opacity: 0;
+  animation: boot-tag-in 1s cubic-bezier(0.22, 1, 0.36, 1) 1.8s both;
+}
+
+@keyframes boot-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes boot-tag-in {
+  0%   { opacity: 0; letter-spacing: 0.38em; }
+  100% { opacity: 1; letter-spacing: 0.5em; }
+}
+
+/* Progress: thin line that draws outward from center, then fills L→R */
+.boot-progress {
+  margin-top: 30px;
+  width: min(72vw, 320px);
+}
+
+.boot-progress-track {
+  position: relative;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 9999px;
+  clip-path: inset(0 50%);
+  animation: boot-track-draw 0.7s cubic-bezier(0.16, 1, 0.3, 1) 2s both;
+}
+
+@keyframes boot-track-draw {
+  from { clip-path: inset(0 50%); }
+  to   { clip-path: inset(0 0%); }
+}
+
+.boot-progress-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, rgba(249, 115, 22, 0.85), rgba(239, 68, 68, 0.95));
+}
+
+.boot-progress-tip {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: rgba(103, 232, 249, 0.9);
+  transform: translate(50%, -50%);
+  box-shadow: 0 0 10px 1px rgba(103, 232, 249, 0.55);
+}
+
+/* Status message: masked rise-in, one line at a time */
+.boot-status {
+  margin-top: 17px;
+  height: 14px;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.boot-status--on { opacity: 1; }
+
+.boot-status-text {
+  display: block;
+  font-size: 9.5px;
+  line-height: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  white-space: nowrap;
+  color: rgba(148, 163, 184, 0.92);
+  opacity: 0;
+}
+
+.boot-status-text--leave {
+  transition: opacity 0.13s ease, transform 0.13s ease;
+  opacity: 0;
+  transform: translateY(-7px);
+}
+
+.boot-status-text--enter {
+  animation: boot-status-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes boot-status-in {
+  from { opacity: 0; transform: translateY(130%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — static, refined composition
+   --------------------------------------------------------------------------- */
+.boot--reduced .boot-bg,
+.boot--reduced .boot-earth,
+.boot--reduced .boot-noise,
+.boot--reduced .boot-map,
+.boot--reduced .boot-grid,
+.boot--reduced .boot-grid-labels,
+.boot--reduced .boot-geo,
+.boot--reduced .boot-thermal,
+.boot--reduced .boot-thermal g,
+.boot--reduced .boot-focus,
+.boot--reduced .boot-aura,
+.boot--reduced .boot-logo,
+.boot--reduced .boot-name,
+.boot--reduced .boot-tag,
+.boot--reduced .boot-progress-track,
+.boot--reduced .boot-status {
+  animation: none;
+  opacity: 1;
+  transform: none;
+  clip-path: none;
+}
+
+.boot--reduced .boot-cloud,
+.boot--reduced .boot-scan,
+.boot--reduced .tp-ring { display: none; }
+
+.boot--reduced .tp-core,
+.boot--reduced .tp-halo {
+  animation: none;
+  opacity: 0.75;
+}
+
+.boot--reduced .tp-halo { opacity: 0.16; }
+
+.boot--reduced .boot-status-text--enter { animation: none; }
+.boot--reduced .boot-status-text--leave { transition: none; }
+
+/* Media-query fallback (belt and braces in case the JS flag misses) */
+@media (prefers-reduced-motion: reduce) {
+  .boot .boot-bg,
+  .boot .boot-earth,
+  .boot .boot-noise,
+  .boot .boot-map,
+  .boot .boot-grid,
+  .boot .boot-grid-labels,
+  .boot .boot-geo,
+  .boot .boot-thermal,
+  .boot .boot-thermal g,
+  .boot .boot-focus,
+  .boot .boot-aura,
+  .boot .boot-logo,
+  .boot .boot-name,
+  .boot .boot-tag,
+  .boot .boot-progress-track,
+  .boot .boot-status {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+  .boot .boot-cloud,
+  .boot .boot-scan,
+  .boot .tp-ring { display: none; }
+  .boot .tp-core { animation: none; opacity: 0.75; }
+  .boot .tp-halo { animation: none; opacity: 0.16; }
+  .boot .boot-status-text--enter { animation: none; }
+  .boot .boot-status-text--leave { transition: none; }
+}
+
+/* Small screens: tighten the composition */
+@media (max-width: 640px) {
+  .boot-logo { height: clamp(44px, 8vh, 64px); }
+  .boot-name { letter-spacing: 0.24em; text-indent: 0.24em; }
+  .boot-progress { width: min(78vw, 320px); }
+}

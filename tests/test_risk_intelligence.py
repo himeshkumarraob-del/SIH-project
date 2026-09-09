@@ -13,7 +13,7 @@ import tempfile
 import pandas as pd
 import pytest
 
-from src.models.risk_intelligence import RiskIntelligenceEngine
+from src.models.risk_intelligence import RiskIntelligenceEngine, build_risk_evidence, DEFAULT_MULTIPLIERS
 
 def _make_dummy_risk_record(
     abnormality="NORMAL",
@@ -138,3 +138,89 @@ def test_existing_ai_results_remain_unchanged():
     
     assert mtime_ai_before == mtime_ai_after
     assert mtime_fa_before == mtime_fa_after
+
+
+# ---------------------------------------------------------------------------
+# AI Evidence Explorer: risk evidence contribution breakdown
+# ---------------------------------------------------------------------------
+
+
+def test_build_risk_evidence_matches_engine_score():
+    """Evidence final_score must equal the engine's stored risk score."""
+    engine = RiskIntelligenceEngine()
+    df = _make_dummy_risk_record(
+        abnormality="HIGH",
+        max_frp=6.0,
+        active_days=1,
+        pers_cat="isolated",
+        max_ti4=338.0,
+        bt_diff=36.0,
+        fa_indicator="HIGH",
+    )
+    res = engine.calculate_risk(df)
+
+    evidence = build_risk_evidence(df.iloc[0])
+
+    assert evidence["final_score"] == res.iloc[0]["risk_score"]
+    assert evidence["final_score"] == 31.0
+    # base = 35 (HIGH) + 12 (FRP) + 3 (isolated) + 12 (TI4) = 62
+    assert evidence["base_score"] == 62.0
+    assert evidence["reliability_multiplier"] == DEFAULT_MULTIPLIERS["HIGH"]
+    assert evidence["false_alarm_concern"] == "HIGH"
+
+    comps = {c["key"]: c for c in evidence["components"]}
+    assert set(comps.keys()) == {"abnormality", "frp", "persistence", "intensity"}
+    assert comps["abnormality"]["points"] == 35.0
+    assert comps["frp"]["points"] == 12.0
+    assert comps["persistence"]["points"] == 3.0
+    assert comps["intensity"]["points"] == 12.0
+
+
+def test_build_risk_evidence_no_fabricated_points():
+    """Component points must come from the discrete engine rule set (never invented)."""
+    allowed = {
+        "abnormality": {5.0, 20.0, 35.0},
+        "frp": {0.0, 6.0, 12.0, 18.0, 25.0},
+        "persistence": {3.0, 12.0, 20.0},
+        "intensity": {4.0, 12.0, 20.0},
+    }
+    maxes = {"abnormality": 35.0, "frp": 25.0, "persistence": 20.0, "intensity": 20.0}
+
+    df = _make_dummy_risk_record(abnormality="HIGH", max_frp=30.0, active_days=5, pers_cat="persistent", max_ti4=360.0, bt_diff=55.0, fa_indicator="LOW")
+    evidence = build_risk_evidence(df.iloc[0])
+    assert evidence["final_score"] == 100.0
+
+    for comp in evidence["components"]:
+        assert comp["points"] in allowed[comp["key"]]
+        assert comp["max_points"] == maxes[comp["key"]]
+        assert 0.0 <= comp["points"] <= comp["max_points"]
+        assert comp["label"]
+        assert comp["detail"]
+
+    assert evidence["reliability_multiplier"] in (0.5, 0.85, 1.0)
+    assert evidence["false_alarm_concern"] in ("LOW", "MEDIUM", "HIGH")
+
+
+def test_risk_evidence_reconciles_with_real_dataset():
+    """On the real processed dataset, every evidence final_score equals the stored risk_score."""
+    path = Path("data/processed/firms_risk_results.csv")
+    if not path.exists():
+        pytest.skip("processed dataset not available")
+
+    df = pd.read_csv(path).head(400)
+    for _, row in df.iterrows():
+        evidence = build_risk_evidence(row)
+        assert abs(evidence["final_score"] - float(row["risk_score"])) < 0.11
+        assert evidence["base_score"] == sum(c["points"] for c in evidence["components"])
+
+
+def test_risk_evidence_missing_fields_default_safely():
+    """Sparse rows still produce a valid, bounded evidence breakdown (no fabricated evidence)."""
+    df = pd.DataFrame([{"cluster_id": 99}])
+    evidence = build_risk_evidence(df.iloc[0])
+    # NORMAL(5) + 0 + isolated(3) + 4 = base 12, attenuated by default MEDIUM 0.85 -> 10.2
+    assert evidence["final_score"] == 10.2
+    assert evidence["base_score"] == 12.0
+    assert len(evidence["components"]) == 4
+    assert evidence["false_alarm_concern"] == "MEDIUM"  # default when missing
+    assert evidence["reliability_multiplier"] == DEFAULT_MULTIPLIERS["MEDIUM"]

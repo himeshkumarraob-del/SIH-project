@@ -67,6 +67,7 @@ class ClusterDetail(BaseModel):
     anomaly_characterization: Optional[str] = None
     explanation: Optional[str] = None
     false_alarm_indicator: str
+    false_alarm_reasons: str = ""
     detection_reliability: str
     risk_score: float
     risk_level: str
@@ -116,12 +117,37 @@ class ClassificationDetail(BaseModel):
     prediction_confidence: float = 0.0
 
 
+class RiskEvidenceComponent(BaseModel):
+    """One contribution to the existing Risk Index (raw points out of max_points)."""
+
+    key: str
+    label: str
+    points: float
+    max_points: float
+    detail: str = ""
+
+
+class RiskEvidence(BaseModel):
+    """Backward-compatible breakdown of the existing risk score.
+
+    Exposes the already-calculated component contributions of the risk engine.
+    final_score always equals the existing risk_score for the same cluster.
+    """
+
+    components: List[RiskEvidenceComponent]
+    reliability_multiplier: float
+    false_alarm_concern: str
+    base_score: float
+    final_score: float
+
+
 class RiskDetail(BaseModel):
     cluster_id: int
     risk_score: float
     risk_level: str
     risk_factors: str = ""
     risk_explanation: str = ""
+    risk_evidence: Optional[RiskEvidence] = None
 
 
 class AlertResponse(BaseModel):
@@ -146,6 +172,7 @@ class ThermalAlert(BaseModel):
 
     alert_id: str
     cluster_id: int
+    event_key: Optional[str] = None
     severity: str
     status: str = "ACTIVE"
     evidence_confidence: str = "INSUFFICIENT"

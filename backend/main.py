@@ -44,6 +44,7 @@ from src.models.alert_engine import (
     ThermalAlertStore,
     build_intelligence_frame,
 )
+from src.models.risk_intelligence import build_risk_evidence
 from src.response.emergency_response_agent import EmergencyResponseAgent
 
 logger = get_logger("backend.main")
@@ -579,6 +580,7 @@ def get_cluster_detail(cluster_id: int):
         "anomaly_characterization": str(row.get("anomaly_characterization", "")),
         "explanation": str(row.get("explanation", "")),
         "false_alarm_indicator": str(row.get("false_alarm_indicator", "MEDIUM")),
+        "false_alarm_reasons": str(row.get("false_alarm_reasons", "")),
         "detection_reliability": str(row.get("detection_reliability", "MEDIUM")),
         "risk_score": float(row.get("risk_score", 0.0)),
         "risk_level": str(row.get("risk_level", "LOW")),
@@ -631,6 +633,7 @@ def get_risk_detail(cluster_id: int):
         "risk_level": str(row.get("risk_level", "LOW")),
         "risk_factors": str(row.get("risk_factors", "")),
         "risk_explanation": str(row.get("risk_explanation", "")),
+        "risk_evidence": build_risk_evidence(row),
     }
 
 

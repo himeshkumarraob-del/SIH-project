@@ -32,6 +32,16 @@ import pandas as pd
 
 from src.config import PersistenceConfig, get_config
 from src.logging_setup import get_logger
+from src.persistence.atomic_io import write_csv_atomic
+from src.persistence.event_identity import (
+    IdentityReport,
+    _max_known_cluster_id_from_artifacts,
+    apply_identity_to_frame,
+    bootstrap_registry_from_legacy,
+    load_registry,
+    resolve_event_identity,
+    save_registry,
+)
 
 logger = get_logger("persistence.persistence_analysis")
 
@@ -54,6 +64,8 @@ class PersistenceRunReport:
     persistent_count: int = 0
     date_range: tuple[str, str] | None = None
     category_counts: dict[str, int] = field(default_factory=dict)
+    # Stable-event-identity resolution summary (see event_identity.py).
+    identity: IdentityReport | None = None
 
 
 def _haversine_km(lat1, lon1, lat2, lon2) -> np.ndarray:
@@ -172,8 +184,10 @@ def _categorize(active_days: int, cfg: PersistenceConfig) -> str:
 
 def compute_cluster_features(df: pd.DataFrame, cluster_ids: np.ndarray, cfg: PersistenceConfig) -> pd.DataFrame:
     """
-    Builds one row per cluster with the persistence features. persistence_score
-    is defined as:
+    Builds one row per cluster with the persistence features. cluster_ids may
+    be the CANONICAL (stable-identity-remapped) ids from resolve_event_identity
+    — grouping membership is unchanged by the remap, only labels differ.
+    persistence_score is defined as:
 
         active_days_in_cluster / total_days_in_dataset_window
 
@@ -203,6 +217,8 @@ def compute_cluster_features(df: pd.DataFrame, cluster_ids: np.ndarray, cfg: Per
 
         row = {
             "cluster_id": int(cluster_id),
+            "event_key": str(g["event_key"].iloc[0]) if "event_key" in g.columns else "",
+            "identity_status": str(g["identity_status"].iloc[0]) if "identity_status" in g.columns else "",
             "observation_count": len(g),
             "active_days": active_days,
             "first_detection": first_detection.date().isoformat(),
@@ -242,8 +258,59 @@ def run_persistence_pipeline() -> tuple[pd.DataFrame, PersistenceRunReport]:
 
     report = PersistenceRunReport(input_records=len(df))
 
-    cluster_ids = cluster_detections(df, pcfg)
-    clusters = compute_cluster_features(df, cluster_ids, pcfg)
+    # 1. Fresh sequential clustering (grouping only — these ids are NOT stable
+    #    across runs and must never be used as event identity downstream).
+    fresh_cluster_ids = cluster_detections(df, pcfg)
+
+    # 2. Stable event identity: match fresh clusters against the persistent
+    #    registry (bootstrap-aligning to legacy ids on the first run), then
+    #    remap cluster_id to the canonical values so TAL-{cluster_id} alerts
+    #    keep pointing at the same physical thermal event across re-ingestion.
+    registry_path = cfg_obj.processed_data_dir / "event_registry.json"
+    registry = load_registry(registry_path)
+    bootstrap_entries = None
+    if registry is None:
+        max_known = _max_known_cluster_id_from_artifacts(cfg_obj.processed_data_dir)
+        gis_df = None
+        gis_path = cfg_obj.processed_data_dir / "gis_thermal_events.csv"
+        if gis_path.exists():
+            try:
+                gis_df = pd.read_csv(gis_path)
+            except (OSError, pd.errors.ParserError) as exc:
+                logger.warning("Identity bootstrap: legacy gis frame unreadable: %s", exc)
+        registry, bootstrap_entries = bootstrap_registry_from_legacy(gis_df, max_known)
+
+    canonical_ids, event_keys, identity_statuses, identity_report = resolve_event_identity(
+        df,
+        fresh_cluster_ids,
+        registry,
+        bootstrap_entries=bootstrap_entries,
+        spatial_distance_km=pcfg.spatial_distance_km,
+    )
+    save_registry(registry_path, registry, run_utc=identity_report.run_utc)
+    report.identity = identity_report
+
+    # 3. Persist the per-detection identity mapping onto firms_india.csv so
+    #    movement analysis and the GIS builder consume canonical ids too.
+    india_with_identity = apply_identity_to_frame(
+        df, fresh_cluster_ids, canonical_ids, event_keys, identity_statuses
+    )
+    write_csv_atomic(india_with_identity, input_path)
+
+    # 4. Per-cluster features computed on CANONICAL ids (pure relabel of the
+    #    fresh grouping, so features are identical; labels are now stable).
+    clusters = compute_cluster_features(df, canonical_ids, pcfg)
+    ident_map = (
+        pd.DataFrame(
+            {
+                "cluster_id": canonical_ids,
+                "event_key": event_keys,
+                "identity_status": identity_statuses,
+            }
+        )
+        .drop_duplicates(subset=["cluster_id"])
+    )
+    clusters = clusters.merge(ident_map, on="cluster_id", how="left")
 
     report.cluster_count = len(clusters)
     counts = clusters["persistence_category"].value_counts().to_dict()
@@ -262,7 +329,7 @@ def run_persistence_pipeline() -> tuple[pd.DataFrame, PersistenceRunReport]:
 def save_persistence_dataset(df: pd.DataFrame) -> Path:
     cfg = get_config()
     out_path: Path = cfg.processed_data_dir / "firms_persistence.csv"
-    df.to_csv(out_path, index=False)
+    write_csv_atomic(df, out_path)
     logger.info("Saved persistence dataset: %s (%d clusters)", out_path, len(df))
     return out_path
 
@@ -274,7 +341,14 @@ def print_summary(report: PersistenceRunReport) -> None:
     print(f"Isolated detections:        {report.isolated_count}")
     print(f"Short-lived/repeated:       {report.short_lived_repeated_count}")
     print(f"Persistent candidates:      {report.persistent_count}")
-    print(f"Date range:                 {report.date_range}")
+    print(f"Date range:                  {report.date_range}")
+    if report.identity is not None:
+        ident = report.identity
+        print("Stable event identity:")
+        print(f"  continued (registry match): {ident.continued}")
+        print(f"  bootstrap-continued:        {ident.bootstrap_matched}")
+        print(f"  new events:                 {ident.new_events}")
+        print(f"  max ever cluster id:        {ident.max_ever_cluster_id}")
     print("Persistence-category counts:")
     for cat, count in report.category_counts.items():
         print(f"  {cat:24s} {count}")
