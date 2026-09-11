@@ -26,6 +26,7 @@ import type {
   EmergencyResponseSearchResult,
   PrototypeNotificationResult,
   PrototypeNotificationHistoryEntry,
+  FireStationCandidate,
 } from '../types';
 
 
@@ -513,12 +514,17 @@ function buildMockClusterDetail(clusterId: number): ClusterDetail {
     movement_status: m?.movement_status ?? 'STATIONARY',
     total_movement_distance_km: m?.total_movement_distance_km ?? 0,
     location: {
-      district: 'Jharsuguda Industrial Zone',
+      latitude: c.latitude ?? 20.5937,
+      longitude: c.longitude ?? 78.9629,
       state: 'Odisha',
-      country: 'India',
-      nearest_city: 'Jharsuguda',
-      distance_to_city_km: 4.8,
-      formatted_address: 'Jharsuguda District, Odisha, India',
+      district: 'Jharsuguda Industrial Zone',
+      city_town: 'Jharsuguda',
+      locality_colony: 'Industrial Corridor',
+      street_road: 'NH-49',
+      landmark: 'Jharsuguda Thermal Power Complex',
+      postcode: '768201',
+      display_name: 'Jharsuguda Industrial Zone, Odisha, India',
+      formatted_location_header: 'Jharsuguda Region, Odisha',
     },
   };
 }
@@ -542,8 +548,8 @@ export async function fetchClassificationDetail(clusterId: number): Promise<Clas
     classification_rationale: cls?.classification_rationale ?? 'Persistent multi-pass detection co-located with industrial site.',
     osm_facility_type: cls?.osm_facility_type ?? 'Industrial Site',
     osm_distance_km: cls?.osm_distance_km ?? 1.2,
-    predicted_landcover_class: cls?.predicted_landcover_class ?? 'Barren / Industrial Land',
-    prediction_confidence: cls?.prediction_confidence ?? 0.85,
+    predicted_landcover_class: cls?.land_cover_class ?? 'Barren / Industrial Land',
+    prediction_confidence: cls?.classification_score ?? 0.85,
   };
   if (USE_MOCK) return mock;
   try {
@@ -594,6 +600,8 @@ export async function fetchResponseDetail(clusterId: number): Promise<ResponseDe
     nearest_station_name: 'Regional Thermal Intelligence Station',
     station_distance_km: 5.4,
     station_available: true,
+    alert_rationale: 'Thermal score exceeds priority threshold requiring automated operational triage.',
+    is_decision_support_only: true,
   };
   if (USE_MOCK) return mock;
   try {
@@ -639,30 +647,42 @@ export function findClassification(clusterId: number): ClassificationData | unde
 }
 
 export async function fetchEmergencyResponseStations(clusterId: number): Promise<EmergencyResponseSearchResult> {
+  const mockStation: FireStationCandidate = {
+    station_id: 'stn-01',
+    station_name: 'District Response Center',
+    station_latitude: 21.75,
+    station_longitude: 83.85,
+    distance_km: 4.5,
+    contact_phone: '+91 98765 43210',
+    verified_source: 'OpenStreetMap / Regional Directory',
+  };
   const mock: EmergencyResponseSearchResult = {
     cluster_id: clusterId,
-    risk_level: 'HIGH',
-    recommended_action: 'Despatch ground inspection unit to coordinates.',
-    nearest_station: {
-      id: 'stn-01',
-      name: 'District Response Center',
-      station_type: 'FIRE_AND_RESCUE',
+    search_radius_km: 25,
+    event: {
+      cluster_id: clusterId,
+      alert_id: `alt-2026-${clusterId}`,
+      severity: 'HIGH',
+      risk_score: 7.5,
+      risk_level: 'HIGH',
+      classification_label: 'Industrial Heat Source / Elevated Flare',
+      evidence_confidence: 'HIGH',
+      false_alarm_indicator: 'LOW',
+      detection_reliability: 'HIGH',
+      observation_count: 3,
+      active_days: 2,
+      persistence_category: 'short_lived_repeated',
       latitude: 21.75,
       longitude: 83.85,
-      distance_km: 4.5,
-      contact_phone: '+91 98765 43210',
+      suppressed: false,
     },
-    nearby_stations: [
-      {
-        id: 'stn-01',
-        name: 'District Response Center',
-        station_type: 'FIRE_AND_RESCUE',
-        latitude: 21.75,
-        longitude: 83.85,
-        distance_km: 4.5,
-        contact_phone: '+91 98765 43210',
-      },
-    ],
+    stations: [mockStation],
+    nearest_station: mockStation,
+    station_available: true,
+    status_message: 'Nearby station identified for dispatch prototype.',
+    notification_eligible: true,
+    eligibility_reason: 'High priority cluster within 25km radius.',
+    is_decision_support_only: true,
   };
   if (USE_MOCK) return mock;
   try {
@@ -673,12 +693,24 @@ export async function fetchEmergencyResponseStations(clusterId: number): Promise
 }
 
 export async function postPrototypeNotification(clusterId: number, stationId?: string): Promise<PrototypeNotificationResult> {
+  const mockStation: FireStationCandidate = {
+    station_id: stationId ?? 'stn-01',
+    station_name: 'District Response Center',
+    station_latitude: 21.75,
+    station_longitude: 83.85,
+    distance_km: 4.5,
+    contact_phone: '+91 98765 43210',
+    verified_source: 'OpenStreetMap / Regional Directory',
+  };
   const mock: PrototypeNotificationResult = {
     cluster_id: clusterId,
-    status: 'PROTOTYPE_ALERT_SENT',
-    recipient: '+91 98765 43210',
-    timestamp: new Date().toISOString(),
-    details: 'Prototype SMS alert dispatched successfully to ground station.',
+    alert_id: `alt-2026-${clusterId}`,
+    send_status: 'PROTOTYPE_ALERT_SENT',
+    recipient_masked: '+91 98765 ****0',
+    selected_station: mockStation,
+    provider_message_id: 'MSG-MOCK-12345',
+    is_decision_support_only: true,
+    detail: 'Prototype SMS alert dispatched successfully to ground station.',
   };
   if (USE_MOCK) return mock;
   try {
@@ -704,12 +736,17 @@ export async function fetchPrototypeNotificationHistory(clusterId?: number): Pro
 
 export async function fetchClusterLocation(clusterId: number): Promise<LocationDetail> {
   const mock: LocationDetail = {
-    district: 'Jharsuguda Industrial Zone',
+    latitude: 20.5937,
+    longitude: 78.9629,
     state: 'Odisha',
-    country: 'India',
-    nearest_city: 'Jharsuguda',
-    distance_to_city_km: 4.8,
-    formatted_address: 'Jharsuguda Region, Odisha, India',
+    district: 'Jharsuguda Industrial Zone',
+    city_town: 'Jharsuguda',
+    locality_colony: 'Industrial Corridor',
+    street_road: 'NH-49',
+    landmark: 'Jharsuguda Thermal Power Complex',
+    postcode: '768201',
+    display_name: 'Jharsuguda Industrial Zone, Odisha, India',
+    formatted_location_header: 'Jharsuguda Region, Odisha',
   };
   if (USE_MOCK) return mock;
   try {
@@ -721,20 +758,62 @@ export async function fetchClusterLocation(clusterId: number): Promise<LocationD
 
 export async function fetchIncidentReport(clusterId: number): Promise<IncidentReportResponse> {
   const c = MOCK_CLUSTERS.find((x) => x.cluster_id === clusterId) || MOCK_CLUSTERS[0];
+  const loc: LocationDetail = {
+    latitude: c.latitude ?? 20.5937,
+    longitude: c.longitude ?? 78.9629,
+    state: 'Odisha',
+    district: 'Jharsuguda Industrial Zone',
+    city_town: 'Jharsuguda',
+    locality_colony: 'Industrial Corridor',
+    street_road: 'NH-49',
+    landmark: 'Jharsuguda Thermal Power Complex',
+    postcode: '768201',
+    display_name: 'Jharsuguda Industrial Zone, Odisha, India',
+    formatted_location_header: 'Jharsuguda Region, Odisha',
+  };
   const mock: IncidentReportResponse = {
+    title: `Thermal Intelligence Incident Dossier - Cluster #${clusterId}`,
+    report_generated_at: new Date().toISOString(),
     cluster_id: clusterId,
-    report_id: `REP-2026-${clusterId}`,
-    generated_at: new Date().toISOString(),
-    summary: `Thermal Intelligence Incident Dossier for Cluster #${clusterId}`,
-    risk_level: c.risk_level ?? 'HIGH',
+    severity: c.risk_level === 'HIGH' ? 'CRITICAL' : 'ELEVATED',
     risk_score: c.risk_score ?? 7.5,
-    max_frp: c.max_frp ?? 10.5,
-    max_bright_ti4: c.max_bright_ti4 ?? 340.0,
+    location: loc,
     observation_count: c.observation_count ?? 3,
+    first_detected: c.first_detection ?? '2026-08-01',
+    last_detected: c.last_detection ?? '2026-08-03',
     active_days: c.active_days ?? 2,
-    location_summary: 'Jharsuguda Region, Odisha, India',
+    max_frp: c.max_frp ?? 10.5,
+    brightness_temp_ti4: c.max_bright_ti4 ?? 340.0,
+    thermal_contrast_k: c.bt_diff_max ?? 40.0,
+    persistence_category: c.persistence_category ?? 'short_lived_repeated',
+    risk_level: c.risk_level ?? 'HIGH',
+    risk_factors: c.risk_factors ?? 'High thermal intensity & multi-day persistence',
+    false_alarm_concern: c.false_alarm_indicator ?? 'LOW',
+    evidence_reliability_level: c.detection_reliability ?? 'HIGH',
     classification_label: 'Industrial Heat Source / Elevated Flare',
-    recommended_action: 'Maintain automated satellite monitoring and conduct periodic site inspection.',
+    classification_confidence: 0.88,
+    osm_industrial_context: 'Co-located within 1.2km of industrial facility',
+    sentinel2_cnn_context: 'Barren / Industrial Land (85% confidence)',
+    cloud_imagery_limitations: 'Minimal cloud obstruction on acquisition pass',
+    movement_status: 'STATIONARY',
+    movement_direction: 'N/A',
+    direction_confidence: 'INSUFFICIENT',
+    displacement_km: 0,
+    movement_rate_km_per_day: 0,
+    directional_consistency: 'N/A',
+    movement_disclaimer: 'Displacement reflects satellite centroid movement only.',
+    nearby_industrial_infrastructure: 'Jharsuguda Industrial Power Plant (1.2 km)',
+    nearby_roads: 'NH-49 State Highway',
+    nearest_fire_station_name: 'District Response Center',
+    distance_to_fire_station_km: '4.5 km',
+    nearby_landmarks: 'Jharsuguda Railway Station',
+    why_flagged_explanation: c.explanation ?? 'Multi-pass thermal anomaly detected above background baseline.',
+    recommended_actions: [
+      'Maintain automated satellite monitoring',
+      'Despatch ground team for visual verification if FRP escalates',
+    ],
+    action_type: 'MONITOR_AND_VERIFY',
+    disclaimer: 'Decision-support intelligence only. Not a physical fire declaration.',
   };
   if (USE_MOCK) return mock;
   try {
