@@ -47,7 +47,9 @@ import { MOCK_CLASSIFICATIONS } from '../data/classifications';
 const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? '/api/v1').replace(/\/$/, '');
 
 async function apiGet<T>(path: string, params?: Record<string, string>): Promise<T> {
-  const url = new URL(`${API_BASE}${path}`, window.location.origin);
+  const url = API_BASE.startsWith('http')
+    ? new URL(`${API_BASE}${path}`)
+    : new URL(`${API_BASE}${path}`, window.location.origin);
   if (params) {
     for (const [k, v] of Object.entries(params)) {
       if (v) url.searchParams.set(k, v);
@@ -61,7 +63,9 @@ async function apiGet<T>(path: string, params?: Record<string, string>): Promise
 }
 
 async function apiPost<T>(path: string, body?: any): Promise<T> {
-  const url = new URL(`${API_BASE}${path}`, window.location.origin);
+  const url = API_BASE.startsWith('http')
+    ? new URL(`${API_BASE}${path}`)
+    : new URL(`${API_BASE}${path}`, window.location.origin);
   const res = await fetch(url.toString(), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
